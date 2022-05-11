@@ -1,0 +1,17 @@
+div.sticky {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    padding: 5px;
+    background-color: #cae8ca;
+    border: 2px solid #4CAF50;
+    z-index: 999;
+    margin: 3px;
+    margin-bottom: 5px;
+
+}
+
+div.sticky input{
+    margin-right: 3px;
+    margin-top: 3px;
+}

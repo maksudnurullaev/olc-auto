@@ -1,0 +1,29 @@
+{
+  "name": "olc-auto",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start-ws": "node src/web-services.js"
+  },
+  "dependencies": {
+    "vue": "^3.2.25",
+    "vue-web-cam": "^1.9.0"
+  },
+  "devDependencies": {
+    "@types/splitpanes": "^2.2.1",
+    "@vitejs/plugin-vue": "^2.3.1",
+    "axios": "^0.27.2",
+    "express": "^4.18.1",
+    "fs": "^0.0.1-security",
+    "got": "^12.0.4",
+    "http": "^0.0.1-security",
+    "https": "^1.0.0",
+    "sass": "^1.51.0",
+    "splitpanes": "^3.1.1",
+    "vite": "^2.9.8",
+    "vue-router": "^4.0.14"
+  }
+}

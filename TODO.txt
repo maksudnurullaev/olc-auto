@@ -1,0 +1,2 @@
+1. Add making foto from device camera (VueJS)
+1.2 Keep local storage to save picture
