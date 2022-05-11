@@ -1,6 +1,11 @@
 const express = require('express');
 const app = express();
+const path = require('path');
+
 app.use(express.json());
+const dataPath = path.resolve(__dirname, '..', 'data');
+console.warn('Data path defined as: ' + dataPath);
+app.use(express.static(dataPath));
 
 app.get('/', (req, res) => {
     // downloadImageFromURL('http://kpp:Kpp_1234@192.168.4.150/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG', 'kpp.jpeg');
@@ -15,8 +20,8 @@ app.post('/base64Jpeg2File', (request, response) => {
     let base64Image = base64String.split(';base64,').pop();
     let myPath = getImagesDirectory(request.body.carNumber);
     if (validateDir(myPath)) {
-        let myFile = getUniqueId();
-        let myPath2File = path.join(myPath, myFile + '.jpeg');
+        let myFile = getUniqueId(null,request.body.carState) + '.jpeg';
+        let myPath2File = path.join(myPath, myFile);
         console.log('File going to be saved as: ' + myPath2File);
         fs.writeFile(myPath2File, base64Image, { encoding: 'base64' }, function (err) {
             if (err) {
@@ -24,7 +29,9 @@ app.post('/base64Jpeg2File', (request, response) => {
                 response.send({ result: false, errMessage: err.toString() });
             } else {
                 console.log('File saved:', myPath2File);
-                response.send({ result: true });
+                let _imageUrl = getImageAccessUrl(request.body.carNumber, myFile);
+                console.log('Image access URL:', _imageUrl);
+                response.send({ result: true, image: _imageUrl });
             }
         })
     } else {
@@ -43,11 +50,14 @@ app.listen(PORT, () => {
 
 var fs = require('fs'),
     http = require('http'),
-    https = require('https'),
-    path = require('path');
+    https = require('https');
 
-function getImagesDirectory(carNumber, forDate) {
-    return path.join(__dirname, 'data', 'cars', carNumber, formatDate(forDate));
+function getImageAccessUrl(carNumber, fileName, forDate) {
+    return ['cars', carNumber, formatDate(forDate), fileName].join('/');
+}
+
+function getImagesDirectory(carNumber, forDate, forDate) {
+    return path.join(__dirname, '..', 'data', 'cars', carNumber, formatDate(forDate));
 }
 
 function formatDate(date) {
@@ -64,12 +74,14 @@ function formatDate(date) {
     return [year, month, day].join('-');
 }
 
-function getUniqueId() {
-    return (new Date()).valueOf();
+function getUniqueId(prefix, postfix) {
+    let _result = (new Date()).valueOf();
+    _result = prefix ? prefix + '-' + _result : '' + _result;
+    _result = postfix ? _result + '-' + postfix : _result;
+    return _result;
 }
 
 function validateDir(myPath) {
-    // let myPath = getImagesDirectory(carNumber);
     if (fs.existsSync(myPath)) {
         console.log("Directory already exists: " + myPath);
         return true;

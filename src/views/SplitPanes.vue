@@ -8,6 +8,7 @@
       <strong>Фотограции</strong>
       <sticky-bar-2 />
       <web-cam />
+      <img v-for="imageURL in globals.car.images" :src="globals.getWebServiceURL + imageURL" />
     </pane>
   </splitpanes>
 </template>
@@ -19,6 +20,10 @@ import "splitpanes/dist/splitpanes.css";
 import StickyBar1 from "../components/StickyBar1.vue";
 import StickyBar2 from "../components/StickyBar2.vue";
 import WebCam from "../components/WebCam.vue";
+
+import { useGlobalStore } from '../stores/globals';
+const globals = useGlobalStore();
+
 
 </script>
 

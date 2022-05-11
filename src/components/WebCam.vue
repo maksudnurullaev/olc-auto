@@ -1,5 +1,5 @@
 <template>
-    <div class="web-camera-container">
+    <div class="web-camera-container" v-if="globals.showCamera">
 
         <div v-if="!_data.isCameraOpen" class="camera-button">
             <select ref="videoList" :disabled="Object.keys(_data.cameras).length <= 1">
@@ -47,13 +47,15 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
-import axios from 'axios'
+import { ref, reactive, onMounted } from 'vue';
+import axios from 'axios';
+import { useGlobalStore } from '../stores/globals';
+const globals = useGlobalStore();
+
 
 const camera = ref(null);
 const canvas = ref(null);
 const videoList = ref(null);
-
 
 const _data = reactive({
     isCameraOpen: false,
@@ -151,12 +153,14 @@ function takePhoto() {
     const dataURL = canvas.value.toDataURL("image/jpeg");
     console.log(dataURL.length);
     axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-    axios.post("http://localhost:8181/base64Jpeg2File", {
+    axios.post(globals.getWebServiceURL + "base64Jpeg2File", {
         dataURL: dataURL,
-        carNumber: 'AD1221XS'
+        carNumber: 'AD1221XS',
+        carState: globals.car.state
     })
         .then(function (response) {
-            console.log(response);
+            globals.addCarImage(response.data.image);
+            console.log(response.data.image);
         })
         .catch(function (error) {
             console.log(error);
