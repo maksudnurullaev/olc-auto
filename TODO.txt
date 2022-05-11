@@ -1,3 +1,4 @@
 1. Add making foto from device camera (VueJS)
 1.2 Keep local storage to save picture
-2.1 Fix: close camera when switching camera is OFF
+2. Fix: close camera when switching camera is OFF
+3. Add Image gallery

@@ -33,15 +33,7 @@
         </div>
 
         <div v-if="_data.isCameraOpen && !_data.isLoading" class="camera-shoot">
-            <button type="button" class="button" @click="takePhoto">
-                <img src="https://img.icons8.com/material-outlined/50/000000/camera--v2.png">
-            </button>
-        </div>
-
-        <div v-if="_data.isPhotoTaken && _data.isCameraOpen" class="camera-download">
-            <a id="downloadPhoto" download="my-photo.jpg" class="button" role="button" @click="downloadImage">
-                Download
-            </a>
+            <input type="submit" @click="takePhoto" value="Сохранить" />
         </div>
     </div>
 </template>
@@ -165,14 +157,6 @@ function takePhoto() {
         .catch(function (error) {
             console.log(error);
         });
-}
-
-
-function downloadImage() { // TODO: refactor
-    const download = document.getElementById("downloadPhoto");
-    const canvas = document.getElementById("photoTaken").toDataURL("image/jpeg")
-        .replace("image/jpeg", "image/octet-stream");
-    download.setAttribute("href", canvas);
 }
 
 </script>
