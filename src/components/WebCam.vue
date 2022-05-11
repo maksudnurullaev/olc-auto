@@ -2,7 +2,7 @@
     <div class="web-camera-container">
 
         <div v-if="!_data.isCameraOpen" class="camera-button">
-            <select ref="videoList"  :disabled="Object.keys(_data.cameras).length <= 1">
+            <select ref="videoList" :disabled="Object.keys(_data.cameras).length <= 1">
                 <option v-for="(value, name, index) in _data.cameras " :value="value">{{ value.label }}</option>
             </select>
         </div>
@@ -48,11 +48,12 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-import got from 'got'
+import axios from 'axios'
 
 const camera = ref(null);
 const canvas = ref(null);
 const videoList = ref(null);
+
 
 const _data = reactive({
     isCameraOpen: false,
@@ -149,6 +150,17 @@ function takePhoto() {
     //MNK
     const dataURL = canvas.value.toDataURL("image/jpeg");
     console.log(dataURL.length);
+    axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+    axios.post("http://localhost:8181/base64Jpeg2File", {
+        dataURL: dataURL,
+        carNumber: 'AD1221XS'
+    })
+        .then(function (response) {
+            console.log(response);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 }
 
 

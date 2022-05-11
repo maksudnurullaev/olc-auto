@@ -13,6 +13,7 @@
 </template>
 
 <script setup >
+
 import { Splitpanes, Pane } from "splitpanes";
 import "splitpanes/dist/splitpanes.css";
 import StickyBar1 from "../components/StickyBar1.vue";
