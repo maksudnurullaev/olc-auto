@@ -7,6 +7,15 @@ export const useGlobalStore = defineStore('globals', {
                 state: 'In',
                 images: [],
             },
+            camera: {
+                isComponentOpen: false,
+                isCameraOpen: false,
+                isPhotoTaken: false,
+                isShotPhoto: false,
+                isLoading: false,
+                link: '#',
+                cameras: {}
+            },
             showCamera: false,
             webServer: {
                 dev: "http://localhost:8181/",
@@ -17,7 +26,7 @@ export const useGlobalStore = defineStore('globals', {
     // could also be defined as
     // state: () => ({ count: 0 })
     actions: {
-        addCarImage(imageUrl){
+        addCarImage(imageUrl) {
             this.car.images.push(imageUrl);
         },
     },

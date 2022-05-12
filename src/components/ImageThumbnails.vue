@@ -1,15 +1,21 @@
 <template>
-    <h2>Thumbnail Image</h2>
-    <p>Click on the image to enlarge it.</p>
+    <div v-if="!globals.camera.isCameraOpen && globals.car.images.length > 0">
+        <p>Нажмите на картинку чтобы увеличить</p>
 
-    <a v-for="imageURL in globals.car.images" target="_blank" :href="globals.getWebServiceURL + imageURL">
-        <img :src="globals.getWebServiceURL + imageURL" alt="" style="width:150px">
-    </a>
+        <a v-for="imageURL in globals.car.images" target="_blank" :href="globals.getWebServiceURL + imageURL">
+            <img :src="globals.getWebServiceURL + imageURL" alt="" style="width:150px">
+        </a>
+    </div>
+    <!-- 
+    Show Camera: {{ globals.camera.isCameraOpen }} <br />
+    Images count: {{ globals.car.images.length }} <br />
+    -->
 </template>
 
 <script setup>
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
+
 </script>
 
 <style scoped>

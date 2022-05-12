@@ -17,13 +17,14 @@
 </template>
 
 <script setup>
-import {ref } from 'vue';
+import { ref } from 'vue';
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
 
-function switchCamera(){
-    globals.showCamera = !globals.showCamera;
-    console.log("Show camera: " + globals.showCamera);
+function switchCamera() {
+    globals.$patch({ camera: { isComponentOpen: !globals.camera.isComponentOpen } });
+    // globals.camera.isComponentOpen = !globals.camera.isComponentOpen;
+    console.log("Show camera component: " + globals.camera.isComponentOpen);
 }
 
 </script>

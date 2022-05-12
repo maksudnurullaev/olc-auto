@@ -1,20 +1,23 @@
 <template>
-    <div class="web-camera-container" v-if="globals.showCamera">
+    <div class="web-camera-container" v-if="globals.camera.isComponentOpen">
 
-        <div v-if="!_data.isCameraOpen" class="camera-button">
-            <select ref="videoList" :disabled="Object.keys(_data.cameras).length <= 1">
-                <option v-for="(value, name, index) in _data.cameras " :value="value">{{ value.label }}</option>
+        <div v-if="!globals.camera.isCameraOpen" class="camera-button">
+            <select ref="videoList" :disabled="Object.keys(globals.camera.cameras).length <= 1">
+                <option v-for="(value, name, index) in globals.camera.cameras " :value="value">{{ value.label }}
+                </option>
             </select>
         </div>
+
         <div class="camera-button">
             <button type="button" class="button is-rounded"
-                :class="{ 'is-primary': !_data.isCameraOpen, 'is-danger': _data.isCameraOpen }" @click="toggleCamera">
-                <span v-if="!_data.isCameraOpen">Open Camera</span>
+                :class="{ 'is-primary': !globals.camera.isCameraOpen, 'is-danger': globals.camera.isCameraOpen }"
+                @click="toggleCamera">
+                <span v-if="!globals.camera.isCameraOpen">Open Camera</span>
                 <span v-else>Close Camera</span>
             </button>
         </div>
 
-        <div v-show="_data.isCameraOpen && _data.isLoading" class="camera-loading">
+        <div v-show="globals.camera.isCameraOpen && globals.camera.isLoading" class="camera-loading">
             <ul class="loader-circle">
                 <li></li>
                 <li></li>
@@ -22,24 +25,30 @@
             </ul>
         </div>
 
-        <div v-if="_data.isCameraOpen" v-show="!_data.isLoading" class="camera-box"
-            :class="{ 'flash': _data.isShotPhoto }">
+        <div v-if="globals.camera.isCameraOpen" v-show="!globals.camera.isLoading" class="camera-box"
+            :class="{ 'flash': globals.camera.isShotPhoto }">
 
-            <div class="camera-shutter" :class="{ 'flash': _data.isShotPhoto }"></div>
+            <div class="camera-shutter" :class="{ 'flash': globals.camera.isShotPhoto }"></div>
 
-            <video v-show="!_data.isPhotoTaken" ref="camera" :width="450" :height="337.5" autoplay></video>
+            <video v-show="!globals.camera.isPhotoTaken" ref="camera" :width="450" :height="337.5" autoplay></video>
 
-            <canvas v-show="_data.isPhotoTaken" id="photoTaken" ref="canvas" :width="450" :height="337.5"></canvas>
+            <canvas v-show="globals.camera.isPhotoTaken" id="photoTaken" ref="canvas" :width="450"
+                :height="337.5"></canvas>
         </div>
 
-        <div v-if="_data.isCameraOpen && !_data.isLoading" class="camera-shoot">
+        <div v-if="globals.camera.isCameraOpen && !globals.camera.isLoading" class="camera-shoot">
             <input type="submit" @click="takePhoto" value="Сохранить" />
         </div>
     </div>
+    <!--
+    <pre>
+        globals.camera.isComponentOpen: {{ globals.camera.isComponentOpen }}
+    </pre>
+    -->
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
@@ -49,15 +58,27 @@ const camera = ref(null);
 const canvas = ref(null);
 const videoList = ref(null);
 
-const _data = reactive({
-    isCameraOpen: false,
-    isPhotoTaken: false,
-    isShotPhoto: false,
-    isLoading: false,
-    link: '#',
-    cameras: {}
+// const _data = reactive({
+//     isCameraOpen: false,
+//     isPhotoTaken: false,
+//     isShotPhoto: false,
+//     isLoading: false,
+//     link: '#',
+//     cameras: {}
 
+// });
+
+watch(globals.camera.isComponentOpen, (newValue, oldValue) => {
+    console.log('(newValue, oldValue)', (newValue, oldValue));
 });
+
+globals.$subscribe((mutation, state) => {
+    let _payload = mutation.payload;
+    if (_payload && _payload.camera)
+        if (!_payload.camera.isComponentOpen) {
+            closeCamera();
+        }
+})
 
 onMounted(() => {
     console.log("Update device list!");
@@ -65,19 +86,27 @@ onMounted(() => {
 });
 
 function toggleCamera() {
-    if (_data.isCameraOpen) {
-        _data.isCameraOpen = false;
-        _data.isPhotoTaken = false;
-        _data.isShotPhoto = false;
-        stopCameraStream();
+    if (globals.camera.isCameraOpen) {
+        closeCamera();
     } else {
-        _data.isCameraOpen = true;
-        createCameraElement();
+        openCamera();
     }
 };
 
+function closeCamera() {
+    globals.camera.isCameraOpen = false;
+    globals.camera.isPhotoTaken = false;
+    globals.camera.isShotPhoto = false;
+    stopCameraStream();
+}
+
+function openCamera() {
+    globals.camera.isCameraOpen = true;
+    createCameraElement();
+}
+
 function createCameraElement() {
-    _data.isLoading = true;
+    globals.camera.isLoading = true;
 
     const constraints = (window.constraints = {
         audio: false,
@@ -88,21 +117,23 @@ function createCameraElement() {
     navigator.mediaDevices
         .getUserMedia(constraints)
         .then(stream => {
-            _data.isLoading = false;
+            globals.camera.isLoading = false;
             camera.value.srcObject = stream;
         })
         .catch(error => {
-            _data.isLoading = false;
+            globals.camera.isLoading = false;
             alert("May the browser didn't support or there is some errors.");
         });
 };
 
 function stopCameraStream() {
-    let tracks = camera.value.srcObject.getTracks();
+    if (camera.value.srcObject) {
+        let tracks = camera.value.srcObject.getTracks();
 
-    tracks.forEach(track => {
-        track.stop();
-    });
+        tracks.forEach(track => {
+            track.stop();
+        });
+    }
 };
 
 
@@ -120,24 +151,24 @@ function updateDeviceList() {
                 elem.value = device.label;
                 if (type === "video") {
                     // videoList.value.appendChild(elem);
-                    _data.cameras[elem.label] = device;
+                    globals.camera.cameras[elem.label] = device;
                 }
             });
         });
 }
 
 function takePhoto() {
-    if (!_data.isPhotoTaken) {
-        _data.isShotPhoto = true;
+    if (!globals.camera.isPhotoTaken) {
+        globals.camera.isShotPhoto = true;
 
         const FLASH_TIMEOUT = 50;
 
         setTimeout(() => {
-            _data.isShotPhoto = false;
+            globals.camera.isShotPhoto = false;
         }, FLASH_TIMEOUT);
     }
 
-    _data.isPhotoTaken = !_data.isPhotoTaken;
+    globals.camera.isPhotoTaken = !globals.camera.isPhotoTaken;
 
     const context = canvas.value.getContext('2d');
     context.drawImage(camera.value, 0, 0, 450, 337.5);
