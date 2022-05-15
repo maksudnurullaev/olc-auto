@@ -7,7 +7,7 @@
     <pane size="65">
       <strong>Фотограции</strong>
       <sticky-bar-2 />
-      <web-cam />
+      <web-cam-2 />
       <image-thumbnails />
     </pane>
   </splitpanes>
@@ -17,10 +17,9 @@
 
 import { Splitpanes, Pane } from "splitpanes";
 import "splitpanes/dist/splitpanes.css";
-import ImageThumbnailsVue from "../components/ImageThumbnails.vue";
 import StickyBar1 from "../components/StickyBar1.vue";
 import StickyBar2 from "../components/StickyBar2.vue";
-import WebCam from "../components/WebCam.vue";
+import WebCam2 from "../components/WebCam2.vue";
 import ImageThumbnails from "../components/ImageThumbnails.vue"
 
 import { useGlobalStore } from '../stores/globals';

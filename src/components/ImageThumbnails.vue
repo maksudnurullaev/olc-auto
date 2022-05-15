@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!globals.camera.isCameraOpen && globals.car.images.length > 0">
+    <div id="container" v-if="globals.car.images.length > 0">
         <p>Нажмите на картинку чтобы увеличить</p>
 
         <a v-for="imageURL in globals.car.images" target="_blank" :href="globals.getWebServiceURL + imageURL">
@@ -28,5 +28,11 @@ img {
 
 img:hover {
     box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+}
+
+div#container {
+    margin: 0 auto 0 auto;
+    /* max-width: 60em; */
+    padding: 1em 1.5em 1.3em 1.5em;
 }
 </style>

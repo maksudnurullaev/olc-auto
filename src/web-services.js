@@ -1,10 +1,16 @@
+const utils = require('./components/js/utils.js');
 const express = require('express');
 const app = express();
-const path = require('path');
-
 app.use(express.json());
+
+const cors = require('cors')
+app.use(cors());
+
+const path = require('path');
 const dataPath = path.resolve(__dirname, '..', 'data');
+
 console.warn('Data path defined as: ' + dataPath);
+
 app.use(express.static(dataPath));
 
 app.get('/', (req, res) => {
@@ -13,14 +19,13 @@ app.get('/', (req, res) => {
     res.send('Hello from App Engine!');
 });
 
-
 app.post('/base64Jpeg2File', (request, response) => {
     console.log(request.body.dataURL.length);
     let base64String = request.body.dataURL;
     let base64Image = base64String.split(';base64,').pop();
-    let myPath = getImagesDirectory(request.body.carNumber);
-    if (validateDir(myPath)) {
-        let myFile = getUniqueId(null,request.body.carState) + '.jpeg';
+    let myPath = utils.getImagesDirectory(dataPath,request.body.carNumber);
+    if (utils.validateDir(myPath)) {
+        let myFile = utils.getUniqueId(null,request.body.carState) + '.jpeg';
         let myPath2File = path.join(myPath, myFile);
         console.log('File going to be saved as: ' + myPath2File);
         fs.writeFile(myPath2File, base64Image, { encoding: 'base64' }, function (err) {
@@ -29,7 +34,7 @@ app.post('/base64Jpeg2File', (request, response) => {
                 response.send({ result: false, errMessage: err.toString() });
             } else {
                 console.log('File saved:', myPath2File);
-                let _imageUrl = getImageAccessUrl(request.body.carNumber, myFile);
+                let _imageUrl = utils.getImageAccessUrl(request.body.carNumber, myFile);
                 console.log('Image access URL:', _imageUrl);
                 response.send({ result: true, image: _imageUrl });
             }
@@ -52,59 +57,8 @@ var fs = require('fs'),
     http = require('http'),
     https = require('https');
 
-function getImageAccessUrl(carNumber, fileName, forDate) {
-    return ['cars', carNumber, formatDate(forDate), fileName].join('/');
-}
-
-function getImagesDirectory(carNumber, forDate, forDate) {
-    return path.join(__dirname, '..', 'data', 'cars', carNumber, formatDate(forDate));
-}
-
-function formatDate(date) {
-    var d = date ? new Date(date) : new Date(),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
-
-    if (month.length < 2)
-        month = '0' + month;
-    if (day.length < 2)
-        day = '0' + day;
-
-    return [year, month, day].join('-');
-}
-
-function getUniqueId(prefix, postfix) {
-    let _result = (new Date()).valueOf();
-    _result = prefix ? prefix + '-' + _result : '' + _result;
-    _result = postfix ? _result + '-' + postfix : _result;
-    return _result;
-}
-
-function validateDir(myPath) {
-    if (fs.existsSync(myPath)) {
-        console.log("Directory already exists: " + myPath);
-        return true;
-    } else {
-        let myResult = fs.mkdirSync(myPath,
-            { recursive: true }, (err) => {
-                if (err) {
-                    console.error(err);
-                    return false;
-                }
-                console.log('Directory created successfully: ' + myPath);
-                return true;
-            });
-        console.log(myResult);
-        return true
-    }
-}
-
-
 var Stream = require('stream').Transform;
-
 var downloadImageFromURL = (url, filename, callback) => {
-
     var username = 'kpp';
     var password = 'Kpp_1234';
     var auth = 'Basic ' + Buffer.from(username + ':' + password).toString('base64');

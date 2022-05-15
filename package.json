@@ -9,6 +9,7 @@
     "start-ws": "node src/web-services.js"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "vue": "^3.2.25",
     "vue-web-cam": "^1.9.0"
   },
@@ -24,6 +25,7 @@
     "sass": "^1.51.0",
     "splitpanes": "^3.1.1",
     "vite": "^2.9.8",
-    "vue-router": "^4.0.14"
+    "vue-router": "^4.0.14",
+    "webrtc-adapter": "^8.1.1"
   }
 }

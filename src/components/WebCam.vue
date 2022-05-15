@@ -101,11 +101,6 @@ function closeCamera() {
 }
 
 function openCamera() {
-    globals.camera.isCameraOpen = true;
-    createCameraElement();
-}
-
-function createCameraElement() {
     globals.camera.isLoading = true;
 
     const constraints = (window.constraints = {
@@ -119,6 +114,7 @@ function createCameraElement() {
         .then(stream => {
             globals.camera.isLoading = false;
             camera.value.srcObject = stream;
+            globals.camera.isCameraOpen = true;
         })
         .catch(error => {
             globals.camera.isLoading = false;

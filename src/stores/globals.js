@@ -1,11 +1,12 @@
-import { defineStore } from 'pinia'
-
+import { defineStore } from 'pinia';
 export const useGlobalStore = defineStore('globals', {
     state: () => {
         return {
             car: {
                 state: 'In',
                 images: [],
+                carID: '',
+                forDate: '_today',
             },
             camera: {
                 isComponentOpen: false,
@@ -23,12 +24,7 @@ export const useGlobalStore = defineStore('globals', {
             }
         }
     },
-    // could also be defined as
-    // state: () => ({ count: 0 })
     actions: {
-        addCarImage(imageUrl) {
-            this.car.images.push(imageUrl);
-        },
     },
     getters: {
         getWebServiceURL: (state) => state.webServer.dev,
