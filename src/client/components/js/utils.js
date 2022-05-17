@@ -1,43 +1,24 @@
-import { commonFormateDate } from './common.js';
+import { commonFormateDate, getImageAccessUrl, string2Date } from './common.js';
 
 const path = require('path');
 
-// function formateDate(date) {
-//     var d = date ? date : new Date(),
-//         month = '' + (d.getMonth() + 1),
-//         day = '' + d.getDate(),
-//         year = d.getFullYear();
-
-//     if (month.length < 2)
-//         month = '0' + month;
-//     if (day.length < 2)
-//         day = '0' + day;
-
-//     return [year, month, day].join('-');
-// };
 exports.formateDate = commonFormateDate;
-
-function string2Date(dateString) {
-    if (dateString) {
-        var parts = dateString.split('-');
-        return new Date(parts[0], parts[1] - 1, parts[2]);
-    }
-    return new Date();
-}
 exports.string2Date = string2Date; 
+exports.getImageAccessUrl = getImageAccessUrl;
 
 function getImagesDirectoryPath(dataPath, carNumber, date) {
     return path.join(dataPath, '..', 'data', 'cars', carNumber, commonFormateDate(string2Date(date)));
 }
 exports.getImagesDirectoryPath = getImagesDirectoryPath;
 
-function getImageAccessUrl(carNumber, fileName, forDate) {
-    return ['cars', carNumber, commonFormateDate(string2Date(forDate)), fileName].join('/');
-}
-exports.getImageAccessUrl = getImageAccessUrl;
-
 function getUniqueId(prefix, postfix) {
-    let _result = (new Date()).valueOf();
+    var d = date ? date : new Date(),
+        _result = 'H' + d.getHours() 
+        + 'M' + d.getMinuyes() 
+        + 'S' + d.getSeconds()
+        + 'MS' + d.getMilliseconds();
+
+    // let _result = (new Date()).valueOf();
     _result = prefix ? prefix + '-' + _result : '' + _result;
     _result = postfix ? _result + '-' + postfix : _result;
     return _result;
@@ -72,4 +53,4 @@ function getDirImagesUrls(myPath){
         console.error("Directoey not exists:", myPath);
     }
 }
-exports.getDirImages = getDirImagesUrls;
+exports.getDirImagesUrls = getDirImagesUrls;

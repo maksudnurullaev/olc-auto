@@ -24,9 +24,9 @@ app.post('/base64Jpeg2File', (request, response) => {
     console.log(request.body.dataURL.length);
     let base64String = request.body.dataURL;
     let base64Image = base64String.split(';base64,').pop();
-    let myPath = utils.getImagesDirectoryPath(dataPath,request.body.carNumber);
+    let myPath = utils.getImagesDirectoryPath(dataPath, request.body.carNumber);
     if (utils.validateDir(myPath)) {
-        let myFile = utils.getUniqueId(null,request.body.carState) + '.jpeg';
+        let myFile = utils.getUniqueId(null, request.body.carState) + '.jpeg';
         let myPath2File = path.join(myPath, myFile);
         console.log('File going to be saved as: ' + myPath2File);
         fs.writeFile(myPath2File, base64Image, { encoding: 'base64' }, function (err) {
@@ -48,29 +48,22 @@ app.post('/base64Jpeg2File', (request, response) => {
 
 app.post('/getImages', (request, response) => {
     let carID = request.body.carID;
-    let forDate =  request.body.forDate;
-    let myPath = utils.getImagesDirectoryPath(dataPath,carID, forDate);
-    utils.getDirImagesUrls(myPath);
-    // if (utils.validateDir(myPath)) {
-    //     let myFile = utils.getUniqueId(null,request.body.carState) + '.jpeg';
-    //     let myPath2File = path.join(myPath, myFile);
-    //     console.log('File going to be saved as: ' + myPath2File);
-    //     fs.writeFile(myPath2File, base64Image, { encoding: 'base64' }, function (err) {
-    //         if (err) {
-    //             console.error(err)
-    //             response.send({ result: false, errMessage: err.toString() });
-    //         } else {
-    //             console.log('File saved:', myPath2File);
-    //             let _imageUrl = utils.getImageAccessUrl(request.body.carNumber, myFile);
-    //             console.log('Image access URL:', _imageUrl);
-    //             response.send({ result: true, image: _imageUrl });
-    //         }
-    //     })
-    // } else {
-    //     console.log("Couldn't validate path: " + myPath);
-    //     response.send({ result: false, errMessage: ("Couldn't validate path: " + myPath) });
-    // }
-    response.send({ result: false, errMessage: ("Couldn't impelented yet: " + myPath) });
+    let forDate = request.body.forDate;
+    let myPath = utils.getImagesDirectoryPath(dataPath, carID, forDate);
+    console.log("utils.getDirImagesUrls(myPath)", utils.getDirImagesUrls(myPath));
+    if (utils.validateDir(myPath)) {
+        let imageUrls = [];
+        fs.readdir(myPath, (err, files) => {
+            files.forEach(file => {
+                imageUrls.push(file);
+                console.log(file, imageUrls.length);
+            });
+            response.send({ result: true, imageUrls: imageUrls });
+            console.log('Found', imageUrls.length, 'images');
+        });
+    } else {
+        response.send({ result: false, errMessage: ("Couldn't implemented yet: " + myPath) });
+    }
 });
 
 

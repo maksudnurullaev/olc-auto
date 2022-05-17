@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getImageAccessUrl } from './common';
 
 function wsAddCarImage(postData, globals) {
     // const globals = useGlobalStore();
@@ -19,20 +20,26 @@ function wsGetCarImages(globals) {
     }
     console.log("Get images for car:", globals.car.carID);
     console.log(" ... and  for date:", globals.car.forDate);
-    let myPostData =  {
+    let myPostData = {
         carID: globals.car.carID,
         forDate: globals.car.forDate
     }
-    axios.post(globals.getWebServiceURL + "getImages",myPostData)
+    globals.car.images = []; // reset images array
+    axios.post(globals.getWebServiceURL + "getImages", myPostData)
         .then(function (response) {
-            console.log(response.data.imagesUrls);
-            // globals.car.images.push(response.data.image);
+            if (response.data.imageUrls.length) {
+                response.data.imageUrls.forEach(element => {
+                    let imageUrl = getImageAccessUrl(globals.car.carID, element, globals.car.forDate);
+                    globals.car.images.push(imageUrl);
+                    // console.log("imageUrl:", imageUrl);
+                });
+            }
+            console.log("Found:", response.data.imageUrls.length, "images!");
         })
         .catch(function (error) {
             console.log(error);
         });
 
 }
-
 
 export { wsAddCarImage, wsGetCarImages };

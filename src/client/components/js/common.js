@@ -12,4 +12,16 @@ function commonFormateDate(date) {
     return [year, month, day].join('-');
 };
 
-export { commonFormateDate }
+function getImageAccessUrl(carNumber, fileName, forDate) {
+    return ['cars', carNumber, commonFormateDate(string2Date(forDate)), fileName].join('/');
+};
+
+function string2Date(dateString) {
+    if (dateString) {
+        var parts = dateString.split('-');
+        return new Date(parts[0], parts[1] - 1, parts[2]);
+    }
+    return new Date();
+}
+
+export { commonFormateDate, getImageAccessUrl, string2Date }
