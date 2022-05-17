@@ -5,3 +5,7 @@ This template should help get you started developing with Vue 3 in Vite. The tem
 ## Recommended IDE Setup
 
 - [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+
+
+## Under Windows 10 we should use nodemon at this manner:
+<code>npx nodemon -w ./src/web-services.js -w ./src/components/js/utils.js</code>

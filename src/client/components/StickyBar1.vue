@@ -25,5 +25,5 @@ function updateCar(){
 </script>
 
 <style scoped>
-@import '../css/sticky.css';
+@import '../assets/css/sticky.css';
 </style>

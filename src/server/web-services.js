@@ -1,4 +1,4 @@
-const utils = require('./components/js/utils.js');
+const utils = require('./utils');
 const express = require('express');
 const app = express();
 app.use(express.json());
@@ -13,10 +13,11 @@ console.warn('Data path defined as: ' + dataPath);
 
 app.use(express.static(dataPath));
 
+const _PORT = 8181;
 app.get('/', (req, res) => {
     // downloadImageFromURL('http://kpp:Kpp_1234@192.168.4.150/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG', 'kpp.jpeg');
 
-    res.send('Hello from App Engine!');
+    res.send('Hello from App Engine v4! _PORT: ' + _PORT);
 });
 
 app.post('/base64Jpeg2File', (request, response) => {
@@ -46,7 +47,7 @@ app.post('/base64Jpeg2File', (request, response) => {
 });
 
 // Listen to the App Engine-specified port, or 8181 otherwise
-const PORT = process.env.PORT || 8181;
+const PORT = process.env.PORT || _PORT;
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}...`);
 });

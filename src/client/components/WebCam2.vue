@@ -197,7 +197,7 @@ const eightKConstraints = {
 </script>
 
 <style scoped>
-@import '../css/webcam2.css';
+@import '../assets/css/webcam2.css';
 
 button {
     margin: 0 10px 20px 0;

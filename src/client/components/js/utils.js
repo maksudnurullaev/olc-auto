@@ -1,6 +1,6 @@
 const path = require('path');
 
-function formateDate(date){
+function formateDate(date) {
     var d = date ? date : new Date(),
         month = '' + (d.getMonth() + 1),
         day = '' + d.getDate(),
@@ -15,7 +15,7 @@ function formateDate(date){
 };
 exports.formateDate = formateDate;
 
-function string2Date(dateString){
+function string2Date(dateString) {
     if (dateString) {
         var parts = dateString.split('-');
         return new Date(parts[0], parts[1] - 1, parts[2]);
@@ -24,9 +24,10 @@ function string2Date(dateString){
 }
 exports.string2Date = string2Date; 
 
-exports.getImagesDirectory = (dataPath, carNumber, date) => {
+function getImagesDirectory(dataPath, carNumber, date) {
     return path.join(dataPath, '..', 'data', 'cars', carNumber, formateDate(string2Date(date)));
 }
+exports.getImagesDirectory = getImagesDirectory;
 
 function getImageAccessUrl(carNumber, fileName, forDate) {
     return ['cars', carNumber, formateDate(string2Date(forDate)), fileName].join('/');

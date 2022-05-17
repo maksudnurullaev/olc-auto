@@ -2,8 +2,8 @@
   <div class="f-container fixed-hf">
     <header>
       <router-link to="/">Главная</router-link>
-      <router-link to="/splitpanes">Контроль на КПП</router-link>
-      <router-link to="/tut">Помощь</router-link>
+      <router-link to="/kpp">Контроль на КПП</router-link>
+      <router-link to="/help">Помощь</router-link>
     </header>
     <div class="main"><router-view /></div>
     <footer>
@@ -13,5 +13,5 @@
 </template>
 
 <style scoped>
-@import url("../src/css/main.css");
+@import url("./assets/css/main.css");
 </style>

@@ -189,5 +189,5 @@ function takePhoto() {
 </script>
 
 <style scoped lang="scss">
-@import '../css/camera.scss';
+@import '../assets/css/camera.scss';
 </style>

@@ -15,16 +15,16 @@
             <!-- option :value="utils.formateDate()" selected="true">Сегодня</option -->
         </select>
     </div>
-    <!-- div>{{ formateDate() }}</div -->
 </template>
 
 <script setup>
-import { ref } from 'vue';
+// import { ref } from 'vue';
+// import { formateDate } from './js/utils';
+
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
+// const utils = require('../src/components/js/utils.js');
 
-// import { formateDate } from './js/utils';
-// const utils = require('./js/utils');
 
 function switchCamera() {
     globals.$patch({ camera: { isComponentOpen: !globals.camera.isComponentOpen } });
@@ -35,5 +35,5 @@ function switchCamera() {
 </script>
 
 <style scoped>
-@import '../css/sticky.css';
+@import '../assets/css/sticky.css';
 </style>
