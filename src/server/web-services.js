@@ -50,7 +50,6 @@ app.post('/getImages', (request, response) => {
     let carID = request.body.carID;
     let forDate = request.body.forDate;
     let myPath = utils.getImagesDirectoryPath(dataPath, carID, forDate);
-    console.log("utils.getDirImagesUrls(myPath)", utils.getDirImagesUrls(myPath));
     if (utils.validateDir(myPath)) {
         let imageUrls = [];
         fs.readdir(myPath, (err, files) => {

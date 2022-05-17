@@ -24,7 +24,7 @@ function wsGetCarImages(globals) {
         carID: globals.car.carID,
         forDate: globals.car.forDate
     }
-    globals.car.images = []; // reset images array
+    globals.car.images = []; // reset car images
     axios.post(globals.getWebServiceURL + "getImages", myPostData)
         .then(function (response) {
             if (response.data.imageUrls.length) {

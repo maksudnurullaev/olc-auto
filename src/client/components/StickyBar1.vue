@@ -19,7 +19,7 @@ function uppercase() {
     }
 }
 
-function updateCar(){
+function updateCar() {
     wsGetCarImages(globals);
 }
 

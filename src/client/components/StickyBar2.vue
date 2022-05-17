@@ -5,12 +5,12 @@
         <input type="radio" id="AutoOut" name="inOrOut" v-model="globals.car.state" value="Out" /><label
             for="AutoOut">Выезд</label>
         | Камеры:
-        <input type="submit" value="Въезда" v-if="globals.car.state == 'In'"/>
-        <input type="submit" value="Выезда" v-if="globals.car.state == 'Out'"/>
+        <input type="submit" value="Въезда" v-if="globals.car.state == 'In'" />
+        <input type="submit" value="Выезда" v-if="globals.car.state == 'Out'" />
         <input type="submit" @click="switchCamera" value="Устройства" />
         |
         История:
-        <select name="History" v-model="globals.car.forDate" >
+        <select name="History" v-model="globals.car.forDate">
             <option :value="commonFormateDate()">Сегодня</option>
         </select>
     </div>

@@ -16,10 +16,10 @@
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
 
-function getImageClass(fileName){
-    if (fileName){
+function getImageClass(fileName) {
+    if (fileName) {
         var result = fileName.match(/.*-(.*).jpeg/);
-        return (result[1]);    
+        return (result[1]);
     }
     return 'NaN';
 };

@@ -46,11 +46,3 @@ function validateDir(myPath) {
 }
 exports.validateDir = validateDir;
 
-function getDirImagesUrls(myPath){
-    console.log("Get images (as Urls) for directory:", myPath);
-    if (fs.existsSync(myPath)) {
-    } else {
-        console.error("Directoey not exists:", myPath);
-    }
-}
-exports.getDirImagesUrls = getDirImagesUrls;
