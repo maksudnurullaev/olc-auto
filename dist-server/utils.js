@@ -1,19 +1,10 @@
 "use strict";
 
-var path = require('path');
+var _common = require("./common.js");
 
-function formateDate(date) {
-  var d = date ? date : new Date(),
-      month = '' + (d.getMonth() + 1),
-      day = '' + d.getDate(),
-      year = d.getFullYear();
-  if (month.length < 2) month = '0' + month;
-  if (day.length < 2) day = '0' + day;
-  return [year, month, day].join('-');
-}
+var path = require('path'); 
 
-;
-exports.formateDate = formateDate;
+exports.formateDate = _common.commonFormateDate;
 
 function string2Date(dateString) {
   if (dateString) {
@@ -27,13 +18,13 @@ function string2Date(dateString) {
 exports.string2Date = string2Date;
 
 function getImagesDirectory(dataPath, carNumber, date) {
-  return path.join(dataPath, '..', 'data', 'cars', carNumber, formateDate(string2Date(date)));
+  return path.join(dataPath, '..', 'data', 'cars', carNumber, (0, _common.commonFormateDate)(string2Date(date)));
 }
 
 exports.getImagesDirectory = getImagesDirectory;
 
 function getImageAccessUrl(carNumber, fileName, forDate) {
-  return ['cars', carNumber, formateDate(string2Date(forDate)), fileName].join('/');
+  return ['cars', carNumber, (0, _common.commonFormateDate)(string2Date(forDate)), fileName].join('/');
 }
 
 exports.getImageAccessUrl = getImageAccessUrl;

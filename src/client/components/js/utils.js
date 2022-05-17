@@ -1,19 +1,21 @@
+import { commonFormateDate } from './common.js';
+
 const path = require('path');
 
-function formateDate(date) {
-    var d = date ? date : new Date(),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
+// function formateDate(date) {
+//     var d = date ? date : new Date(),
+//         month = '' + (d.getMonth() + 1),
+//         day = '' + d.getDate(),
+//         year = d.getFullYear();
 
-    if (month.length < 2)
-        month = '0' + month;
-    if (day.length < 2)
-        day = '0' + day;
+//     if (month.length < 2)
+//         month = '0' + month;
+//     if (day.length < 2)
+//         day = '0' + day;
 
-    return [year, month, day].join('-');
-};
-exports.formateDate = formateDate;
+//     return [year, month, day].join('-');
+// };
+exports.formateDate = commonFormateDate;
 
 function string2Date(dateString) {
     if (dateString) {
@@ -25,12 +27,12 @@ function string2Date(dateString) {
 exports.string2Date = string2Date; 
 
 function getImagesDirectory(dataPath, carNumber, date) {
-    return path.join(dataPath, '..', 'data', 'cars', carNumber, formateDate(string2Date(date)));
+    return path.join(dataPath, '..', 'data', 'cars', carNumber, commonFormateDate(string2Date(date)));
 }
 exports.getImagesDirectory = getImagesDirectory;
 
 function getImageAccessUrl(carNumber, fileName, forDate) {
-    return ['cars', carNumber, formateDate(string2Date(forDate)), fileName].join('/');
+    return ['cars', carNumber, commonFormateDate(string2Date(forDate)), fileName].join('/');
 }
 exports.getImageAccessUrl = getImageAccessUrl;
 

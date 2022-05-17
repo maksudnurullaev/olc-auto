@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { commonFormateDate } from '../components/js/common.js';
 export const useGlobalStore = defineStore('globals', {
     state: () => {
         return {
@@ -6,7 +7,7 @@ export const useGlobalStore = defineStore('globals', {
                 state: 'In',
                 images: [],
                 carID: '',
-                forDate: '_today',
+                forDate: commonFormateDate(),
             },
             camera: {
                 isComponentOpen: false,

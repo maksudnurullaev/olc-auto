@@ -10,21 +10,20 @@
         <input type="submit" @click="switchCamera" value="Устройства" />
         |
         История:
-        <select name="History" v-model="globals.car.forDate">
-            <option value="_today" selected="true">Сегодня</option>
-            <!-- option :value="utils.formateDate()" selected="true">Сегодня</option -->
+        <select name="History" v-model="globals.car.forDate" >
+            <option :value="commonFormateDate()">Сегодня</option>
         </select>
     </div>
 </template>
 
 <script setup>
 // import { ref } from 'vue';
-// import { formateDate } from './js/utils';
-
+import { commonFormateDate } from '../components/js/common.js';
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
 // const utils = require('../src/components/js/utils.js');
 
+// const utils = require('./js/utils.js');
 
 function switchCamera() {
     globals.$patch({ camera: { isComponentOpen: !globals.camera.isComponentOpen } });

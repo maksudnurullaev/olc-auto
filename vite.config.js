@@ -9,5 +9,5 @@ export default defineConfig({
       fs: require.resolve('rollup-plugin-node-builtins'),
       require: require.resolve('rollup-plugin-node-builtins'),
     },
-  }
+  },
 })
