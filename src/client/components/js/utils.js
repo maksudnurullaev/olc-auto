@@ -12,9 +12,9 @@ function getImagesDirectoryPath(dataPath, carNumber, date) {
 exports.getImagesDirectoryPath = getImagesDirectoryPath;
 
 function getUniqueId(prefix, postfix) {
-    var d = date ? date : new Date(),
+    var d = new Date(),
         _result = 'H' + d.getHours() 
-        + 'M' + d.getMinuyes() 
+        + 'M' + d.getMinutes() 
         + 'S' + d.getSeconds()
         + 'MS' + d.getMilliseconds();
 

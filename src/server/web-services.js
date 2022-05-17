@@ -56,7 +56,7 @@ app.post('/getImages', (request, response) => {
         fs.readdir(myPath, (err, files) => {
             files.forEach(file => {
                 imageUrls.push(file);
-                console.log(file, imageUrls.length);
+                // console.log(file, imageUrls.length);
             });
             response.send({ result: true, imageUrls: imageUrls });
             console.log('Found', imageUrls.length, 'images');
