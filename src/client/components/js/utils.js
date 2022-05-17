@@ -26,10 +26,10 @@ function string2Date(dateString) {
 }
 exports.string2Date = string2Date; 
 
-function getImagesDirectory(dataPath, carNumber, date) {
+function getImagesDirectoryPath(dataPath, carNumber, date) {
     return path.join(dataPath, '..', 'data', 'cars', carNumber, commonFormateDate(string2Date(date)));
 }
-exports.getImagesDirectory = getImagesDirectory;
+exports.getImagesDirectoryPath = getImagesDirectoryPath;
 
 function getImageAccessUrl(carNumber, fileName, forDate) {
     return ['cars', carNumber, commonFormateDate(string2Date(forDate)), fileName].join('/');
@@ -64,3 +64,12 @@ function validateDir(myPath) {
     }
 }
 exports.validateDir = validateDir;
+
+function getDirImagesUrls(myPath){
+    console.log("Get images (as Urls) for directory:", myPath);
+    if (fs.existsSync(myPath)) {
+    } else {
+        console.error("Directoey not exists:", myPath);
+    }
+}
+exports.getDirImages = getDirImagesUrls;

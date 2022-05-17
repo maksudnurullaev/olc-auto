@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "vite",
-    "dev-server": "npx nodemon -w ./src/backpart/web-services.js -w ./src/client/components/js/utils.js",
+    "dev-server": "npx nodemon -w ./src/server/web-services.js -w ./src/client/components/js/utils.js -w ./src/client/components/js/common.js",
     "build": "vite build",
     "preview": "vite preview",
     "ws-transpile": "babel ./src/server/web-services.js ./src/client/components/js/utils.js ./src/client/components/js/common.js --out-dir dist-server",

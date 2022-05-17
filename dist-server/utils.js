@@ -2,7 +2,18 @@
 
 var _common = require("./common.js");
 
-var path = require('path'); 
+var path = require('path'); // function formateDate(date) {
+//     var d = date ? date : new Date(),
+//         month = '' + (d.getMonth() + 1),
+//         day = '' + d.getDate(),
+//         year = d.getFullYear();
+//     if (month.length < 2)
+//         month = '0' + month;
+//     if (day.length < 2)
+//         day = '0' + day;
+//     return [year, month, day].join('-');
+// };
+
 
 exports.formateDate = _common.commonFormateDate;
 
@@ -17,11 +28,11 @@ function string2Date(dateString) {
 
 exports.string2Date = string2Date;
 
-function getImagesDirectory(dataPath, carNumber, date) {
+function getImagesDirectoryPath(dataPath, carNumber, date) {
   return path.join(dataPath, '..', 'data', 'cars', carNumber, (0, _common.commonFormateDate)(string2Date(date)));
 }
 
-exports.getImagesDirectory = getImagesDirectory;
+exports.getImagesDirectoryPath = getImagesDirectoryPath;
 
 function getImageAccessUrl(carNumber, fileName, forDate) {
   return ['cars', carNumber, (0, _common.commonFormateDate)(string2Date(forDate)), fileName].join('/');
@@ -63,3 +74,13 @@ function validateDir(myPath) {
 }
 
 exports.validateDir = validateDir;
+
+function getDirImagesUrls(myPath) {
+  console.log("Get images (as Urls) for directory:", myPath);
+
+  if (fs.existsSync(myPath)) {} else {
+    console.error("Directoey not exists:", myPath);
+  }
+}
+
+exports.getDirImages = getDirImagesUrls;

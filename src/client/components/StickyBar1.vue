@@ -10,6 +10,7 @@ import { ref } from 'vue';
 import { wsGetCarImages } from '../components/js/axiosws';
 import { useGlobalStore } from '../stores/globals';
 
+
 const globals = useGlobalStore();
 
 function uppercase() {

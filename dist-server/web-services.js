@@ -1,6 +1,6 @@
 "use strict";
 
-var utils = require('./utils');
+var utils = require('./utils.js');
 
 var express = require('express');
 
@@ -25,7 +25,7 @@ app.post('/base64Jpeg2File', function (request, response) {
   console.log(request.body.dataURL.length);
   var base64String = request.body.dataURL;
   var base64Image = base64String.split(';base64,').pop();
-  var myPath = utils.getImagesDirectory(dataPath, request.body.carNumber);
+  var myPath = utils.getImagesDirectoryPath(dataPath, request.body.carNumber);
 
   if (utils.validateDir(myPath)) {
     var myFile = utils.getUniqueId(null, request.body.carState) + '.jpeg';
@@ -59,6 +59,35 @@ app.post('/base64Jpeg2File', function (request, response) {
       errMessage: "Couldn't validate path: " + myPath
     });
   }
+});
+app.post('/getImages', function (request, response) {
+  var carID = request.body.carID;
+  var forDate = request.body.forDate;
+  var myPath = utils.getImagesDirectoryPath(dataPath, carID, forDate);
+  utils.getDirImagesUrls(myPath); // if (utils.validateDir(myPath)) {
+  //     let myFile = utils.getUniqueId(null,request.body.carState) + '.jpeg';
+  //     let myPath2File = path.join(myPath, myFile);
+  //     console.log('File going to be saved as: ' + myPath2File);
+  //     fs.writeFile(myPath2File, base64Image, { encoding: 'base64' }, function (err) {
+  //         if (err) {
+  //             console.error(err)
+  //             response.send({ result: false, errMessage: err.toString() });
+  //         } else {
+  //             console.log('File saved:', myPath2File);
+  //             let _imageUrl = utils.getImageAccessUrl(request.body.carNumber, myFile);
+  //             console.log('Image access URL:', _imageUrl);
+  //             response.send({ result: true, image: _imageUrl });
+  //         }
+  //     })
+  // } else {
+  //     console.log("Couldn't validate path: " + myPath);
+  //     response.send({ result: false, errMessage: ("Couldn't validate path: " + myPath) });
+  // }
+
+  response.send({
+    result: false,
+    errMessage: "Couldn't impelented yet: " + myPath
+  });
 }); // Listen to the App Engine-specified port, or 8181 otherwise
 
 var PORT = process.env.PORT || _PORT;

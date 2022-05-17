@@ -1,4 +1,4 @@
-const utils = require('./utils');
+const utils = require('./utils.js');
 const express = require('express');
 const app = express();
 app.use(express.json());
@@ -24,7 +24,7 @@ app.post('/base64Jpeg2File', (request, response) => {
     console.log(request.body.dataURL.length);
     let base64String = request.body.dataURL;
     let base64Image = base64String.split(';base64,').pop();
-    let myPath = utils.getImagesDirectory(dataPath,request.body.carNumber);
+    let myPath = utils.getImagesDirectoryPath(dataPath,request.body.carNumber);
     if (utils.validateDir(myPath)) {
         let myFile = utils.getUniqueId(null,request.body.carState) + '.jpeg';
         let myPath2File = path.join(myPath, myFile);
@@ -45,6 +45,34 @@ app.post('/base64Jpeg2File', (request, response) => {
         response.send({ result: false, errMessage: ("Couldn't validate path: " + myPath) });
     }
 });
+
+app.post('/getImages', (request, response) => {
+    let carID = request.body.carID;
+    let forDate =  request.body.forDate;
+    let myPath = utils.getImagesDirectoryPath(dataPath,carID, forDate);
+    utils.getDirImagesUrls(myPath);
+    // if (utils.validateDir(myPath)) {
+    //     let myFile = utils.getUniqueId(null,request.body.carState) + '.jpeg';
+    //     let myPath2File = path.join(myPath, myFile);
+    //     console.log('File going to be saved as: ' + myPath2File);
+    //     fs.writeFile(myPath2File, base64Image, { encoding: 'base64' }, function (err) {
+    //         if (err) {
+    //             console.error(err)
+    //             response.send({ result: false, errMessage: err.toString() });
+    //         } else {
+    //             console.log('File saved:', myPath2File);
+    //             let _imageUrl = utils.getImageAccessUrl(request.body.carNumber, myFile);
+    //             console.log('Image access URL:', _imageUrl);
+    //             response.send({ result: true, image: _imageUrl });
+    //         }
+    //     })
+    // } else {
+    //     console.log("Couldn't validate path: " + myPath);
+    //     response.send({ result: false, errMessage: ("Couldn't validate path: " + myPath) });
+    // }
+    response.send({ result: false, errMessage: ("Couldn't impelented yet: " + myPath) });
+});
+
 
 // Listen to the App Engine-specified port, or 8181 otherwise
 const PORT = process.env.PORT || _PORT;
