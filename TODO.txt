@@ -3,3 +3,6 @@
 2. Fix: close camera when switching camera is OFF
 3. Add Image gallery
 4. Implement SQLITE3/knex 
+5. Add user management wuth admin user|role
+6. Install objectction knex better-sqlite3
+6.1 npm -i -D objectction knex better-sqlite3 jest jest-extended supertest ts-test ts-node
