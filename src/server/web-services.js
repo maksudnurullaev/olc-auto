@@ -7,17 +7,26 @@ const cors = require('cors')
 app.use(cors());
 
 const path = require('path');
+const _PORT = 8181;
+// const knex = path.resolve(__dirname, 'knex', 'knex.js')
+
+// define DATA path
 const dataPath = path.resolve(__dirname, '..', 'data');
+console.warn('Data path defined as:', dataPath);
+console.warn('process.env.ENVIRONMENT:', process.env.ENVIRONMENT);
 
-console.warn('Data path defined as: ' + dataPath);
-
+// add DATA folder to static serve (for images!)
 app.use(express.static(dataPath));
 
-const _PORT = 8181;
+// get objection's Cars
+const Cars = require('./Cars')
+
 app.get('/', (req, res) => {
     // downloadImageFromURL('http://kpp:Kpp_1234@192.168.4.150/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG', 'kpp.jpeg');
 
-    res.send('Hello from App Engine v4! _PORT: ' + _PORT);
+    // res.send('Hello from App Engine v4! _PORT: ' + _PORT);
+    // Cars.query().then((cars) => res.send({ result: true, cars: cars }));
+    Cars.query().then((cars) => res.json(cars));
 });
 
 app.post('/base64Jpeg2File', (request, response) => {
