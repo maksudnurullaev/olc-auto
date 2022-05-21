@@ -20,13 +20,9 @@
             <button id="cinemaFourK">Cinema 4K (4096x2160)</button>
             <button id="eightK">8K</button>
             -->
-            <template v-if="globals.camera.isCameraOpen">
-                <br /><button ref="button" @click="takeSnapshot" style="background: green;">Сделать снимок</button>
-            </template>
-
         </div>
 
-        <div ref="videoblock" id="videoblock">
+        <div ref="videoblock" id="videoblock" @click="takeSnapshot" style="border: 1px green solid">
             <video id="gum-res-local" ref="video" playsinline autoplay></video>
         </div>
 

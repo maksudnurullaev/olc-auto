@@ -7,7 +7,7 @@
         | Камеры:
         <input type="submit" value="Въезда" v-if="globals.car.state == 'In'" />
         <input type="submit" value="Выезда" v-if="globals.car.state == 'Out'" />
-        <input type="submit" @click="switchCamera" value="Устройства" />
+        <input type="submit" @click="switchCamera" :value="getCameraBtnTitle()" />
         |
         История:
         <select name="History" v-model="globals.car.forDate">
@@ -29,6 +29,10 @@ function switchCamera() {
     globals.$patch({ camera: { isComponentOpen: !globals.camera.isComponentOpen } });
     // globals.camera.isComponentOpen = !globals.camera.isComponentOpen;
     console.log("Show camera component: " + globals.camera.isComponentOpen);
+}
+
+function getCameraBtnTitle() {
+    return (globals.camera.isComponentOpen ? 'Выкл.' : 'Вкл.') + " камеру планшета";
 }
 
 </script>
