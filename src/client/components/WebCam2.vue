@@ -22,8 +22,8 @@
             -->
         </div>
 
-        <div ref="videoblock" id="videoblock" @click="takeSnapshot" style="border: 1px green solid">
-            <video id="gum-res-local" ref="video" playsinline autoplay></video>
+        <div ref="videoblock" id="videoblock">
+            <video @click="takeSnapshot" id="gum-res-local" ref="video" playsinline autoplay></video>
         </div>
 
         <p ref="errormessageblock" id="errormessage"></p>
@@ -44,7 +44,6 @@ const button = ref(null);
 const video = ref(null);
 const canvas = ref(null);
 const videoblock = ref(null);
-const dimenstionsblock = ref(null);
 const stream = ref(null);
 const constraints = {
     audio: false,
