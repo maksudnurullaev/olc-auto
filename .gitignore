@@ -27,3 +27,4 @@ dist-server
 # NMK
 data
 *.jpeg
+package-lock.json
