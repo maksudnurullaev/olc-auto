@@ -1,4 +1,4 @@
-const utils = require('./utils.js');
+const utils = require('../utils/utils.js');
 const express = require('express');
 const app = express();
 app.use(express.json());
@@ -11,7 +11,7 @@ const _PORT = 8181;
 // const knex = path.resolve(__dirname, 'knex', 'knex.js')
 
 // define DATA path
-const dataPath = path.resolve(__dirname, '..', 'data');
+const dataPath = path.resolve(__dirname, '..','..', 'data');
 console.warn('Data path defined as:', dataPath);
 console.warn('process.env.ENVIRONMENT:', process.env.ENVIRONMENT);
 
@@ -19,7 +19,7 @@ console.warn('process.env.ENVIRONMENT:', process.env.ENVIRONMENT);
 app.use(express.static(dataPath));
 
 // get objection's Cars
-const Cars = require('./Cars')
+const Cars = require('./knex/models/Cars')
 
 app.get('/', (req, res) => {
     // downloadImageFromURL('http://kpp:Kpp_1234@192.168.4.150/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG', 'kpp.jpeg');

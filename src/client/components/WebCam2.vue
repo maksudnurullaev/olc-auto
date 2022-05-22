@@ -35,7 +35,7 @@
 <script setup>
 import adapter from 'webrtc-adapter';
 import { onMounted, ref } from 'vue';
-import { wsAddCarImage } from '../components/js/axiosws';
+import { wsAddCarImage } from '../axios/ws.js';
 
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();

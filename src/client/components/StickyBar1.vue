@@ -7,7 +7,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { wsGetCarImages } from '../components/js/axiosws';
+import { wsGetCarImages } from '../axios/ws.js';
 import { useGlobalStore } from '../stores/globals';
 
 

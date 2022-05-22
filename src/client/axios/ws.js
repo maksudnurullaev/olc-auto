@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getImageAccessUrl } from './common';
+import { getImageAccessUrl } from '../../utils/common';
 
 function wsAddCarImage(postData, globals) {
     // const globals = useGlobalStore();

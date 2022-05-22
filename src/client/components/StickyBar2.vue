@@ -17,13 +17,9 @@
 </template>
 
 <script setup>
-// import { ref } from 'vue';
-import { commonFormateDate } from '../components/js/common.js';
+import { commonFormateDate } from '../../utils/common.js';
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
-// const utils = require('../src/components/js/utils.js');
-
-// const utils = require('./js/utils.js');
 
 function switchCamera() {
     globals.$patch({ camera: { isComponentOpen: !globals.camera.isComponentOpen } });

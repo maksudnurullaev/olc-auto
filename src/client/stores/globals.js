@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { commonFormateDate } from '../components/js/common.js';
+import { commonFormateDate } from '../../utils/common.js';
 export const useGlobalStore = defineStore('globals', {
     state: () => {
         return {

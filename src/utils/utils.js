@@ -1,4 +1,4 @@
-import { commonFormateDate, getImageAccessUrl, string2Date } from './common.js';
+import { commonFormateDate, getImageAccessUrl, string2Date } from './common';
 
 const path = require('path');
 
