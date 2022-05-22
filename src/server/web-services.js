@@ -11,7 +11,7 @@ const _PORT = 8181;
 // const knex = path.resolve(__dirname, 'knex', 'knex.js')
 
 // define DATA path
-const dataPath = path.resolve(__dirname, '..','..', 'data');
+const dataPath = path.resolve(__dirname, '..', '..', 'data');
 console.warn('Data path defined as:', dataPath);
 console.warn('process.env.ENVIRONMENT:', process.env.ENVIRONMENT);
 
@@ -19,13 +19,33 @@ console.warn('process.env.ENVIRONMENT:', process.env.ENVIRONMENT);
 app.use(express.static(dataPath));
 
 // get objection's Cars
-const Cars = require('./knex/models/Cars')
+const Cars = require('./knex/models/Car')
 
-app.get('/', (req, res) => {
-    // downloadImageFromURL('http://kpp:Kpp_1234@192.168.4.150/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG', 'kpp.jpeg');
+// TODO: downloadImageFromURL('http://kpp:Kpp_1234@192.168.4.150/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG', 'kpp.jpeg');
 
-    // res.send('Hello from App Engine v4! _PORT: ' + _PORT);
-    // Cars.query().then((cars) => res.send({ result: true, cars: cars }));
+app.get('/cars/:id', (req, res) => {
+    const { id } = req.params;
+    console.warn("Car's ID:", id)
+    try {
+        const car = Cars.query().findById(id).then((car) => {
+            if (!car) {
+                throw new Error('Car not found!');
+            }
+            car.$relatedQuery('photos').then((photos) => {
+                if (photos) {
+                    console.log("Photos:", photos);
+                    car['photos'] = photos;
+                }
+                res.status(200).send({ result: true, car: car });
+            })
+            // res.status(200).send({ result: true, car: car });
+        })
+    } catch (error) {
+        res.status(404).send({ result: false, message: error.message })
+    }
+});
+
+app.get('/cars', (req, res) => {
     Cars.query().then((cars) => res.json(cars));
 });
 
@@ -86,6 +106,7 @@ app.listen(PORT, () => {
 var fs = require('fs'),
     http = require('http'),
     https = require('https');
+const { TypePredicateKind } = require('typescript');
 
 var Stream = require('stream').Transform;
 var downloadImageFromURL = (url, filename, callback) => {

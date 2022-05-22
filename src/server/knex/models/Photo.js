@@ -1,21 +1,19 @@
-const knex = require('./knex');
+const knex = require('../knex');
 const { Model } = require('objection');
-// const knexConfig = require('../knexfile.js');
-// const knex = Knex(knexConfig);
 Model.knex(knex);
 
-class Photos extends Model {
+class Photo extends Model {
     static get tableName(){
         return 'photos';
     }
 
     static get relationMappings(){
-        const Cars = require('./Cars');
+        const Car = require('./Car');
 
         return {
             car: {
                 relation: Model.BelongsToOneRelation,
-                modelClass: Cars,
+                modelClass: Car,
                 join: {
                     to: 'cars.id',
                     from: 'photos.car_id'
@@ -26,4 +24,4 @@ class Photos extends Model {
 
 }
 
-module.exports = Photos;
+module.exports = Photo;
