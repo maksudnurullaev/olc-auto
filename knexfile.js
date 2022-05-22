@@ -13,12 +13,12 @@ module.exports = {
       filename: path.resolve(__dirname, 'data', 'dev.sqlite3')
     },
     migrations: {
-      directory: path.resolve(__dirname, 'src', 'knex', 'migrations')
+      directory: path.resolve(__dirname, 'src', 'server', 'knex', 'migrations')
     },
     seeds: {
-      directory: path.resolve(__dirname, 'src', 'knex', 'seeds')
+      directory: path.resolve(__dirname, 'src', 'server', 'knex', 'seeds')
     },
-    useNullAsDefault: true  
+    useNullAsDefault: true
   },
 
   staging: {
