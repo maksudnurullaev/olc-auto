@@ -1,19 +1,22 @@
 const utils = require('../utils/utils.js');
 const express = require('express');
+const WS_VERSION = "0.0.1b";
+const WS_NAME = "OLC-KPP API Web-Service version";
 const app = express();
 app.use(express.json());
+
+module.exports = app;
 
 const cors = require('cors')
 app.use(cors());
 
 const path = require('path');
-const _PORT = 8181;
 // const knex = path.resolve(__dirname, 'knex', 'knex.js')
 
 // define DATA path
 const dataPath = path.resolve(__dirname, '..', '..', 'data');
 console.warn('Data path defined as:', dataPath);
-console.warn('process.env.ENVIRONMENT:', process.env.ENVIRONMENT);
+console.warn('process.env.ENVIRONMENT:', process.env.ENVIRONMENT || 'development');
 
 // add DATA folder to static serve (for images!)
 app.use(express.static(dataPath));
@@ -22,6 +25,13 @@ app.use(express.static(dataPath));
 const Cars = require('./knex/models/Car')
 
 // TODO: downloadImageFromURL('http://kpp:Kpp_1234@192.168.4.150/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG', 'kpp.jpeg');
+app.get('/', (req, res) => {
+    res.send({ resut: true, message: WS_NAME + ": " + WS_VERSION });
+});
+
+app.get('/cars', (req, res) => {
+    Cars.query().then((cars) => res.json(cars));
+});
 
 app.get('/cars/:id', (req, res) => {
     const { id } = req.params;
@@ -43,10 +53,6 @@ app.get('/cars/:id', (req, res) => {
     } catch (error) {
         res.status(404).send({ result: false, message: error.message })
     }
-});
-
-app.get('/cars', (req, res) => {
-    Cars.query().then((cars) => res.json(cars));
 });
 
 app.post('/base64Jpeg2File', (request, response) => {
@@ -94,19 +100,13 @@ app.post('/getImages', (request, response) => {
     }
 });
 
-
-// Listen to the App Engine-specified port, or 8181 otherwise
-const PORT = process.env.PORT || _PORT;
-app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}...`);
-});
-
 // ############### Web service part
 
 var fs = require('fs'),
     http = require('http'),
     https = require('https');
 const { TypePredicateKind } = require('typescript');
+const { VERSION } = require('ts-node');
 
 var Stream = require('stream').Transform;
 var downloadImageFromURL = (url, filename, callback) => {

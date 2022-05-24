@@ -10,19 +10,19 @@
     "ws-transpile-server": "babel ./src/server --out-dir dist-server/server",
     "ws-transpile-common": "babel ./src/utils --out-dir dist-server/utils",
     "ws-clean": "rimraf dist-server",
-    "ws-start": "node ./dist-server/server/web-services.js",
+    "ws-start": "node ./dist-server/server/app.js",
     "ws-build": "npm-run-all ws-clean ws-transpile-server ws-transpile-common",
     "ws-dev": "set NODE_ENV=development && npm-run-all ws-build ws-start",
     "ws-prod": "set NODE_ENV=production && npm-run-all ws-build ws-start",
     "start": "npm run ws-prod",
-    "watch:dev": "npx nodemon"
+    "watch:dev": "npx nodemon",
+    "test": "jest"
+  },
+  "jest": {
+    "modulePathIgnorePatterns": ["dist", "dist-server"]  
   },
   "nodemonConfig": {
     "exec": "npm run ws-dev",
-    "watch": [
-      "./src/web-services.js",
-      "./src/components/js/utils.js"
-    ],
     "ignore": [
       "**/__tests__/**",
       "*.test.js",
