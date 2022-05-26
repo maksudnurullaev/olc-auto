@@ -2,12 +2,6 @@ const request = require("supertest");
 const app = require("../app-ws");
 const knex = require("../knex/knex")
 
-// beforeAll(() => {
-//   console.log('process.env.NODE_ENV', process.env.NODE_ENV);
-//   process.env.NODE_ENV = 'test'
-//   console.log('process.env.NODE_ENV', process.env.NODE_ENV);
-// });
-
 describe("Test WS-API for:", () => {
 
   test(" ... GET  /: root path", () => {
@@ -52,19 +46,46 @@ describe("Test WS-API vs Objection.js for:", () => {
   });
 
   test(" ... GET  /cars/car-1: valid Car ID #1", () => {
-    let carId1 = 'car-1';
+    let carId = 'car-1';
     return request(app)
-      .get("/cars/" + carId1)
+      .get("/cars/" + carId)
       .then(response => {
         let _data = eval(response.body);
         expect(_data.result);
-        expect(_data.car.id).toBe(carId1);
+        expect(_data.car.id).toBe(carId);
         expect(_data.car.photos);
         expect(_data.car.photos.length).toBe(1);
         expect(response.statusCode).toBe(200);
       });
   });
 
+  test(" ... GET  /cars/car-2: valid Car ID #2", () => {
+    let carId = 'car-2';
+    return request(app)
+      .get("/cars/" + carId)
+      .then(response => {
+        let _data = eval(response.body);
+        expect(_data.result);
+        expect(_data.car.id).toBe(carId);
+        expect(_data.car.photos);
+        expect(_data.car.photos.length).toBe(2);
+        expect(response.statusCode).toBe(200);
+      });
+  });
+
+  test(" ... GET  /cars/car-2: valid Car ID #3", () => {
+    let carId = 'car-3';
+    return request(app)
+      .get("/cars/" + carId)
+      .then(response => {
+        let _data = eval(response.body);
+        expect(_data.result);
+        expect(_data.car.id).toBe(carId);
+        expect(_data.car.photos);
+        expect(_data.car.photos.length).toBe(3);
+        expect(response.statusCode).toBe(200);
+      });
+  });
 
   afterAll(() => {
     knex.destroy();
