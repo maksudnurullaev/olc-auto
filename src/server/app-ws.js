@@ -1,11 +1,9 @@
 const utils = require('../utils/utils.js');
 const express = require('express');
-const WS_VERSION = "0.0.1b";
 const WS_NAME = "OLC-KPP API Web-Service version";
+const WS_VERSION = "0.0.1b";
 const app = express();
 app.use(express.json());
-
-module.exports = app;
 
 const cors = require('cors')
 app.use(cors());
@@ -15,43 +13,47 @@ const path = require('path');
 
 // define DATA path
 const dataPath = path.resolve(__dirname, '..', '..', 'data');
-console.warn('Data path defined as:', dataPath);
-console.warn('process.env.ENVIRONMENT:', process.env.ENVIRONMENT || 'development');
+console.log('Data path defined as:' + dataPath);
+console.log('API Server environment:', (process.env.NODE_ENV || 'development'));
 
-// add DATA folder to static serve (for images!)
+// DATA folder to static files(images)
 app.use(express.static(dataPath));
+
+// TODO: downloadImageFromURL('http://kpp:Kpp_1234@192.168.4.150/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG', 'kpp.jpeg');
+app.get('/', (request, response) => {
+    response.send({ resut: true, message: WS_NAME + ": " + WS_VERSION });
+});
 
 // get objection's Cars
 const Cars = require('./knex/models/Car')
-
-// TODO: downloadImageFromURL('http://kpp:Kpp_1234@192.168.4.150/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG', 'kpp.jpeg');
-app.get('/', (req, res) => {
-    res.send({ resut: true, message: WS_NAME + ": " + WS_VERSION });
-});
-
-app.get('/cars', (req, res) => {
-    Cars.query().then((cars) => res.json(cars));
+app.get('/cars', (request, response) => {
+    Cars.query().then((cars) => {
+        console.log('Found', cars.length, 'cars');
+        response.json({ restul: true, cars: cars });
+    });
 });
 
 app.get('/cars/:id', (req, res) => {
     const { id } = req.params;
-    console.warn("Car's ID:", id)
+    console.log("Car's ID:", id)
     try {
         const car = Cars.query().findById(id).then((car) => {
             if (!car) {
-                throw new Error('Car not found!');
+                // throw new Error('Car not found!');
+                res.status(404).send({ result: false, message: "Car not found!" })
+            } else {
+                car.$relatedQuery('photos').then((photos) => {
+                    if (photos) {
+                        // console.log("Photos:", photos);
+                        car['photos'] = photos;
+                    }
+                    res.status(200).send({ result: true, car: car });
+                })    
             }
-            car.$relatedQuery('photos').then((photos) => {
-                if (photos) {
-                    console.log("Photos:", photos);
-                    car['photos'] = photos;
-                }
-                res.status(200).send({ result: true, car: car });
-            })
             // res.status(200).send({ result: true, car: car });
         })
     } catch (error) {
-        res.status(404).send({ result: false, message: error.message })
+        res.status(500).send({ result: false, message: error.message })
     }
 });
 
@@ -84,6 +86,10 @@ app.post('/base64Jpeg2File', (request, response) => {
 app.post('/getImages', (request, response) => {
     let carID = request.body.carID;
     let forDate = request.body.forDate;
+    if (!request.body.carID || !request.body.forDate) {
+        response.status(400).send({ result: false, message: "Parameters are not properly defined!" });
+        return;
+    }
     let myPath = utils.getImagesDirectoryPath(dataPath, carID, forDate);
     if (utils.validateDir(myPath)) {
         let imageUrls = [];
@@ -96,7 +102,7 @@ app.post('/getImages', (request, response) => {
             console.log('Found', imageUrls.length, 'images');
         });
     } else {
-        response.send({ result: false, errMessage: ("Couldn't implemented yet: " + myPath) });
+        response.status(400).send({ result: false, errMessage: ("Couldn't implemented yet: " + myPath) });
     }
 });
 
@@ -105,8 +111,6 @@ app.post('/getImages', (request, response) => {
 var fs = require('fs'),
     http = require('http'),
     https = require('https');
-const { TypePredicateKind } = require('typescript');
-const { VERSION } = require('ts-node');
 
 var Stream = require('stream').Transform;
 var downloadImageFromURL = (url, filename, callback) => {
@@ -138,3 +142,4 @@ var downloadImageFromURL = (url, filename, callback) => {
     req.end();
 };
 
+module.exports = app;

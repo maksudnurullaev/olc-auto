@@ -1,12 +1,11 @@
 // Update with your config settings.
-
-const path = require('path');
-
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
  */
-module.exports = {
 
+ const path = require('path');
+
+ module.exports = {
   development: {
     client: 'better-sqlite3',
     connection: {
@@ -20,7 +19,19 @@ module.exports = {
     },
     useNullAsDefault: true
   },
-
+  test: {
+    client: 'better-sqlite3',
+    connection: {
+      filename: path.resolve(__dirname, 'data', 'test.sqlite3')
+    },
+    migrations: {
+      directory: path.resolve(__dirname, 'src', 'server', 'knex', 'migrations')
+    },
+    seeds: {
+      directory: path.resolve(__dirname, 'src', 'server', 'knex', 'seeds')
+    },
+    useNullAsDefault: true
+  },
   staging: {
     client: 'postgresql',
     connection: {
@@ -36,7 +47,6 @@ module.exports = {
       tableName: 'knex_migrations'
     }
   },
-
   production: {
     client: 'postgresql',
     connection: {
@@ -52,5 +62,4 @@ module.exports = {
       tableName: 'knex_migrations'
     }
   }
-
 };
