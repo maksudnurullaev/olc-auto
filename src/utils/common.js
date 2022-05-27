@@ -13,7 +13,7 @@ function commonFormateDate(date) {
 };
 
 function getImageAccessUrl(carNumber, fileName, forDate) {
-    return ['cars', carNumber, commonFormateDate(string2Date(forDate)), fileName].join('/');
+    return ['photos',carNumber, commonFormateDate(string2Date(forDate)), fileName].join('/');
 };
 
 function string2Date(dateString) {

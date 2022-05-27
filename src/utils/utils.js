@@ -6,8 +6,8 @@ exports.formateDate = commonFormateDate;
 exports.string2Date = string2Date; 
 exports.getImageAccessUrl = getImageAccessUrl;
 
-function getImagesDirectoryPath(dataPath, carNumber, date) {
-    return path.join(dataPath, '..', 'data', 'cars', carNumber, commonFormateDate(string2Date(date)));
+function getImagesDirectoryPath(path2Photos, carNumber, date) {
+    return path.join(path2Photos, carNumber, commonFormateDate(string2Date(date)));
 }
 exports.getImagesDirectoryPath = getImagesDirectoryPath;
 

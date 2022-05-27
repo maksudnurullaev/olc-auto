@@ -3,13 +3,13 @@
  * @type { Object.<string, import("knex").Knex.Config> }
  */
 
- const path = require('path');
+const path = require('path');
 
- module.exports = {
+module.exports = {
   development: {
     client: 'better-sqlite3',
     connection: {
-      filename: path.resolve(__dirname, 'data', 'dev.sqlite3')
+      filename: path.resolve(__dirname, 'dist', 'db', 'dev.sqlite3')
     },
     migrations: {
       directory: path.resolve(__dirname, 'src', 'server', 'knex', 'migrations')
@@ -22,7 +22,7 @@
   test: {
     client: 'better-sqlite3',
     connection: {
-      filename: path.resolve(__dirname, 'data', 'test.sqlite3')
+      filename: path.resolve(__dirname, 'dist', 'db', 'test.sqlite3')
     },
     migrations: {
       directory: path.resolve(__dirname, 'src', 'server', 'knex', 'migrations')
