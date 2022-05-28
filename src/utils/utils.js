@@ -46,3 +46,23 @@ function validateDir(myPath) {
 }
 exports.validateDir = validateDir;
 
+// Detect current environment: [prod|test|development]
+const NODE_ENV_TEST = 'test';
+const NODE_ENV_DEV = 'development';
+const NODE_ENV = (process.env.NODE_ENV || NODE_ENV_DEV).trim(); // Why trim() maybe !!!BUGFIX!!!
+
+console.log('API Server environment:', NODE_ENV);
+function isDevEnvironment(){
+   return (NODE_ENV === NODE_ENV_DEV) 
+}
+exports.isDevEnvironment = isDevEnvironment;
+
+function isTestEnvironment(){
+   return (NODE_ENV === NODE_ENV_TEST) 
+}
+exports.isTestEnvironment = isTestEnvironment;
+
+function isProdEnvironment(){
+    return (!isDevEnvironment() && !isTestEnvironment()) 
+ }
+ exports.isProdEnvironment = isProdEnvironment;

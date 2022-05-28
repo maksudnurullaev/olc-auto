@@ -5,8 +5,8 @@
         <input type="radio" id="AutoOut" name="inOrOut" v-model="globals.car.state" value="Out" /><label
             for="AutoOut">Выезд</label>
         | Камеры:
-        <input type="submit" value="Въезда" v-if="globals.car.state == 'In'" />
-        <input type="submit" value="Выезда" v-if="globals.car.state == 'Out'" />
+        <input type="submit" value="Въезда" @click="getCameraImage4In()" v-if="globals.car.state == 'In'" />
+        <input type="submit" value="Выезда" @click="getCameraImage4Out()" v-if="globals.car.state == 'Out'" />
         <input type="submit" @click="switchCamera" :value="getCameraBtnTitle()" />
         |
         История:
@@ -18,6 +18,7 @@
 
 <script setup>
 import { commonFormateDate } from '../../utils/common.js';
+import { wsGetCameraImage } from '../axios/ws.js';
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
 
@@ -29,6 +30,14 @@ function switchCamera() {
 
 function getCameraBtnTitle() {
     return (globals.camera.isComponentOpen ? 'Выкл.' : 'Вкл.') + " камеру планшета";
+}
+
+function getCameraImage4In(){
+    wsGetCameraImage('192.168.4.150', globals);
+}
+
+function getCameraImage4Out(){
+    wsGetCameraImage('192.168.4.151', globals);
 }
 
 </script>

@@ -1,22 +1,15 @@
+const fs = require('fs');
 const utils = require('../utils/utils.js');
 const express = require('express');
 const app = require("./app-ws");
 const PORT = process.env.PORT || 8181;
 
-const NODE_ENV_DEV = 'development';
-const NODE_ENV = (process.env.NODE_ENV || NODE_ENV_DEV).trim(); // !!!BUGFIX!!!
-
-console.log('API Server environment:', NODE_ENV);
-
 // ... just for DEVELOPMENT-CORS using from localhost
-console.log("NODE_ENV === NODE_ENV_DEV", NODE_ENV === NODE_ENV_DEV)
-if (NODE_ENV === NODE_ENV_DEV) {
+if (utils.isDevEnvironment()) {
     const cors = require('cors')
     app.use(cors());
     console.warn("!!!WARNING!!! We're using CORS just for DEVELOPMENT!");
 }
-
-
 
 // Define static file path
 const path = require('path');
@@ -55,43 +48,6 @@ app.post('/base64Jpeg2File', (request, response) => {
       response.send({ result: false, errMessage: ("Couldn't validate path: " + myPath) });
   }
 });
-
-// ############### Web service part
-
-var fs = require('fs'),
-    http = require('http'),
-    https = require('https');
-
-var Stream = require('stream').Transform;
-var downloadImageFromURL = (url, filename, callback) => {
-    var username = 'kpp';
-    var password = 'Kpp_1234';
-    var auth = 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
-
-    var client = http;
-    if (url.toString().indexOf("https") === 0) {
-        client = https;
-    }
-
-    const options = new URL(url);
-
-    var req = client.request(options, function (response) {
-        var data = new Stream();
-
-        response.on('data', function (chunk) {
-            data.push(chunk);
-        });
-
-        response.on('end', function () {
-            fs.writeFileSync(filename, data.read());
-        });
-    })
-    req.on('error', function (err) {
-        console.log(err.toString());
-    });
-    req.end();
-};
-
 
 // Start server
 app.listen(PORT, () => {
