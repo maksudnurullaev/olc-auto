@@ -9,8 +9,8 @@ const app = express();
 
 // app.use(express.json());
 // Patch limit of size upload image
-app.use(express.json({limit: '50mb'}));
-app.use(express.urlencoded({limit: '50mb'}));
+app.use(express.json({ extended: true, limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 function getModuleInfo() {
     return WS_NAME + ': ' + WS_VERSION;

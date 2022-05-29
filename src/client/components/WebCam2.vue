@@ -33,7 +33,7 @@
 
         <div ref="videoblock" id="videoblock">
             <video @onchange="start" @click="takeSnapshot" id="gum-res-local" ref="video" playsinline autoplay></video>
-            <button @click="takeSnapshot">Сфотографировать</button>
+            <br /><button @click="takeSnapshot">Сфотографировать</button>
         </div>
 
         <p ref="errormessageblock" id="errormessage"></p>
