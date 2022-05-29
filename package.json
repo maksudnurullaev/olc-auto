@@ -10,7 +10,7 @@
     "ws-transpile-server": "babel ./src/server --out-dir dist/server",
     "ws-transpile-common": "babel ./src/utils --out-dir dist/utils",
     "ws-clean": "rimraf dist/server dist/utils",
-    "ws-start": "node ./dist/server/app.js",
+    "ws-start": "node ./dist/server/apps.js",
     "ws-build": "npm-run-all ws-clean ws-transpile-server ws-transpile-common",
     "ws-dev": "set NODE_ENV=development && npm-run-all ws-build ws-start",
     "ws-prod": "set NODE_ENV=production && npm-run-all ws-build ws-start",

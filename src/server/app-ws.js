@@ -6,7 +6,11 @@ const path = require('path');
 const Fs = require('fs')
 const Axios = require('axios')
 const app = express();
-app.use(express.json());
+
+// app.use(express.json());
+// Patch limit of size upload image
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb'}));
 
 function getModuleInfo() {
     return WS_NAME + ': ' + WS_VERSION;

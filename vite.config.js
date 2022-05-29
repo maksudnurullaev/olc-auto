@@ -13,4 +13,7 @@ export default defineConfig({
       require: require.resolve('rollup-plugin-node-builtins'),
     },
   },
+  server: {
+    host: '0.0.0.0'
+  }
 })

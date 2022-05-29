@@ -7,10 +7,19 @@
         <button @click="openCamera" style="background: green;">Открыть камеру</button>
         <button @click="closeCamera">Закрыть камеру</button>
 -->
-        <p>Выберите разрешение камеры!</p>
+        <!-- p>Выберите камеру!</p -->
+        <div class="select">
+            <label for="videoSource">Камера: </label>
+            <select ref="video_Source" v-model="globals.camera.current">
+                <option value="None">Выберите камеру...</option>
+                <option v-for="item in globals.camera.cameras" :value="item.id">{{ item.label }}</option>
+            </select>
+        </div>
+
         <!-- p>Click a button to call <code>getUserMedia()</code> with appropriate resolution.</p -->
 
-        <div id="buttons">
+        <div id="buttons" ref="resolutionsButtons" v-if="globals.camera.current != 'None'">
+            Разрешение:
             <button id="qvga" @click="getMedia(qvgaConstraints)">QVGA</button>
             <button id="vga" @click="getMedia(vgaConstraints)">VGA</button>
             <button id="hd" @click="getMedia(hdConstraints)">HD</button>
@@ -23,11 +32,11 @@
         </div>
 
         <div ref="videoblock" id="videoblock">
-            <video @click="takeSnapshot" id="gum-res-local" ref="video" playsinline autoplay></video>
+            <video @onchange="start" @click="takeSnapshot" id="gum-res-local" ref="video" playsinline autoplay></video>
+            <button @click="takeSnapshot">Сфотографировать</button>
         </div>
 
         <p ref="errormessageblock" id="errormessage"></p>
-
         <canvas ref="canvas"></canvas>
     </div>
 </template>
@@ -38,6 +47,7 @@ import { onMounted, ref } from 'vue';
 import { wsAddCarImage } from '../axios/ws.js';
 
 import { useGlobalStore } from '../stores/globals';
+// import { constants } from 'buffer';
 const globals = useGlobalStore();
 
 const button = ref(null);
@@ -45,17 +55,83 @@ const video = ref(null);
 const canvas = ref(null);
 const videoblock = ref(null);
 const stream = ref(null);
+const resolutionsButtons = ref(null);
 const constraints = {
     audio: false,
     video: true
 };
+
+// ### For video source selection
+const videoSource = ref(null);
+// const selectors = [videoSource];
+
+function gotDevices(deviceInfos) {
+    // // Handles being called several times to update labels. Preserve values.
+    // const values = selectors.map(select => select.value);
+    // // selectors.forEach(select => {
+    // while (videoSource.value.firstChild) {
+    //     videoSource.value.removeChild(videoSource.value.firstChild);
+    // }
+    // // });
+    if (!globals.camera.initialized) {
+        for (let i = 0; i !== deviceInfos.length; ++i) {
+            const deviceInfo = deviceInfos[i];
+            if (deviceInfo.kind === 'videoinput') {
+                // const option = document.createElement('optionF');
+                const camera = {
+                    id: deviceInfo.deviceId,
+                    label: deviceInfo.label || `camera ${videoSource.value.length + 1}`
+                }
+                globals.camera.cameras.push(camera);
+                // option.value = deviceInfo.deviceId;
+                // option.text = deviceInfo.label || `camera ${videoSource.value.length + 1}`;
+                // videoSource.value.appendChild(option);
+            } else {
+                console.log('Some other kind of source/device: ', deviceInfo);
+            }
+        }
+        globals.camera.initialized = true;
+    }
+    // selectors.forEach((select, selectorIndex) => {
+    //     if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
+    //         select.value = values[selectorIndex];
+    //     }
+    // });
+}
+
+onMounted(() => {
+    navigator.mediaDevices.enumerateDevices(constraints).then(gotDevices).catch(handleError);
+    // console.log(adapter.browserDetails);
+    // videoSource.value.onchange = start;
+});
+
+function start() {
+    if (window.stream) {
+        window.stream.getTracks().forEach(track => {
+            track.stop();
+        });
+    }
+    // console.log("videoSelect changed, value: " + videoSource.value.value);
+    //   const audioSource = audioInputSelect.value;
+    //   const videoSource = videoSelect.value;
+    //   const constraints = {
+    //     audio: {deviceId: audioSource ? {exact: audioSource} : undefined},
+    //     video: {deviceId: videoSource ? {exact: videoSource} : undefined}
+    //   };
+    //   navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
+}
+
+
+
+// #### Video source selection end
 
 globals.$subscribe((mutation, state) => {
     let _payload = mutation.payload;
     if (_payload && _payload.camera)
         if (!_payload.camera.isComponentOpen) {
             closeCamera();
-            globals.camera.isCameraOpen = false;
+        } else {
+            navigator.mediaDevices.enumerateDevices(constraints).then(gotDevices).catch(handleError);
         }
 });
 
@@ -89,9 +165,9 @@ function takeSnapshot() {
 };
 
 
-function openCamera() {
-    navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError);
-}
+// function openCamera() {
+//     navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError);
+// }
 
 function closeCamera() {
     if (video.value.srcObject) {
@@ -103,10 +179,6 @@ function closeCamera() {
     }
 }
 
-onMounted(() => {
-    console.log(adapter.browserDetails);
-});
-
 function getMedia(constraints) {
     globals.camera.isCameraOpen = false;
     if (stream.value) {
@@ -115,7 +187,16 @@ function getMedia(constraints) {
         });
     }
 
-    clearErrorMessage();
+    if (globals.camera.current == 'None') {
+        alert('Выберите камеру!');
+        return;
+    }
+
+    constraints.video.deviceId = globals.camera.current;
+    // console.log('constraints:', constraints);
+    // showDebugMessage(JSON.stringify(constraints));
+
+    // clearErrorMessage();
     videoblock.value.style.display = 'none';
     navigator.mediaDevices.getUserMedia(constraints)
         .then(gotStream)
@@ -144,6 +225,12 @@ function gotStream(mediaStream) {
 
 // Error functions
 const errormessageblock = ref(null);
+
+function showDebugMessage(message) {
+    let messagebox = errormessageblock.value;
+    messagebox.innerText = message;
+    messagebox.style.display = 'block';
+}
 
 function errorMessage(who, what, when) {
     let messagebox = errormessageblock.value;

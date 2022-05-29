@@ -16,7 +16,9 @@ export const useGlobalStore = defineStore('globals', {
                 isShotPhoto: false,
                 isLoading: false,
                 link: '#',
-                cameras: {}
+                cameras: [],
+                current: "None",
+                initialized: false
             },
             showCamera: false,
             webServer: {
@@ -28,6 +30,6 @@ export const useGlobalStore = defineStore('globals', {
     actions: {
     },
     getters: {
-        getWebServiceURL: (state) => state.webServer.dev,
+        getWebServiceURL: (state) => '/', //state.webServer.dev,
     },
 })

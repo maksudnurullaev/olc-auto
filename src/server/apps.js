@@ -1,8 +1,18 @@
-const fs = require('fs');
+const path = require('path')
+var fs = require('fs');
 const utils = require('../utils/utils.js');
-const express = require('express');
+var http = require('http');
+var https = require('https');
+var express = require('express');
+
+// setup SSL for https
+const credentials = {
+    key: fs.readFileSync(path.resolve(__dirname, '..', '..', 'ssl', 'key.pem')),
+    cert: fs.readFileSync(path.resolve(__dirname, '..', '..', 'ssl', 'cert.pem'))
+};
+// ##################### SSL-header part of module
+
 const app = require("./app-ws");
-const PORT = process.env.PORT || 8181;
 
 // ... just for DEVELOPMENT-CORS using from localhost
 if (utils.isDevEnvironment() || utils.isTestEnvironment()) {
@@ -11,8 +21,6 @@ if (utils.isDevEnvironment() || utils.isTestEnvironment()) {
     console.warn("!!!WARNING!!! We're using CORS just for DEVELOPMENT!");
 }
 
-// Define static file path
-const path = require('path');
 // ... to front files
 const path2Front = path.resolve(__dirname, '..', '..', 'dist', 'front');
 console.log('Path to photos: ' + path2Front);
@@ -49,8 +57,13 @@ app.post('/base64Jpeg2File', (request, response) => {
   }
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log('Server listening on port: ' + PORT);
-});
+// ##################### SSL-footer part of module
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
 
+httpServer.listen(8080, () => {
+    console.log('http - listen for 8080 port')
+});
+httpsServer.listen(8443, () => {
+    console.log('https - listen for 8443 port')
+});

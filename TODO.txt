@@ -8,3 +8,10 @@
 6.1 npm -i -D objectction knex better-sqlite3 jest jest-extended supertest ts-test ts-node
 7. Refactor knex|objectction files due generating with babel
 8. HTTP Basic Auth "SEEMS" does not works!
+
+
+# --- SSL Self signed certificate for development ---
+openssl genrsa -out key.pem
+openssl req -new -key key.pem -out csr.pem
+openssl x509 -req -days 9999 -in csr.pem -signkey key.pem -out cert.pem
+rm csr.pem
