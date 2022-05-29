@@ -1,6 +1,6 @@
 <template>
     <div class="sticky">
-        <input type="text" v-model="globals.car.carID" @keyup="uppercase" placeholder="Номер авто" />
+        <input type="text" v-model="globals.car.carID" @input="uppercase" placeholder="Номер авто" />
         <input type="submit" value="Обновить" @click="updateCar" />
     </div>
 </template>

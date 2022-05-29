@@ -10,7 +10,7 @@
         <!-- p>Выберите камеру!</p -->
         <div class="select">
             <label for="videoSource">Камера: </label>
-            <select ref="video_Source" v-model="globals.camera.current">
+            <select @change="closeCamera" ref="video_Source" v-model="globals.camera.currentCamera">
                 <option value="None">Выберите камеру...</option>
                 <option v-for="item in globals.camera.cameras" :value="item.id">{{ item.label }}</option>
             </select>
@@ -18,7 +18,7 @@
 
         <!-- p>Click a button to call <code>getUserMedia()</code> with appropriate resolution.</p -->
 
-        <div id="buttons" ref="resolutionsButtons" v-if="globals.camera.current != 'None'">
+        <div id="buttons" ref="resolutionsButtons" v-if="globals.camera.currentCamera != 'None'">
             Разрешение:
             <button id="qvga" @click="getMedia(qvgaConstraints)">QVGA</button>
             <button id="vga" @click="getMedia(vgaConstraints)">VGA</button>
@@ -121,24 +121,30 @@ function start() {
     //   navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
 }
 
-
-
 // #### Video source selection end
-
 globals.$subscribe((mutation, state) => {
     let _payload = mutation.payload;
-    if (_payload && _payload.camera)
+    console.log('mutation', mutation);
+    if (_payload && _payload.camera) {
         if (!_payload.camera.isComponentOpen) {
             closeCamera();
         } else {
             navigator.mediaDevices.enumerateDevices(constraints).then(gotDevices).catch(handleError);
         }
+    }
+    if (mutation
+        && mutation.events
+        && mutation.events.key
+        && mutation.events.key == 'currentCamera'
+        && mutation.events.newValue == 'None') {
+        closeCamera();
+    }
 });
 
-function handleSuccess(stream) {
-    window.stream = stream; // make stream available to browser console
-    video.value.srcObject = stream;
-}
+// function handleSuccess(stream) {
+//     window.stream = stream; // make stream available to browser console
+//     video.value.srcObject = stream;
+// }
 
 function handleError(error) {
     console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
@@ -164,7 +170,6 @@ function takeSnapshot() {
     wsAddCarImage(myPostData, globals);
 };
 
-
 // function openCamera() {
 //     navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError);
 // }
@@ -177,6 +182,7 @@ function closeCamera() {
             track.stop();
         });
     }
+    videoblock.value.style.display = 'none';
 }
 
 function getMedia(constraints) {
@@ -187,12 +193,12 @@ function getMedia(constraints) {
         });
     }
 
-    if (globals.camera.current == 'None') {
+    if (globals.camera.currentCamera == 'None') {
         alert('Выберите камеру!');
         return;
     }
 
-    constraints.video.deviceId = globals.camera.current;
+    constraints.video.deviceId = globals.camera.currentCamera;
     // console.log('constraints:', constraints);
     // showDebugMessage(JSON.stringify(constraints));
 
@@ -226,11 +232,11 @@ function gotStream(mediaStream) {
 // Error functions
 const errormessageblock = ref(null);
 
-function showDebugMessage(message) {
-    let messagebox = errormessageblock.value;
-    messagebox.innerText = message;
-    messagebox.style.display = 'block';
-}
+// function showDebugMessage(message) {
+//     let messagebox = errormessageblock.value;
+//     messagebox.innerText = message;
+//     messagebox.style.display = 'block';
+// }
 
 function errorMessage(who, what, when) {
     let messagebox = errormessageblock.value;
@@ -241,10 +247,10 @@ function errorMessage(who, what, when) {
     console.log(message);
 }
 
-function clearErrorMessage() {
-    let messagebox = errormessageblock.value;
-    messagebox.style.display = 'none';
-}
+// function clearErrorMessage() {
+//     let messagebox = errormessageblock.value;
+//     messagebox.style.display = 'none';
+// }
 
 // Video quality:
 const qvgaConstraints = {

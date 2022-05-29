@@ -3,15 +3,15 @@
   "private": true,
   "version": "0.0.1",
   "scripts": {
-    "dev": "vite",
+    "dev-front": "vite",
     "dev-server": "npx nodemon -w ./src/server -w ./src/utils",
-    "build": "vite build",
+    "build-front": "vite build",
     "preview": "vite preview",
     "ws-transpile-server": "babel ./src/server --out-dir dist/server",
     "ws-transpile-common": "babel ./src/utils --out-dir dist/utils",
     "ws-clean": "rimraf dist/server dist/utils",
     "ws-start": "node ./dist/server/apps.js",
-    "ws-build": "npm-run-all ws-clean ws-transpile-server ws-transpile-common",
+    "ws-build": "npm-run-all build-front ws-clean ws-transpile-server ws-transpile-common",
     "ws-dev": "set NODE_ENV=development && npm-run-all ws-build ws-start",
     "ws-prod": "set NODE_ENV=production && npm-run-all ws-build ws-start",
     "start": "npm run ws-prod",
@@ -19,7 +19,7 @@
     "test": "jest"
   },
   "jest": {
-    "modulePathIgnorePatterns": ["dist", "dist-server"]  
+    "modulePathIgnorePatterns": ["dist"]  
   },
   "nodemonConfig": {
     "exec": "npm run ws-dev",

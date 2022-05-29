@@ -17,7 +17,7 @@ export const useGlobalStore = defineStore('globals', {
                 isLoading: false,
                 link: '#',
                 cameras: [],
-                current: "None",
+                currentCamera: "None",
                 initialized: false
             },
             showCamera: false,
