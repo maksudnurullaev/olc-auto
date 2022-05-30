@@ -5,7 +5,7 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   build: {
     outDir: "dist/front",
-    // minify: false // TODO: remove later, just for development
+    minify: false // TODO: remove later, just for development
   },
   plugins: [vue()],
   resolve: {

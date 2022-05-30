@@ -10,7 +10,7 @@
         <!-- p>Выберите камеру!</p -->
         <div class="select">
             <label for="videoSource">Камера: </label>
-            <select @change="closeCamera" ref="video_Source" v-model="globals.camera.currentCamera">
+            <select @change="closeCamera" ref="videoSource" v-model="globals.camera.currentCamera">
                 <option value="None">Выберите камеру...</option>
                 <option v-for="item in globals.camera.cameras" :value="item.id">{{ item.label }}</option>
             </select>
@@ -80,7 +80,7 @@ function gotDevices(deviceInfos) {
                 // const option = document.createElement('optionF');
                 const camera = {
                     id: deviceInfo.deviceId,
-                    label: deviceInfo.label || `camera ${videoSource.value.length + 1}`
+                    label: deviceInfo.label || `camera ${globals.camera.cameras.length + 1}`
                 }
                 globals.camera.cameras.push(camera);
                 // option.value = deviceInfo.deviceId;
