@@ -30,6 +30,10 @@ module.exports = {
     seeds: {
       directory: path.resolve(__dirname, 'src', 'server', 'knex', 'seeds')
     },
+    pool: {
+      min: 2,
+      max: 10
+    },
     useNullAsDefault: true
   },
   staging: {
