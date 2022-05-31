@@ -46,7 +46,7 @@ app.post('/checkLogin', function (req, res) {
 app.post('/login', function (req, res) {
     if (!req.body.id || !req.body.password) {
         res.send({ result: false, message: 'Не заполнено поле пользователя или пароля!' });
-    } else if (req.body.id === "amy" && req.body.password === "amyspassword") {
+    } else if (req.body.id === "amy" && req.body.password === "amy") {
         req.session.user = "amy";
         req.session.role = "admin";
         res.send({

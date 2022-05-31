@@ -1,7 +1,7 @@
 <template>
   <div class="f-container fixed-hf">
     <header v-if="globals.user.id">
-      <router-link to="/">Пользователь</router-link>
+      <router-link to="/">Настройки</router-link>
       <router-link to="/kpp">Контроль на КПП</router-link>
     </header>
     <header v-else>

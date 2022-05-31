@@ -1,22 +1,16 @@
 <template>
-    <div class="wrapper fadeInDown">
-        <div id="formContent">
-            <!-- Icon -->
-            <div class="fadeIn first" style="margin-top: 10px;">
-                <img src="../assets/icons/login.png" id="icon" alt="User Icon" />
-            </div>
-
-            <!-- Tabs Titles -->
-            <h2 class="active">Вход</h2>
+    <div class="content">
+        <fieldset>
+            <legend>Вход</legend>
             <!-- Login Form -->
             <form @submit.prevent="login">
                 <input type="text" id="login" class="fadeIn second" name="login" placeholder="Пользователь"
-                    v-model="userData.id">
+                    v-model="userData.id"><br />
                 <input type="password" id="password" class="fadeIn third" name="login" placeholder="Пароль"
-                    v-model="userData.password">
+                    v-model="userData.password"><br />
                 <input type="submit" class="fadeIn fourth" value="Вход">
             </form>
-        </div>
+        </fieldset>
     </div>
 </template>
 
@@ -41,5 +35,8 @@ function login() {
 </script>
 
 <style scoped>
-@import url("../assets/css/login.css");
+div.content input {
+    margin-right: 3px;
+    margin-top: 3px;
+}
 </style>
