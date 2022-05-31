@@ -61,10 +61,9 @@ app.post('/base64Jpeg2File', (request, response) => {
 var httpServer = http.createServer(app);
 var httpsServer = https.createServer(credentials, app);
 
-
-httpServer.listen(8080, () => {
-    console.log('http - listen for 8080 port')
-});
+// httpServer.listen(8080, () => { // we switch off it - camers don't works without https(ssl)
+//     console.log('http - listen for 8080 port')
+// });
 
 httpsServer.listen(8443, () => {
     console.log('https - listen for 8443 port')

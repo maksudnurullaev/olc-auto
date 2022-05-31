@@ -3,6 +3,10 @@ import { commonFormateDate } from '../../utils/common.js';
 export const useGlobalStore = defineStore('globals', {
     state: () => {
         return {
+            user: {
+                id: '',
+                role: ''
+            },
             car: {
                 state: 'In',
                 images: [],

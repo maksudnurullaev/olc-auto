@@ -1,19 +1,82 @@
 import axios from 'axios';
 import { getImageAccessUrl } from '../../utils/common';
 
-function wsAddCarImage(postData, globals) {
-    // const globals = useGlobalStore();
-    axios.post(globals.getWebServiceURL + "base64Jpeg2File", postData)
+function wsLogout(globals) {
+    axios.post(globals.getWebServiceURL + "logout")
         .then(function (response) {
-            console.log(response.data.image);
-            globals.car.images.push(response.data.image);
+            if (response.data.result) {
+                globals.user = response.data.user;
+            } else {
+                if (response.data.message) {
+                    alert(response.data.message);
+                } else {
+                    console.warn("Logout error!");
+                }
+            }
         })
         .catch(function (error) {
             console.log(error);
         });
 }
 
-function wsGetCameraImage(cameraIp, globals){
+function wsCheckLogin(globals) {
+    axios.post(globals.getWebServiceURL + "checkLogin")
+        .then(function (response) {
+            if (response.data.result) {
+                console.log(response.data.message);
+                globals.user = response.data.user;
+            } else {
+                if (response.data.message) {
+                    console.warn(response.data.message);
+                }
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+function wsLogin(userData, globals) {
+    let postData = {
+        id: userData.id,
+        password: userData.password
+    };
+    console.log(postData);
+    axios.post(globals.getWebServiceURL + "login", postData)
+        .then(function (response) {
+            if (response.data.result) {
+                console.log(response.data.message);
+                globals.user = response.data.user;
+            } else {
+                if (response.data.message) {
+                    alert(response.data.message);
+                } else {
+                    console.warn("Authorization error!");
+                }
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+function wsAddCarImage(postData, globals) {
+    // const globals = useGlobalStore();
+    axios.post(globals.getWebServiceURL + "base64Jpeg2File", postData)
+        .then(function (response) {
+            if (response.data.result) {
+                console.log(response.data.image);
+                globals.car.images.push(response.data.image);
+            } else {
+                console.warn(response.data.message ? response.data.message : "Error returns from server, check logs!");
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+function wsGetCameraImage(cameraIp, globals) {
     if (!globals.car.carID) {
         alert('Нет номера авто!');
         return;
@@ -30,9 +93,9 @@ function wsGetCameraImage(cameraIp, globals){
     axios.post(globals.getWebServiceURL + "getCameraImage", myPostData)
         .then(function (response) {
             if (response.data.result) {
-                    let imageUrl = getImageAccessUrl(globals.car.carID, response.data.imageUrl, globals.car.forDate);
-                    globals.car.images.push(imageUrl);
-                    console.log("imageUrl:", imageUrl);
+                let imageUrl = getImageAccessUrl(globals.car.carID, response.data.imageUrl, globals.car.forDate);
+                globals.car.images.push(imageUrl);
+                console.log("imageUrl:", imageUrl);
             } else {
                 alert(response.data.message);
             }
@@ -71,4 +134,4 @@ function wsGetCarImages(globals) {
 
 }
 
-export { wsAddCarImage, wsGetCarImages, wsGetCameraImage };
+export { wsAddCarImage, wsGetCarImages, wsGetCameraImage, wsLogin, wsCheckLogin, wsLogout };

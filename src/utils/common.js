@@ -23,5 +23,8 @@ function string2Date(dateString) {
     }
     return new Date();
 }
-
+// const utils = require('./utils')
+// var commonFormateDate = utils.formateDate;
+// var getImageAccessUrl= utils.getImageAccessUrl;
+// var string2Date = utils.string2Date;
 export { commonFormateDate, getImageAccessUrl, string2Date }

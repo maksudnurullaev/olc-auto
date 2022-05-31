@@ -6,11 +6,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
 import { wsGetCarImages } from '../axios/ws.js';
 import { useGlobalStore } from '../stores/globals';
-
-
 const globals = useGlobalStore();
 
 function uppercase() {

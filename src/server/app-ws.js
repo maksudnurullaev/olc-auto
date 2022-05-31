@@ -7,14 +7,71 @@ const Fs = require('fs')
 const Axios = require('axios')
 const app = express();
 
-// app.use(express.json());
 // Patch limit of size upload image
 app.use(express.json({ extended: true, limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
+// express & session part - for auth
+//   ... i.e.: https://www.codexpedia.com/node-js/a-very-basic-session-auth-in-node-js-with-express-js/
+const session = require('express-session');
+app.use(session({
+    secret: 'WppQ38S-4D44-2C44',
+    resave: true,
+    saveUninitialized: true
+}));
+
+function auth(req, res, next) {
+    if (req.session && req.session.user === "amy" && req.session.admin)
+        return next();
+    else
+        return res.status(401).send({ result: false, message: "Вы не авторизованы!" });
+};
+
+app.post('/checkLogin', function (req, res) {
+    if (req.session.user) {
+        res.send({
+            result: true,
+            message: "login already done!",
+            user: { id: req.session.user, role: req.session.role }
+        });
+    } else {
+        res.send({
+            result: false,
+            message: "no-login!",
+            user: { id: '', role: '' }
+        });
+    }
+});
+
+app.post('/login', function (req, res) {
+    if (!req.body.id || !req.body.password) {
+        res.send({ result: false, message: 'Не заполнено поле пользователя или пароля!' });
+    } else if (req.body.id === "amy" && req.body.password === "amyspassword") {
+        req.session.user = "amy";
+        req.session.role = "admin";
+        res.send({
+            result: true,
+            user: { id: req.session.user, role: req.session.role }
+        });
+    } else {
+        res.send({ result: false, message: 'Ошибка авторизации!' });
+    }
+});
+
+// Logout endpoint
+app.post('/logout', function (req, res) {
+    req.session.destroy();
+    res.send({ result: true, message: "logout success!", user: { id: '', role: '' } });
+});
+
 function getModuleInfo() {
     return WS_NAME + ': ' + WS_VERSION;
 }
+
+// Get content endpoint
+//   app.get('/content', auth, function (req, res) {
+//       res.send("You can only see this after you've logged in.");
+//   });
 
 // TODO: downloadImageFromURL('http://kpp:Kpp_1234@192.168.4.150/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG', 'kpp.jpeg');
 app.get('/', (request, response) => {
