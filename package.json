@@ -16,7 +16,7 @@
     "ws-prod": "set NODE_ENV=production && npm-run-all ws-build ws-start",
     "start": "npm run ws-prod",
     "watch:dev": "npx nodemon",
-    "test": "jest"
+    "test": "jest --silent"
   },
   "jest": {
     "modulePathIgnorePatterns": [
