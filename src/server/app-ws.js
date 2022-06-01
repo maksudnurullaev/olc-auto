@@ -21,7 +21,7 @@ app.use(session({
 }));
 
 function auth(req, res, next) {
-    if (req.session && req.session.user === "amy" && req.session.admin)
+    if (req.session && req.session.user === "admin" && req.session.admin)
         return next();
     else
         return res.status(401).send({ result: false, message: "Вы не авторизованы!" });
@@ -60,8 +60,8 @@ app.post('/changePassword', function (req, res) {
 app.post('/login', function (req, res) {
     if (!req.body.id || !req.body.password) {
         res.send({ result: false, message: 'Не заполнено поле пользователя или пароля!' });
-    } else if (req.body.id === "amy" && req.body.password === "amy") {
-        req.session.user = "amy";
+    } else if (req.body.id === "admin" && req.body.password === "admin") {
+        req.session.user = "admin";
         req.session.role = "admin";
         res.send({
             result: true,
