@@ -12,11 +12,15 @@ class User extends Model {
 
         return {
             roles: {
-                relation: Model.HasManyRelation,
+                relation: Model.ManyToManyRelation,
                 modelClass: Roles,
                 join: {
-                    from: 'users.id',
-                    to: 'user_roles.user_id'
+                    from: 'user_roles.id',
+                    through: {
+                        from: 'users_roles.roleId',
+                        to: 'users_roles.userId'
+                      },
+                    to: 'users.id'
                 }
             }
         };

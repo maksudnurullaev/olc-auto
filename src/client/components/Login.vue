@@ -17,9 +17,10 @@
 <script setup>
 import { reactive } from 'vue';
 import { wsLogin } from '../axios/ws.js';
-import { useGlobalStore } from '../stores/globals';
 
+import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
+
 const userData = reactive({ id: '', password: '' });
 
 function login() {

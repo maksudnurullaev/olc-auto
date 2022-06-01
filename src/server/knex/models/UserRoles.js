@@ -8,20 +8,23 @@ class UserRoles extends Model {
     }
 
     static get relationMappings(){
-        const Roles = require('./UserRoles');
+        const User = require('./User');
 
         return {
-            car: {
-                relation: Model.BelongsToOneRelation,
-                modelClass: Roles,
+            users: {
+                relation: Model.ManyToManyRelation,
+                modelClass: User,
                 join: {
-                    to: 'users.id',
-                    from: 'user_roles.user_id'
+                    from: 'user.id',
+                    through: {
+                        from: 'users_roles.userId',
+                        to: 'users_roles.roleId'
+                      },
+                    to: 'user_roles.id'
                 }
             }
         };
     }
-
 }
 
 module.exports = UserRoles;
