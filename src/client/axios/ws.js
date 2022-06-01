@@ -36,12 +36,23 @@ function wsCheckLogin(globals) {
         });
 }
 
+function wsChangePassword(userData, globals){
+    let postData = { newPassword: userData.password };
+    return axios.post(globals.getWebServiceURL + "changePassword", postData);
+        // .then(function (response) {
+        //         return response.data;
+        // })
+        // .catch(function (error) {
+        //     console.log(error);
+        // });
+}
+
 function wsLogin(userData, globals) {
     let postData = {
         id: userData.id,
         password: userData.password
     };
-    console.log(postData);
+    // console.log(postData);
     axios.post(globals.getWebServiceURL + "login", postData)
         .then(function (response) {
             if (response.data.result) {
@@ -134,4 +145,4 @@ function wsGetCarImages(globals) {
 
 }
 
-export { wsAddCarImage, wsGetCarImages, wsGetCameraImage, wsLogin, wsCheckLogin, wsLogout };
+export { wsAddCarImage, wsGetCarImages, wsGetCameraImage, wsLogin, wsCheckLogin, wsLogout, wsChangePassword };

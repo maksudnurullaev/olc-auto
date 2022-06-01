@@ -43,6 +43,20 @@ app.post('/checkLogin', function (req, res) {
     }
 });
 
+app.post('/changePassword', function (req, res) {
+    console.log("Going to change user password!");
+    if (!req.body.newPassword) {
+        console.error("User password's is empty!");
+        res.send({ result: false, message: 'Не заполнено поле пароля!' });
+    } else {
+        console.log("User password successfully changed!");
+        res.send({
+            result: true,
+            message: 'Mock: Password changes!'
+        });
+    }
+});
+
 app.post('/login', function (req, res) {
     if (!req.body.id || !req.body.password) {
         res.send({ result: false, message: 'Не заполнено поле пользователя или пароля!' });
