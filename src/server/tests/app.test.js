@@ -9,20 +9,14 @@ var tables = [
 
 function truncate() {
   let truncates = [];
+  // truncate tables
   tables.forEach((table) => {
     truncates.push(knex(table).truncate());
   });
+  // sedd database with test data
+  truncates.push(knex.seed.run());
   return truncates;
 };
-
-// beforeAll(() => {
-//   return Promise.all(truncate()).then(() => {
-//     knex.seed.run().then(() => {
-//       console.log(" ... seed:run - done!");
-//     });
-//     console.log(' ... truncate - done!');
-//   });
-// });
 
 describe("Test WS-API for:", () => {
 
@@ -45,6 +39,12 @@ describe("Test WS-API for:", () => {
 });
 
 describe("Test WS-API vs Objection.js for:", () => {
+
+  beforeAll( async () => {
+    return Promise.all(truncate()).finally(() => {
+      console.log(' ... truncate - done!');
+    });
+  });
 
   test(" ... GET  /cars/: get all test cars", () => {
     return request(app)
