@@ -5,22 +5,25 @@ const authUtils = require('../../auth/utils');
 
 var tables = [
     'users',
-    'user_roles',
+    'roles',
     'users_roles'
 ];
 
 function truncate() {
-    let trancates = [];
+    let truncates = [];
     tables.forEach((table) => {
-        trancates.push(knex(table).truncate());
+        truncates.push(knex(table).truncate());
     });
-    return trancates;
+    return truncates;
 };
 
 describe("Test:", () => {
     beforeAll(() => {
         return Promise.all(truncate()).then(() => {
-            console.log(' ...prepare test - trancate tables... ');
+            // knex.seed.run().then(() => {
+            //     console.log(" ... seed:run - done!");
+            //  });
+            console.log(' ... truncate - done!');
         });
     });
 
@@ -67,16 +70,33 @@ describe("Test:", () => {
         const new_admin = await authUtils.setNewAdmin('admin', 'admin');
         expect(new_admin).not.toBeNull();
         expect(myCrypto.checkUserAndPassword('admin', 'admin', new_admin.hashedPassword));
-        // let roles = await new_admin.$relatedQuery('roles', 'admin', 'Administrators');
-        let role = await authUtils.setRole(new_admin, 'admin', 'Administrators');
-        expect(role).not.toBeNull();
-        expect(role.id).toEqual('admin');
-        let role_2 = await authUtils.setRole(new_admin, 'vip', 'VIP Users');
+
+        // add roles #1
+        let role_1 = await authUtils.getRole(new_admin, 'admin');
+        expect(role_1.length).toEqual(0);
+        role_1 = await authUtils.addRole('admin', 'Administrators');
+        expect(role_1).not.toBeNull();
+        expect(role_1.id).toEqual('admin');
+        let role_1_added = await authUtils.addRole4User(new_admin.id, role_1.id);
+        expect(role_1_added).toEqual(1);
+
+        // add roles #2
+        let role_2 = await authUtils.addRole('vip', 'VIP User');
         expect(role_2).not.toBeNull();
         expect(role_2.id).toEqual('vip');
+        let role_2_added = await authUtils.addRole4User(new_admin, role_2.id);
+        expect(role_2_added).toEqual(1);
+        
+        // check roles
         let roles = await new_admin.$relatedQuery('roles');
-        expect(roles).not.toBeNull();
-        expect(roles.length == 2);
+        expect(roles.length).toEqual(2);
+
+        // delete role_2 - vip
+        let delete_count = await authUtils.delRole4User(new_admin.id, role_2.id);
+        expect(delete_count).toEqual(1);
+        roles = await authUtils.getRoles(new_admin);
+        expect(roles.length).toEqual(1);
+        expect(roles[0].id).toEqual(role_1.id)
     });
 
     afterAll(() => {

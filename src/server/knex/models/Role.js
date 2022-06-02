@@ -4,7 +4,7 @@ Model.knex(knex);
 
 class UserRoles extends Model {
     static get tableName(){
-        return 'user_roles';
+        return 'roles';
     }
 
     static get relationMappings(){
@@ -15,12 +15,12 @@ class UserRoles extends Model {
                 relation: Model.ManyToManyRelation,
                 modelClass: User,
                 join: {
-                    from: 'user.id',
+                    from: 'roles.id',
                     through: {
-                        from: 'users_roles.userId',
-                        to: 'users_roles.roleId'
+                        from: 'users_roles.roleId',
+                        to: 'users_roles.userId'
                       },
-                    to: 'user_roles.id'
+                    to: 'users.id'
                 }
             }
         };

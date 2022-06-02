@@ -1,4 +1,6 @@
 const User = require('../knex/models/User');
+const Role = require('../knex/models/Role');
+// const UsersRoles = require('../knex/models/UsersRoles');
 const myCrypto = require('../crypto');
 
 function isAdminExists() {
@@ -19,7 +21,27 @@ function setNewAdmin(adminId, adminPassword) {
 }
 exports.setNewAdmin = setNewAdmin
 
-function setRole(user, roleId, roleDesc) {
-    return user.$relatedQuery('roles').insert({ id: roleId, description: roleDesc });
+function getRoles(user) {
+    return User.relatedQuery('roles').for(user.id);
 }
-exports.setRole = setRole;
+exports.getRoles = getRoles;
+
+function getRole(user, roleId) {
+    return user.$relatedQuery('roles').for(roleId);
+}
+exports.getRole = getRole;
+
+function addRole(roleId, roleDesc) {
+    return Role.query().insert({ id: roleId, description: roleDesc });
+}
+exports.addRole = addRole;
+
+function delRole4User(userId, roleId) {
+    return User.relatedQuery('roles').for(userId).unrelate().where('roleId', roleId);
+}
+exports.delRole4User = delRole4User;
+
+function addRole4User(userId, roleId) {
+    return User.relatedQuery('roles').for(userId).relate(roleId);
+}
+exports.addRole4User = addRole4User;

@@ -8,19 +8,19 @@ class User extends Model {
     }
 
     static get relationMappings(){
-        const Roles = require('./UserRoles');
+        const Role = require('./Role');
 
         return {
             roles: {
                 relation: Model.ManyToManyRelation,
-                modelClass: Roles,
+                modelClass: Role,
                 join: {
-                    from: 'user_roles.id',
+                    from: 'users.id',
                     through: {
-                        from: 'users_roles.roleId',
-                        to: 'users_roles.userId'
+                        from: 'users_roles.userId',
+                        to: 'users_roles.roleId'
                       },
-                    to: 'users.id'
+                    to: 'roles.id'
                 }
             }
         };

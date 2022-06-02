@@ -3,13 +3,12 @@
  * @returns { Promise<void> }
  */
 exports.up = function (knex) {
-    return knex.schema.createTable('cars', function (table) {
-        table.string('id', 15).notNullable().primary();
-        table.string('status', 10).notNullable();
-        table.string('description');
+    return knex.schema.createTable('roles', function (table) {
+        table.string('id', 25).notNullable().index().primary();
+        table.string('description').notNullable();
         table.timestamp('created_at').defaultTo(knex.fn.now());
         table.timestamp('updated_at').defaultTo(knex.fn.now());
-    });
+    })
 };
 
 /**
@@ -17,5 +16,5 @@ exports.up = function (knex) {
  * @returns { Promise<void> }
  */
 exports.down = function (knex) {
-    return knex.schema.dropTable('cars');
+    return knex.schema.dropTable('roles');
 };

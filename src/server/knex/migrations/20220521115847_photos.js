@@ -4,7 +4,7 @@
  */
 exports.up = function (knex) {
     return knex.schema.createTable('photos', function (table) {
-        table.string('url').notNullable().index();
+        table.string('url').notNullable().index().primary();
         table.string('description');
         table.string('car_id', 15).index().references('id').inTable('cars').onDelete('CASCADE');
         table.timestamp('created_at').defaultTo(knex.fn.now());

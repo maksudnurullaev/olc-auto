@@ -2,6 +2,28 @@ const request = require("supertest");
 const app = require("../app-ws");
 const knex = require("../knex/knex")
 
+var tables = [
+  'cars',
+  'photos'
+];
+
+function truncate() {
+  let truncates = [];
+  tables.forEach((table) => {
+    truncates.push(knex(table).truncate());
+  });
+  return truncates;
+};
+
+// beforeAll(() => {
+//   return Promise.all(truncate()).then(() => {
+//     knex.seed.run().then(() => {
+//       console.log(" ... seed:run - done!");
+//     });
+//     console.log(' ... truncate - done!');
+//   });
+// });
+
 describe("Test WS-API for:", () => {
 
   test(" ... GET  /: root path", () => {
@@ -23,7 +45,7 @@ describe("Test WS-API for:", () => {
 });
 
 describe("Test WS-API vs Objection.js for:", () => {
- 
+
   test(" ... GET  /cars/: get all test cars", () => {
     return request(app)
       .get("/cars/")
