@@ -1,6 +1,14 @@
-# Vue 3 + Vite
+# Truck & Car monitoring system
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+The system for controlling the transport yard and the movement of vehicles on the territory of warehouses or logistics companies using the ability to create photo reports.
+
+---
+
+Система контроля транспортного двора и  перемещения транспортных средств на территории складов или логистических компаний с  использование возможности создания фотоотчетов.
+
+## Used libraries
+
+Vue 3 + Vite + Knex + ObjectionJs + Jest
 
 ## Recommended IDE Setup
 
