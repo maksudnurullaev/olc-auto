@@ -1,4 +1,4 @@
-const myCrypto = require('../crypto');
+const myCrypto = require('../../crypto');
 
 describe("Test user & password:", () => {
     test(" ... initialization:", () => {

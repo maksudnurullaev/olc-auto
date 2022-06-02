@@ -1,6 +1,6 @@
 const request = require("supertest");
-const app = require("../app-ws");
-const knex = require("../knex/knex")
+const app = require("../../app-ws");
+const knex = require("../../knex/knex")
 
 var tables = [
   'cars',
