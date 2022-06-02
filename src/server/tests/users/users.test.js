@@ -14,6 +14,8 @@ function truncate() {
     tables.forEach((table) => {
         truncates.push(knex(table).truncate());
     });
+    // migrate:latest
+    truncates.push(knex.migrate.latest());
     return truncates;
 };
 
@@ -86,7 +88,7 @@ describe("Test:", () => {
         expect(role_2.id).toEqual('vip');
         let role_2_added = await authUtils.addRole4User(new_admin, role_2.id);
         expect(role_2_added).toEqual(1);
-        
+
         // check roles
         let roles = await new_admin.$relatedQuery('roles');
         expect(roles.length).toEqual(2);

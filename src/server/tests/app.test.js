@@ -13,6 +13,8 @@ function truncate() {
   tables.forEach((table) => {
     truncates.push(knex(table).truncate());
   });
+  // migrate:latest
+  truncates.push(knex.migrate.latest());
   // sedd database with test data
   truncates.push(knex.seed.run());
   return truncates;

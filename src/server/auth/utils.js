@@ -1,6 +1,5 @@
 const User = require('../knex/models/User');
 const Role = require('../knex/models/Role');
-// const UsersRoles = require('../knex/models/UsersRoles');
 const myCrypto = require('../crypto');
 
 function isAdminExists() {
