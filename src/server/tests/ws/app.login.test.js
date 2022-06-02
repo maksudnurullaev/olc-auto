@@ -8,23 +8,27 @@ var tables = [
   'users_roles'
 ];
 
-function truncate() {
-  let truncates = [];
-  // truncate tables
+function prepareDb() {
+  let beforeTestsTasks = [];
+  // migrate
+  beforeTestsTasks.push(knex.migrate.latest().then(() => { console.log(' ... 1. db migrates - done!') }));
+  // seed 
+  beforeTestsTasks.push(knex.seed.run().then(() => { console.log(' ... 2. db seed - done!') }));
+  // truncate 
   tables.forEach((table) => {
-    truncates.push(knex(table).truncate());
+    beforeTestsTasks.push(knex(table).truncate().then(() => { console.log(' ... ... truncate: ' + table) }));
   });
-  // migrate:latest
-  truncates.push(knex.migrate.latest());
-  return truncates;
+  return beforeTestsTasks;
 };
 
 describe("Test WS-API vs Objection.js for:", () => {
 
-  beforeAll(async () => {
-    return Promise.all(truncate()).finally(() => {
-      console.log(' ... truncate - done!');
-    });
+  beforeAll(() => {
+    return Promise.all(prepareDb()).then(() => {
+      console.log(' ... db prepared!');
+    }).catch((err) => {
+      console.error(err);
+    })
   });
 
   test(" ... POST  /checkLogin: check login status", () => {
@@ -42,7 +46,9 @@ describe("Test WS-API vs Objection.js for:", () => {
       .send({ id: 'admin', password: 'admin' })
       .then(response => {
         let _data = eval(response.body);
-        expect(_data.result).toEqual(true); // ... login as admin
+        expect(_data.result).toEqual(true);
+        expect(_data.user.role).toEqual('admin');
+        expect(_data.user.id).toEqual('admin');
       });
   });
 

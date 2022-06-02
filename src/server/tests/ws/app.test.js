@@ -7,17 +7,17 @@ var tables = [
   'photos'
 ];
 
-function truncate() {
-  let truncates = [];
-  // truncate tables
+function prepareDb() {
+  let beforeTestsTasks = [];
+  // migrate
+  beforeTestsTasks.push(knex.migrate.latest().then(() => { console.log(' ... 1. db migrates - done!') }));
+  // seed 
+  beforeTestsTasks.push(knex.seed.run().then(() => { console.log(' ... 2. db seed - done!') }));
+  // truncate 
   tables.forEach((table) => {
-    truncates.push(knex(table).truncate());
+      beforeTestsTasks.push(knex(table).truncate().then(() => { console.log(' ... ... truncate: ' + table) }));
   });
-  // migrate:latest
-  truncates.push(knex.migrate.latest());
-  // sedd database with test data
-  truncates.push(knex.seed.run());
-  return truncates;
+  return beforeTestsTasks;
 };
 
 describe("Test WS-API for:", () => {
@@ -42,10 +42,12 @@ describe("Test WS-API for:", () => {
 
 describe("Test WS-API vs Objection.js for:", () => {
 
-  beforeAll( async () => {
-    return Promise.all(truncate()).finally(() => {
-      console.log(' ... truncate - done!');
-    });
+  beforeAll(() => {
+    return Promise.all(prepareDb()).then(() => {
+      console.log(' ... db prepared!');
+    }).catch((err) => {
+      console.error(err);
+    })
   });
 
   test(" ... GET  /cars/: get all test cars", () => {

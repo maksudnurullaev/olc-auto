@@ -17,7 +17,7 @@ exports.hashUserAndPassword = hashUserAndPassword;
 function checkUserAndPassword(userId, password, inHash){
     let _hash = hashUserAndPassword(userId, password);
     if (!_hash){
-        console.error("Couldn't get proper inhHah f == 0;or user & password!");
+        console.error("Couldn't get proper hashes for user & password!");
         return false;
     }   
     return _hash.localeCompare(inHash) == 0;

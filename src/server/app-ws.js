@@ -83,30 +83,30 @@ app.post('/login', function (req, res) {
                     })
                 });
             } else {
-                loginUser(user, req.body.password, res);
+                loginUser(user, req.body.password, req, res);
             }
         });
     } else {
         let userId = req.body.id,
             userPassword = req.body.password;
         authUtils.isUserExists(userId).then((user) => {
-            if(user){
-                loginUser(user, userPassword, res);
+            if (user) {
+                loginUser(user, userPassword, req, res);
             } else {
                 res.send({
                     result: false,
                     message: "User not found!"
-                });    
+                });
             }
         });
     }
 });
 
-function loginUser(user, userPassword, res) {
-    if (myCrypto.checkUserAndPassword(user.Id, userPassword, user.hashedPassword)) {
+function loginUser(user, userPassword, req, res) {
+    if (myCrypto.checkUserAndPassword(user.id, userPassword, user.hashedPassword)) {
         req.session.user = user.id;
         authUtils.getRoles(user).then((roles) => {
-            if (roles) {
+            if (roles[0]) {
                 req.session.role = roles[0].id;
                 res.send({
                     result: true,
@@ -115,16 +115,18 @@ function loginUser(user, userPassword, res) {
             } else {
                 res.send({
                     result: false,
-                    user: 'Not found role for user: ' + user.id
+                    message: 'Not found role for user: ' + user.id
                 });
             }
         }).catch((err) => {
+            console.error(err);
             res.send({
                 result: false,
-                messsage: err.toString()
+                message: "Internale error #1"
             });
         });
     } else {
+        // console.warn("Login error for user", user.id, userPassword);
         res.send({
             result: false,
             message: "Authentication failed!"

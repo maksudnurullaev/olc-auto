@@ -9,29 +9,31 @@ var tables = [
     'users_roles'
 ];
 
-function truncate() {
-    let truncates = [];
+function prepareDb() {
+    let beforeTestsTasks = [];
+    // migrate
+    beforeTestsTasks.push(knex.migrate.latest().then(() => { console.log(' ... 1. db migrates - done!') }));
+    // seed 
+    beforeTestsTasks.push(knex.seed.run().then(() => { console.log(' ... 2. db seed - done!') }));
+    // truncate 
     tables.forEach((table) => {
-        truncates.push(knex(table).truncate());
+        beforeTestsTasks.push(knex(table).truncate().then(() => { console.log(' ... ... truncate: ' + table) }));
     });
-    // migrate:latest
-    truncates.push(knex.migrate.latest());
-    return truncates;
+    return beforeTestsTasks;
 };
 
 describe("Test:", () => {
     beforeAll(() => {
-        return Promise.all(truncate()).then(() => {
-            // knex.seed.run().then(() => {
-            //     console.log(" ... seed:run - done!");
-            //  });
-            console.log(' ... truncate - done!');
-        });
+        return Promise.all(prepareDb()).then(() => {
+            console.log(' ... db prepared!');
+        }).catch((err) => {
+            console.error(err);
+        })
     });
 
     test(" ... user: exceptions: create user without ID or Password", () => {
-        expect(() => authUtils.addNewUser('admin','')).toThrow();
-        expect(() => authUtils.addNewUser('','admin')).toThrow();
+        expect(() => authUtils.addNewUser('admin', '')).toThrow();
+        expect(() => authUtils.addNewUser('', 'admin')).toThrow();
     });
 
     let userId1 = 'testuser12@olc.uz',
@@ -79,12 +81,9 @@ describe("Test:", () => {
         expect(myCrypto.checkUserAndPassword('admin', 'admin', new_admin.hashedPassword));
 
         // add roles #1
-        let role_1 = await authUtils.getRole(new_admin, 'admin');
-        expect(role_1.length).toEqual(0);
-        role_1 = await authUtils.addRole('admin', 'Administrators');
-        expect(role_1).not.toBeNull();
-        expect(role_1.id).toEqual('admin');
-        let role_1_added = await authUtils.addRole4User(new_admin.id, role_1.id);
+        let role_not_exist_yet = await authUtils.getRole(new_admin, 'admin');
+        expect(role_not_exist_yet.length).toEqual(0);
+        let role_1_added = await authUtils.addRole4User(new_admin.id, 'admin');
         expect(role_1_added).toEqual(1);
 
         // add roles #2
@@ -103,7 +102,7 @@ describe("Test:", () => {
         expect(delete_count).toEqual(1);
         roles = await authUtils.getRoles(new_admin);
         expect(roles.length).toEqual(1);
-        expect(roles[0].id).toEqual(role_1.id)
+        expect(roles[0].id).toEqual('admin')
     });
 
     afterAll(() => {
