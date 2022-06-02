@@ -29,6 +29,11 @@ describe("Test:", () => {
         });
     });
 
+    test(" ... user: exceptions: create user without ID or Password", () => {
+        expect(() => authUtils.addNewUser('admin','')).toThrow();
+        expect(() => authUtils.addNewUser('','admin')).toThrow();
+    });
+
     let userId1 = 'testuser12@olc.uz',
         userIdPassword1 = 'testuser1@password',
         roleId1 = "testRole1",
@@ -67,9 +72,9 @@ describe("Test:", () => {
     });
 
     test(' ... admin', async () => {
-        const no_admin = await authUtils.isAdminExists();
+        const no_admin = await authUtils.isUserExists('admin');
         expect(no_admin).toBeUndefined();
-        const new_admin = await authUtils.setNewAdmin('admin', 'admin');
+        const new_admin = await authUtils.addNewUser('admin', 'admin');
         expect(new_admin).not.toBeNull();
         expect(myCrypto.checkUserAndPassword('admin', 'admin', new_admin.hashedPassword));
 

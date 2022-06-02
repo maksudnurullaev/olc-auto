@@ -36,7 +36,7 @@ describe("Test WS-API vs Objection.js for:", () => {
       });
   });
 
-  test(" ... POST  /login: login", () => {
+  test(" ... POST  /login: admin", () => {
     return request(app)
       .post("/login")
       .send({ id: 'admin', password: 'admin' })
@@ -46,7 +46,30 @@ describe("Test WS-API vs Objection.js for:", () => {
       });
   });
 
+  test(" ... POST  /login: not existance user", () => {
+    return request(app)
+      .post("/login")
+      .send({ id: 'notExistanceUser', password: 'notExistancePassword' })
+      .then(response => {
+        let _data = eval(response.body);
+        expect(_data.result).toEqual(false);
+        expect(_data.message).toEqual('User not found!');
+      });
+  });
+
+  test(" ... POST  /login: existance user with invalid password", () => {
+    return request(app)
+      .post("/login")
+      .send({ id: 'admin', password: 'notExistancePassword' })
+      .then(response => {
+        let _data = eval(response.body);
+        expect(_data.result).toEqual(false);
+        expect(_data.message).toEqual('Authentication failed!');
+      });
+  });
+
   afterAll(() => {
     knex.destroy();
   })
+
 });

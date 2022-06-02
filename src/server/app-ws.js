@@ -6,6 +6,9 @@ const path = require('path');
 const Fs = require('fs')
 const Axios = require('axios')
 const app = express();
+const authUtils = require('./auth/utils');
+const myCrypto = require('./crypto');
+
 
 // Patch limit of size upload image
 app.use(express.json({ extended: true, limit: '50mb' }));
@@ -20,7 +23,7 @@ app.use(session({
     saveUninitialized: true
 }));
 
-function auth(req, res, next) {
+function auth(req, res, next) { //TODO: add it to test user rights
     if (req.session && req.session.user === "admin" && req.session.admin)
         return next();
     else
@@ -60,17 +63,74 @@ app.post('/changePassword', function (req, res) {
 app.post('/login', function (req, res) {
     if (!req.body.id || !req.body.password) {
         res.send({ result: false, message: 'Не заполнено поле пользователя или пароля!' });
-    } else if (req.body.id === "admin" ) { // && req.body.password === "admin") {  // administrator
-        req.session.user = "admin";
-        req.session.role = "admin";
-        res.send({
-            result: true,
-            user: { id: req.session.user, role: req.session.role }
+    } else if (req.body.id === "admin") {
+        authUtils.isUserExists('admin').then((user) => {
+            if (!user) {
+                authUtils.addNewUser('admin', 'admin').then((user) => {
+                    authUtils.addRole4User(user.id, 'admin').then(() => {
+                        req.session.user = "admin";
+                        req.session.role = "admin";
+                        res.send({
+                            result: true,
+                            user: { id: 'admin', role: 'admin' },
+                            message: 'New admin created with same password! Please change password ASAP!'
+                        });
+                    }).catch((err) => {
+                        res.send({
+                            result: false,
+                            message: err.toString()
+                        });
+                    })
+                });
+            } else {
+                loginUser(user, req.body.password, res);
+            }
         });
     } else {
-        res.send({ result: false, message: 'Ошибка авторизации!' });
+        let userId = req.body.id,
+            userPassword = req.body.password;
+        authUtils.isUserExists(userId).then((user) => {
+            if(user){
+                loginUser(user, userPassword, res);
+            } else {
+                res.send({
+                    result: false,
+                    message: "User not found!"
+                });    
+            }
+        });
     }
 });
+
+function loginUser(user, userPassword, res) {
+    if (myCrypto.checkUserAndPassword(user.Id, userPassword, user.hashedPassword)) {
+        req.session.user = user.id;
+        authUtils.getRoles(user).then((roles) => {
+            if (roles) {
+                req.session.role = roles[0].id;
+                res.send({
+                    result: true,
+                    user: { id: req.session.user, role: req.session.role }
+                });
+            } else {
+                res.send({
+                    result: false,
+                    user: 'Not found role for user: ' + user.id
+                });
+            }
+        }).catch((err) => {
+            res.send({
+                result: false,
+                messsage: err.toString()
+            });
+        });
+    } else {
+        res.send({
+            result: false,
+            message: "Authentication failed!"
+        });
+    }
+}
 
 // Logout endpoint
 app.post('/logout', function (req, res) {
@@ -93,7 +153,8 @@ app.get('/', (request, response) => {
 });
 
 // get objection's Cars
-const Cars = require('./knex/models/Car')
+const Cars = require('./knex/models/Car');
+const User = require('./knex/models/User.js');
 app.get('/cars', (request, response) => {
     Cars.query().then((cars) => {
         console.log('Found', cars.length, 'cars');

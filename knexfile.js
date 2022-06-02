@@ -36,34 +36,21 @@ module.exports = {
     },
     useNullAsDefault: true
   },
-  staging: {
-    client: 'postgresql',
-    connection: {
-      database: 'my_db',
-      user: 'username',
-      password: 'password'
-    },
-    pool: {
-      min: 2,
-      max: 10
-    },
-    migrations: {
-      tableName: 'knex_migrations'
-    }
-  },
   production: {
-    client: 'postgresql',
+    client: 'better-sqlite3',
     connection: {
-      database: 'my_db',
-      user: 'username',
-      password: 'password'
+      filename: path.resolve(__dirname, 'dist', 'db', 'prod.sqlite3')
+    },
+    migrations: {
+      directory: path.resolve(__dirname, 'src', 'server', 'knex', 'migrations')
+    },
+    seeds: {
+      directory: path.resolve(__dirname, 'src', 'server', 'knex', 'seeds', 'prod')
     },
     pool: {
       min: 2,
       max: 10
     },
-    migrations: {
-      tableName: 'knex_migrations'
-    }
+    useNullAsDefault: true
   }
 };

@@ -2,23 +2,29 @@ const User = require('../knex/models/User');
 const Role = require('../knex/models/Role');
 const myCrypto = require('../crypto');
 
-function isAdminExists() {
-    return User.query().findById('admin');
+function isUserExists(userId) {
+    return User.query().findById(userId);
 }
-exports.isAdminExists = isAdminExists;
+exports.isUserExists = isUserExists
 
-function setNewAdmin(adminId, adminPassword) {
-    // async() => {
-    const admin = User.query().insert({
-        id: adminId,
-        hashedPassword: myCrypto.hashUserAndPassword(adminId, adminPassword)
-    })
-    // let admin_role = await admin.$relatedQuery('roles').insert({id: 'admin', description: 'Administrator'});
-    // console.log('New Administrator created!');
-    return admin;
-    // }
+function AuthException(message) {
+    this.message = message;
+    this.name = "AuthException";
 }
-exports.setNewAdmin = setNewAdmin
+
+function addNewUser(userId, userPassword) {
+    if (!userId || !userPassword) {
+        throw new AuthException("Empty user or password!");
+    } else {
+        const user = User.query().insert({
+            id: userId,
+            hashedPassword: myCrypto.hashUserAndPassword(userId, userPassword)
+        })
+        return user;
+
+    }
+}
+exports.addNewUser = addNewUser
 
 function getRoles(user) {
     return User.relatedQuery('roles').for(user.id);
