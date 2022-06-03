@@ -35,7 +35,7 @@ app.post('/checkLogin', function (req, res) {
         res.send({
             result: true,
             message: "login already done!",
-            user: { id: req.session.user, role: req.session.role }
+            user: { id: req.session.user, role: req.session.userRole }
         });
     } else {
         res.send({
@@ -48,14 +48,24 @@ app.post('/checkLogin', function (req, res) {
 
 app.post('/changePassword', function (req, res) {
     console.log("Going to change user password!");
-    if (!req.body.newPassword) {
-        console.error("User password's is empty!");
-        res.send({ result: false, message: 'Не заполнено поле пароля!' });
+    if (!req.body.userId || !req.body.newUserPassword) {
+        res.send({ result: false, message: 'Не заполнено поле пользователя или пароля!' });
     } else {
-        console.log("User password successfully changed!");
-        res.send({
-            result: true,
-            message: 'Mock: Password changes!'
+        let userId = req.body.userId,
+            userPassword = req.body.newUserPassword;
+        User.query().findById(userId).patch({
+            hashedPassword: myCrypto.hashUserAndPassword(userId, userPassword)
+        }).then(() => {
+            console.log("User password successfully changed!");
+            res.send({
+                result: true,
+                message: 'Password changed!'
+            });
+        }).catch((err) => {
+            res.send({
+                result: false,
+                message: err.toString()
+            });
         });
     }
 });
@@ -69,7 +79,7 @@ app.post('/login', function (req, res) {
                 authUtils.addNewUser('admin', 'admin').then((user) => {
                     authUtils.addRole4User(user.id, 'admin').then(() => {
                         req.session.user = "admin";
-                        req.session.role = "admin";
+                        req.session.userRole = "admin";
                         res.send({
                             result: true,
                             user: { id: 'admin', role: 'admin' },
@@ -107,10 +117,10 @@ function loginUser(user, userPassword, req, res) {
         req.session.user = user.id;
         authUtils.getRoles(user).then((roles) => {
             if (roles[0]) {
-                req.session.role = roles[0].id;
+                req.session.userRole = roles[0].id;
                 res.send({
                     result: true,
-                    user: { id: req.session.user, role: req.session.role }
+                    user: { id: req.session.user, role: req.session.userRole }
                 });
             } else {
                 res.send({

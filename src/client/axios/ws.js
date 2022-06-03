@@ -37,14 +37,8 @@ function wsCheckLogin(globals) {
 }
 
 function wsChangePassword(userData, globals){
-    let postData = { newPassword: userData.password };
+    let postData = { userId: userData.userId, newUserPassword: userData.newUserPassword };
     return axios.post(globals.getWebServiceURL + "changePassword", postData);
-        // .then(function (response) {
-        //         return response.data;
-        // })
-        // .catch(function (error) {
-        //     console.log(error);
-        // });
 }
 
 function wsLogin(userData, globals) {

@@ -4,9 +4,9 @@
             <legend>Смена пароля:</legend>
             <!-- Login Form -->
             <form @submit.prevent="changePassword">
-                <input type="password" id="password" placeholder="Пароль" v-model="userData.password1">&nbsp;<img
+                <input type="password" id="password1" placeholder="Пароль" v-model="userData.password1">&nbsp;<img
                     src="../assets/icons/correct.png" v-if="validPasswordLength()" /><br />
-                <input type="password" id="password" placeholder="Подтверждение пароля"
+                <input type="password" id="password2    " placeholder="Подтверждение пароля"
                     v-model="userData.password2">&nbsp;<img src="../assets/icons/correct.png"
                     v-if="validPasswords()" /><br />
                 <input v-if="validPasswords()" type="submit" value="Сменить пароль">
@@ -31,35 +31,19 @@ function validPasswords() {
     return validPasswordLength() && (userData.password1.trim() === userData.password2)
 }
 
-// const sendGetRequest = async () => {
-//     try {
-//         const resp = await axios.get('https://jsonplaceholder.typicode.com/posts');
-//         console.log(resp.data);
-//     } catch (err) {
-//         // Handle Error Here
-//         console.error(err);
-//     }
-// };
-
 function changePassword() {
     console.log('Change password!');
     if (!validPasswords()) {
         alert('Некорретные данные!');
         return;
     }
-    // async () => {
-    // try {
-    wsChangePassword({ password: userData.password1 }, globals).then((response) => {
+    wsChangePassword({ userId: globals.user.id, newUserPassword: userData.password1 }, globals).then((response) => {
         if (response.data.result) {
             userData.password1 = '';
             userData.password2 = '';
         }
         alert(response.data.message)
     });
-    // } catch (err) {
-    //     console.error(err);
-    // }
-    // }
 };
 </script>
 
