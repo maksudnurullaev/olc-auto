@@ -2,6 +2,7 @@ const User = require('../../knex/models/User');
 const myCrypto = require('../../crypto');
 const knex = require('../../knex/knex');
 const authUtils = require('../../auth/utils');
+const testUtils = require('../utils')
 
 var tables = [
     'users',
@@ -9,26 +10,9 @@ var tables = [
     'users_roles'
 ];
 
-function prepareDb() {
-    let beforeTestsTasks = [];
-    // migrate
-    beforeTestsTasks.push(knex.migrate.latest().then(() => { console.log(' ... 1. db migrates - done!') }));
-    // seed 
-    beforeTestsTasks.push(knex.seed.run().then(() => { console.log(' ... 2. db seed - done!') }));
-    // truncate 
-    tables.forEach((table) => {
-        beforeTestsTasks.push(knex(table).truncate().then(() => { console.log(' ... ... truncate: ' + table) }));
-    });
-    return beforeTestsTasks;
-};
-
 describe("Test:", () => {
     beforeAll(() => {
-        return Promise.all(prepareDb()).then(() => {
-            console.log(' ... db prepared!');
-        }).catch((err) => {
-            console.error(err);
-        })
+        return testUtils.beforeAll(tables);
     });
 
     test(" ... user: exceptions: create user without ID or Password", () => {
@@ -94,7 +78,7 @@ describe("Test:", () => {
         expect(role_2_added).toEqual(1);
 
         // check roles
-        let roles = await new_admin.$relatedQuery('roles');
+        let roles = await authUtils.getRoles(new_admin);
         expect(roles.length).toEqual(2);
 
         // delete role_2 - vip
