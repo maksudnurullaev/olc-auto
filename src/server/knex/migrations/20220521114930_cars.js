@@ -5,8 +5,7 @@
 exports.up = function (knex) {
     return knex.schema.createTable('cars', function (table) {
         table.string('id', 15).notNullable().primary();
-        table.string('status', 10).notNullable();
-        table.string('description');
+        table.string('state', 1).notNullable().defaultTo('I'); // [I(In) | O(Out)]
         table.timestamp('created_at').defaultTo(knex.fn.now());
         table.timestamp('updated_at').defaultTo(knex.fn.now());
     });

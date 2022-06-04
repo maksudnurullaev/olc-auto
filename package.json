@@ -4,10 +4,10 @@
   "version": "0.0.1",
   "scripts": {
     "dev-front": "vite",
-    "dev-server": "npx nodemon -w ./src/server -w ./src/utils -w ./scr/client",
+    "dev-server": "npx nodemon -w ./src/server -w ./src/utils -w ./scr/client --ignore **/tests/**",
     "build-front": "vite build",
     "preview": "vite preview",
-    "ws-transpile-server": "babel ./src/server --out-dir dist/server",
+    "ws-transpile-server": "babel ./src/server --out-dir dist/server --ignore **/tests/**",
     "ws-transpile-common": "babel ./src/utils --out-dir dist/utils",
     "ws-clean": "rimraf dist/server dist/utils",
     "ws-start": "node ./dist/server/apps.js",

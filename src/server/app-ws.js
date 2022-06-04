@@ -8,6 +8,7 @@ const Axios = require('axios')
 const app = express();
 const authUtils = require('./auth/utils');
 const myCrypto = require('./crypto');
+const dbUtils = require('./knex/utils');
 
 
 // Patch limit of size upload image
@@ -224,15 +225,20 @@ app.post('/getImages', (request, response) => {
 });
 
 app.post('/getCameraImage', (request, response) => {
-    let carID = request.body.carID;
-    let forDate = request.body.forDate;
-    let cameraIp = request.body.cameraIp;
-    let carState = request.body.carState;
+    let carID = request.body.carID,
+        forDate = request.body.forDate,
+        cameraIp = request.body.cameraIp,
+        carState = request.body.carState;
+    console.log("Get image:");
+    console.log(" ... for carID:", carID);
+    console.log(" ... for date:", forDate);
+    console.log(" ... from camera IP:", cameraIp);
+    console.log(" ... with car state:", carState);
     if (!carID || !forDate || !cameraIp || !carState) {
         response.status(400).send({ result: false, message: "Parameters are not properly defined!" });
         return;
     }
-    let myPath = utils.getImagesDirectoryPath(path2Photos, carID);
+    let myPath = utils.getImagesDirectoryPath(path2Photos, carID, forDate);
     if (utils.validateDir(myPath)) {
         let myFile = utils.getUniqueId(null, request.body.carState) + '.jpeg';
         let myPath2File = path.join(myPath, myFile);
@@ -244,13 +250,30 @@ app.post('/getCameraImage', (request, response) => {
             'http://kpp:Kpp_1234@' + cameraIp + '/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG'
 
         downloadImageFromURL(imageUrl, myPath2File, () => { console.log('done'); })
-            .then(() => { response.send({ result: true, imageUrl: myFile }) })
-            .catch(() => response.send({ result: false, message: "Error" }));
+            .then(() => {
+                dbUtils.isCarExists(carID).then((car) => {
+                    if (car) {
+                        dbUtils.addPhoto4Car(carID, { url: myFile, date_ymd: forDate }).then((photo) => {
+                            response.send({ result: true, imageUrl: myFile });
+                        }).catch((err) => {
+                            response.send({ result: false, message: err });
+                        })
+                    } else {
+                        dbUtils.addNewCar(carID, carState).then((car) => {
+                            dbUtils.addPhoto4Car(carID, { url: myFile, date_ymd: forDate }).then((photo) => {
+                                response.send({ result: true, imageUrl: myFile });
+                            }).catch((err) => {
+                                response.send({ result: false, message: err });
+                            })    
+                        });
+                    }
+                });
+            })
+            .catch((err) => response.send({ result: false, message: err }));
     } else {
         console.log("Couldn't validate path: " + myPath);
         response.send({ result: false, errMessage: ("Couldn't validate path: " + myPath) });
     }
-
 });
 
 // ############### Web service part
