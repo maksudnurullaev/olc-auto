@@ -20,13 +20,22 @@ describe("Test:", () => {
         expect(() => authUtils.addNewUser('', 'admin')).toThrow();
     });
 
+    test(" ... user: exceptions: create user with same ID", () => {
+        authUtils.addNewUser('sameId', 'samePassword').then((user) => {
+            expect(user).not.toBeNull();
+        })
+        authUtils.addNewUser('sameId', 'samePassword').catch((e) => {
+            expect(e).not.toBeNull()
+            expect(e.code).toEqual('SQLITE_CONSTRAINT_PRIMARYKEY');
+        })
+    });
+
     let userId1 = 'testuser12@olc.uz',
         userIdPassword1 = 'testuser1@password',
         roleId1 = "testRole1",
         roleId1Desc = "Some description of role1",
         roleId2 = "testRole2",
         roleId2Desc = "Some description of role2";
-
 
     test(" ... user", async () => {
         expect(userId1).toEqual('testuser12@olc.uz');

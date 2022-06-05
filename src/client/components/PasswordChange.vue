@@ -6,7 +6,7 @@
             <form @submit.prevent="changePassword">
                 <input type="password" id="password1" placeholder="Пароль" v-model="userData.password1">&nbsp;<img
                     src="../assets/icons/correct.png" v-if="validPasswordLength()" /><br />
-                <input type="password" id="password2    " placeholder="Подтверждение пароля"
+                <input type="password" id="password2" placeholder="Подтверждение пароля"
                     v-model="userData.password2">&nbsp;<img src="../assets/icons/correct.png"
                     v-if="validPasswords()" /><br />
                 <input v-if="validPasswords()" type="submit" value="Сменить пароль">
@@ -20,7 +20,6 @@ import { reactive } from 'vue';
 import { wsChangePassword } from '../axios/ws';
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
-
 const userData = reactive({ password1: '', password2: '' });
 
 function validPasswordLength() {

@@ -24,6 +24,49 @@ app.use(session({
     saveUninitialized: true
 }));
 
+app.post('/getAllUsers', function (req, res) {
+    console.log("Going to get all users");
+    let _result = [];
+    let _promises = [];
+    dbUtils.getAllUsers(['id', 'description']).then((users) => {
+        users.forEach((user) => {
+            _promises.push(new Promise((resolve, reject) => {
+                authUtils.getRoles(user).then((roles) => {
+                    let _user = user.toJSON();
+                    _user.roles = [];
+                    roles.forEach((role) => {
+                        _user.roles.push({ id: role.id, desc: role.description })
+                    })
+                    _result.push(_user);
+                    // console.log("User found:", user.id);
+                    resolve(_result);
+                });
+            }));
+        });
+        return Promise.all(_promises)
+    }).then(() => {
+        res.send({ result: true, users: _result });
+    }).catch((err) => {
+        res.send({ result: false, message: err });
+    })
+});
+
+app.post('/addUser', function (req, res) {
+    console.log("Going to add user");
+    let userData = req.body;
+    authUtils.addNewUserData(userData).then((user) => {
+        res.send({ result: true, message: "Новый пользователь системы [" + user.id + '] создан успешно!' });
+    }).catch((err) => {
+        if( err && err.code == "SQLITE_CONSTRAINT_PRIMARYKEY"){
+            res.send({ result: false, message: "Такой пользователь уже существует в базе данных!" });
+        } else{
+            console.error(err)
+            res.send({ result: false, message: "Ошибка базы данных или сервера!" });
+        }
+    })
+});
+
+
 function auth(req, res, next) { //TODO: add it to test user rights
     if (req.session && req.session.user === "admin" && req.session.admin)
         return next();

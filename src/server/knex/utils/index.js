@@ -1,5 +1,11 @@
 const Car = require('../models/Car');
-const photo = require('../models/Photo');
+// const photo = require('../models/Photo');
+const User = require('../models/User');
+
+function getAllUsers(columns){
+    return User.query().select(columns);
+}
+exports.getAllUsers = getAllUsers;
 
 function isCarExists(carId) {
     return Car.query().findById(carId);
@@ -10,6 +16,11 @@ function DbException(message) {
     this.message = message;
     this.name = "DbException";
 }
+
+function addUser(userData){
+    return User.query().insert(userData)
+}
+exports.addUser = addUser;
 
 function addNewCar(carId, carState) {
     if (!carId || !carState) {

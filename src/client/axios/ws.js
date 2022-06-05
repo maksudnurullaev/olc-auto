@@ -1,6 +1,26 @@
 import axios from 'axios';
 import { getImageAccessUrl } from '../../utils/common';
 
+function wsGetAllUsers(globals, pageResources) {
+    axios.post(globals.getWebServiceURL + "getAllUsers")
+        .then(function (response) {
+            if (response.data.result) {
+                pageResources.users = response.data.users;
+            } else {
+                if (response.data.message) {
+                    alert(response.data.message);
+                } else {
+                    console.warn("Get all users: error!");
+                }
+                return [];
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+            return [];
+        });
+}
+
 function wsLogout(globals) {
     axios.post(globals.getWebServiceURL + "logout")
         .then(function (response) {
@@ -36,7 +56,11 @@ function wsCheckLogin(globals) {
         });
 }
 
-function wsChangePassword(userData, globals){
+function wsAddUser(userData, globals) {
+    return axios.post(globals.getWebServiceURL + "addUser", userData);
+}
+
+function wsChangePassword(userData, globals) {
     let postData = { userId: userData.userId, newUserPassword: userData.newUserPassword };
     return axios.post(globals.getWebServiceURL + "changePassword", postData);
 }
@@ -139,4 +163,4 @@ function wsGetCarImages(globals) {
 
 }
 
-export { wsAddCarImage, wsGetCarImages, wsGetCameraImage, wsLogin, wsCheckLogin, wsLogout, wsChangePassword };
+export { wsAddCarImage, wsGetCarImages, wsGetCameraImage, wsLogin, wsCheckLogin, wsLogout, wsChangePassword, wsGetAllUsers, wsAddUser };

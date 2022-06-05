@@ -12,18 +12,20 @@ function AuthException(message) {
     this.name = "AuthException";
 }
 
+function addNewUserData(userData) {
+    return addNewUser(userData.id, userData.password, userData.phone, userData.description);
+}
+exports.addNewUserData = addNewUserData
+
 function addNewUser(userId, userPassword, phone, description) {
     if (!userId || !userPassword) {
         throw new AuthException("Empty user or password!");
     } else {
-        const user = User.query().insert({
-            id: userId,
-            hashedPassword: myCrypto.hashUserAndPassword(userId, userPassword),
-            phone: (phone ? phone : '[no_phone]'),
-            description: (description ? description : '[no_description]')
-        })
-        return user;
-
+        let userData = { id: userId, hashedPassword: myCrypto.hashUserAndPassword(userId, userPassword) };
+        // optional fields
+        if (phone) { userData.phone = phone }
+        if (description) { userData.description = description }
+        return User.query().insert(userData)
     }
 }
 exports.addNewUser = addNewUser
