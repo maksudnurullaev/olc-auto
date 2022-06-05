@@ -60,6 +60,11 @@ function wsAddUser(userData, globals) {
     return axios.post(globals.getWebServiceURL + "addUser", userData);
 }
 
+function wsUpdateUser(userData, globals) {
+    return axios.post(globals.getWebServiceURL + "updateUser", userData);
+}
+
+
 function wsChangePassword(userData, globals) {
     let postData = { userId: userData.userId, newUserPassword: userData.newUserPassword };
     return axios.post(globals.getWebServiceURL + "changePassword", postData);
@@ -163,4 +168,4 @@ function wsGetCarImages(globals) {
 
 }
 
-export { wsAddCarImage, wsGetCarImages, wsGetCameraImage, wsLogin, wsCheckLogin, wsLogout, wsChangePassword, wsGetAllUsers, wsAddUser };
+export { wsAddCarImage, wsGetCarImages, wsGetCameraImage, wsLogin, wsCheckLogin, wsLogout, wsChangePassword, wsGetAllUsers, wsAddUser, wsUpdateUser };

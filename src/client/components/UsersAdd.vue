@@ -26,29 +26,28 @@ const globals = useGlobalStore();
 
 const userData = reactive({ id: '', password1: '', password2: '', phone: '', description: '' });
 
-function addUser(){
+function addUser() {
     if (!validAll()) {
         alert('Некорретные данные!');
         return;
     }
     let _userData = { id: userData.id, password: userData.password1 };
-    if (userData.phone){
+    if (userData.phone) {
         _userData.phone = userData.phone;
     }
-    if (userData.description){
+    if (userData.description) {
         _userData.description = userData.description;
     }
     wsAddUser(_userData, globals).then((response) => {
-        if (response.data.result) {
-            userData.id = '';
-            userData.password2 = '';
-            userData.password1 = '';
-            userData.phone = '';
-            userData.description = '';
-        }
+        // if (response.data.result) {
+        //     userData.id = '';
+        //     userData.password2 = '';
+        //     userData.password1 = '';
+        //     userData.phone = '';
+        //     userData.description = '';
+        // }
         alert(response.data.message)
     });
-
 }
 
 function acceptNumber() {

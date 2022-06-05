@@ -17,6 +17,21 @@ function addNewUserData(userData) {
 }
 exports.addNewUserData = addNewUserData
 
+function updateUser(userData) {
+    let _userData = {};
+    if (userData.id) {
+        _userData.id = userData.id
+    }
+    if (userData.password) {
+        _userData.hashedPassword = myCrypto.hashUserAndPassword(userData.id, userData.password)
+    }
+    // optional fields
+    if (userData.phone) { _userData.phone = userData.phone }
+    if (userData.description) { _userData.description = userData.description }
+    return User.query().patch(_userData).where('rowid', userData.rowid)
+}
+exports.updateUser = updateUser
+
 function addNewUser(userId, userPassword, phone, description) {
     if (!userId || !userPassword) {
         throw new AuthException("Empty user or password!");

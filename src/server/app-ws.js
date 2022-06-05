@@ -28,7 +28,7 @@ app.post('/getAllUsers', function (req, res) {
     console.log("Going to get all users");
     let _result = [];
     let _promises = [];
-    dbUtils.getAllUsers(['id', 'description']).then((users) => {
+    dbUtils.getAllUsers(['id', 'description', 'phone', 'rowid']).then((users) => {
         users.forEach((user) => {
             _promises.push(new Promise((resolve, reject) => {
                 authUtils.getRoles(user).then((roles) => {
@@ -51,15 +51,36 @@ app.post('/getAllUsers', function (req, res) {
     })
 });
 
+app.post('/updateUser', function (req, res) {
+    console.log("Going to update user data");
+    let userData = req.body;
+    authUtils.updateUser(userData).then((user) => {
+        User.query().select(['id', 'phone', 'description', 'rowid']).where('rowid', userData.rowid).then((user) => {
+            res.send({
+                result: true, user: user, message: 'Пользователь обновлен успешно!'
+            });
+        }).catch((err) => {
+            res.send({ result: false, message: err });
+        });
+    }).catch((err) => {
+        if (err && err.code == "SQLITE_CONSTRAINT_PRIMARYKEY") {
+            res.send({ result: false, message: "Такой пользователь уже существует в базе данных!" });
+        } else {
+            console.error(err)
+            res.send({ result: false, message: "Ошибка базы данных или сервера!" });
+        }
+    })
+});
+
 app.post('/addUser', function (req, res) {
     console.log("Going to add user");
     let userData = req.body;
     authUtils.addNewUserData(userData).then((user) => {
         res.send({ result: true, message: "Новый пользователь системы [" + user.id + '] создан успешно!' });
     }).catch((err) => {
-        if( err && err.code == "SQLITE_CONSTRAINT_PRIMARYKEY"){
+        if (err && err.code == "SQLITE_CONSTRAINT_PRIMARYKEY") {
             res.send({ result: false, message: "Такой пользователь уже существует в базе данных!" });
-        } else{
+        } else {
             console.error(err)
             res.send({ result: false, message: "Ошибка базы данных или сервера!" });
         }
