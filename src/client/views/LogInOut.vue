@@ -3,14 +3,18 @@ import { reactive } from 'vue';
 import Login from "../components/Login.vue";
 import { wsLogout } from '../axios/ws.js';
 import { useGlobalStore } from '../stores/globals';
- import PasswordChange  from '../components/PasswordChange.vue';
+import PasswordChange from '../components/PasswordChange.vue';
 import Reports from '../components/Reports.vue';
+import Users from '../components/Users.vue';
 const globals = useGlobalStore();
-// const userData = reactive({ id: '', password: '' });
-const subView = reactive({ id: '' });
+const subView = reactive({ id: 'passwordChange' });
 
 function logout() {
   wsLogout(globals);
+}
+
+function isClass(id) {
+  return subView.id == id;
 }
 </script>
 
@@ -26,13 +30,19 @@ function logout() {
           <u>Текущая роль:</u> <strong>{{ globals.user.role }}</strong>
         </p>
         <input type="submit" style="padding: 5px 10px" @click="logout" value="Выход">
-        <input type="submit" style="padding: 5px 10px" @click="subView.id = 'passwordChange'" value="Смена пароля">
-        <input type="submit" style="padding: 5px 10px" @click="subView.id = 'reports'" value="Отчеты">
+        <input type="submit" style="padding: 5px 10px" @click="subView.id = 'passwordChange'"
+          :class="{ selected: isClass('passwordChange') }" value="Смена пароля">
+        <input type="submit" style="padding: 5px 10px" @click="subView.id = 'reports'"
+          :class="{ selected: isClass('reports') }" value="Отчеты">
+        <input type="submit" style="padding: 5px 10px" @click="subView.id = 'users'"
+          :class="{ selected: isClass('users') }" value="Пользователи">
       </fieldset>
     </div>
-    <div v-if="subView.id" class="content subview">
+    <div class="content subview">
       <password-change v-if="subView.id == 'passwordChange'" />
-      <reports v-if="subView.id == 'reports'" />
+      <reports v-else-if="subView.id == 'reports'" />
+      <users v-else-if="subView.id == 'users'" />
+      <strong v-else>Undefined sub-component!</strong>
     </div>
   </template>
   <template v-else>
@@ -40,10 +50,6 @@ function logout() {
   </template>
 </template>
 
-
 <style scoped>
-div.content input {
-  margin-right: 3px;
-  margin-top: 3px;
-}
+@import url("../assets/css/main.content.css");
 </style>

@@ -35,26 +35,29 @@ describe("Test WS-API vs Objection.js for:", () => {
       })
   })
 
-  test(" ... POST  /login: admin, change password", () => {
-    let newPassword = 'dfadfadsfasfasdfasdf';
+  let newAdminPassword = '111111';
+
+  test(" ... POST  /changePassword: admin, change password", () => {
     return request(app)
       .post("/changePassword")
-      .send({ userId: 'admin', newUserPassword: newPassword })
+      .send({ userId: 'admin', newUserPassword: newAdminPassword })
       .then(response => {
         let _data = eval(response.body);
         expect(_data.result).toEqual(true);
         expect(_data.message).toEqual('Password changed!');
-      }).then(() => {
-        return request(app)
-          .post("/login")
-          .send({ id: 'admin', password: newPassword })
-          .then(response => {
-            let _data = eval(response.body);
-            expect(_data.result).toEqual(true);
-            expect(_data.user.role).toEqual('admin');
-            expect(_data.user.id).toEqual('admin');
-          })
-      });
+      })
+  });
+
+  test(" ... POST  /login: admin, with new password", () => {
+    return request(app)
+      .post("/login")
+      .send({ id: 'admin', password: newAdminPassword })
+      .then(response => {
+        let _data = eval(response.body);
+        expect(_data.result).toEqual(true);
+        expect(_data.user.role).toEqual('admin');
+        expect(_data.user.id).toEqual('admin');
+      })
   })
 
   test(" ... POST  /login: not existance user", () => {

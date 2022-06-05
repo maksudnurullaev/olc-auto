@@ -1,0 +1,8 @@
+div.content input {
+    margin-right: 3px;
+    margin-top: 3px;
+}
+div.content input.selected {
+    background: lightgoldenrodyellow;
+    text-decoration: underline;
+}

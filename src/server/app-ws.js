@@ -9,7 +9,7 @@ const app = express();
 const authUtils = require('./auth/utils');
 const myCrypto = require('./crypto');
 const dbUtils = require('./knex/utils');
-
+const wsUtils = require('./utils/ws')
 
 // Patch limit of size upload image
 app.use(express.json({ extended: true, limit: '50mb' }));
@@ -72,37 +72,22 @@ app.post('/changePassword', function (req, res) {
 });
 
 app.post('/login', function (req, res) {
-    if (!req.body.id || !req.body.password) {
+    let userId = req.body.id,
+        userPassword = req.body.password;
+    if (!userId || !userPassword) {
         res.send({ result: false, message: 'Не заполнено поле пользователя или пароля!' });
-    } else if (req.body.id === "admin") {
+    } else if (userId === "admin") {
         authUtils.isUserExists('admin').then((user) => {
             if (!user) {
-                authUtils.addNewUser('admin', 'admin').then((user) => {
-                    authUtils.addRole4User(user.id, 'admin').then(() => {
-                        req.session.user = "admin";
-                        req.session.userRole = "admin";
-                        res.send({
-                            result: true,
-                            user: { id: 'admin', role: 'admin' },
-                            message: 'New admin created with same password! Please change password ASAP!'
-                        });
-                    }).catch((err) => {
-                        res.send({
-                            result: false,
-                            message: err.toString()
-                        });
-                    })
-                });
+                wsUtils.loginAdminNew(userPassword, req, res);
             } else {
-                loginUser(user, req.body.password, req, res);
+                wsUtils.loginUser(user, req.body.password, req, res);
             }
         });
     } else {
-        let userId = req.body.id,
-            userPassword = req.body.password;
         authUtils.isUserExists(userId).then((user) => {
             if (user) {
-                loginUser(user, userPassword, req, res);
+                wsUtils.loginUser(user, userPassword, req, res);
             } else {
                 res.send({
                     result: false,
@@ -113,38 +98,6 @@ app.post('/login', function (req, res) {
     }
 });
 
-function loginUser(user, userPassword, req, res) {
-    if (myCrypto.checkUserAndPassword(user.id, userPassword, user.hashedPassword)) {
-        req.session.user = user.id;
-        authUtils.getRoles(user).then((roles) => {
-            if (roles[0]) {
-                req.session.userRole = roles[0].id;
-                res.send({
-                    result: true,
-                    user: { id: req.session.user, role: req.session.userRole }
-                });
-            } else {
-                res.send({
-                    result: false,
-                    message: 'Not found role for user: ' + user.id
-                });
-            }
-        }).catch((err) => {
-            console.error(err);
-            res.send({
-                result: false,
-                message: "Internale error #1"
-            });
-        });
-    } else {
-        // console.warn("Login error for user", user.id, userPassword);
-        res.send({
-            result: false,
-            message: "Authentication failed!"
-        });
-    }
-}
-
 // Logout endpoint
 app.post('/logout', function (req, res) {
     req.session.destroy();
@@ -154,11 +107,6 @@ app.post('/logout', function (req, res) {
 function getModuleInfo() {
     return WS_NAME + ': ' + WS_VERSION;
 }
-
-// Get content endpoint
-//   app.get('/content', auth, function (req, res) {
-//       res.send("You can only see this after you've logged in.");
-//   });
 
 // TODO: downloadImageFromURL('http://kpp:Kpp_1234@192.168.4.150/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG', 'kpp.jpeg');
 app.get('/', (request, response) => {
@@ -264,7 +212,7 @@ app.post('/getCameraImage', (request, response) => {
                                 response.send({ result: true, imageUrl: myFile });
                             }).catch((err) => {
                                 response.send({ result: false, message: err });
-                            })    
+                            })
                         });
                     }
                 });
