@@ -4,9 +4,9 @@
             <legend>Список пользователей:</legend>
             <button @click="updateList()">Загрузить список пользователей</button>
             <ul v-for="(user, userIndex) in resources.users">
-                <li><strong>{{ user.id }}</strong></li>
+                <li><strong style="color: blue;">{{ user.id }}</strong></li>
                 <ul>
-                    <li v-if="user.roles[0]"><strong>Роль:</strong> {{ user.roles[0].desc }}</li>
+                    <li v-if="user.role"><strong>Доступ:</strong> {{ resources.rolesMap[user.role] }}</li>
                     <li v-if="user.phone"><strong>Мобильный номер:</strong> {{ user.phone }}</li>
                     <li v-if="user.description"><strong>Описание:</strong> {{ user.description }}</li>
                     <li v-if="userIndex != resources.editUserIndex"><button
@@ -31,6 +31,11 @@
                         Описание:<br />
                         <textarea id="w3review" name="w3review" rows="4" cols="50"
                             v-model="userData.description"></textarea><br />
+                        Доступ:
+                        <select v-if="userData.id != 'admin'" v-model="user.role"
+                            @change="changeRole4User(user.id, user.role)">
+                            <option v-for="role in resources.roles" :value="role.id">{{ role.description }}</option>
+                        </select> {{ userData.roleDesc }} <br />
                         <input v-if="validAll(user.id)" type="submit" value="Обновить"
                             @click="updateUser(user.id, userIndex)">
                         <button @click="editUser(-1)">Отмена</button>
@@ -45,11 +50,16 @@
 <script setup>
 
 import { reactive } from 'vue';
-import { wsGetAllUsers, wsUpdateUser } from '../axios/ws';
+import { wsGetAllUsers, wsUpdateUser, wsGetRoles, wsChangeRole4User } from '../axios/ws';
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
-const resources = reactive({ users: [], editUserIndex: -1 });
-const userData = reactive({ id: '', password1: '', password2: '', phone: '', description: '', rowid: '' });
+const resources = reactive({ users: [], editUserIndex: -1, roles: [], rolesMap: {} });
+const userData = reactive({ id: '', password1: '', password2: '', phone: '', description: '', rowid: '', role: '', roleDesc: '' });
+
+function changeRole4User(userId, roleId) {
+    console.log('changeUserRole(user.id, role.id)', userId, roleId);
+    wsChangeRole4User(globals, { userId: userId, roleId: roleId });
+}
 
 function editUser(userIndex) {
     if (userIndex != -1) {
@@ -82,6 +92,7 @@ function setUserData(user) {
 
 function updateList() {
     wsGetAllUsers(globals, resources);
+    wsGetRoles(globals, resources);
 };
 
 function acceptNumber() {

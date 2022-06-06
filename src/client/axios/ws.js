@@ -1,6 +1,25 @@
 import axios from 'axios';
 import { getImageAccessUrl } from '../../utils/common';
 
+function wsGetRoles(globals, pageResources) {
+    axios.post(globals.getWebServiceURL + "getRoles").then(function (response) {
+        if (response.data.result) {
+            pageResources.roles = response.data.roles;
+            response.data.roles.forEach((role) => {
+                pageResources.rolesMap[role.id] = role.description;
+            })
+        }
+    });
+}
+
+function wsChangeRole4User(globals, postData) {
+    axios.post(globals.getWebServiceURL + "changeRole4User", postData).then(function (response) {
+        if (response.data.result) {
+            console.log(response.data.message);
+        }
+    });
+}
+
 function wsGetAllUsers(globals, pageResources) {
     axios.post(globals.getWebServiceURL + "getAllUsers")
         .then(function (response) {
@@ -168,4 +187,8 @@ function wsGetCarImages(globals) {
 
 }
 
-export { wsAddCarImage, wsGetCarImages, wsGetCameraImage, wsLogin, wsCheckLogin, wsLogout, wsChangePassword, wsGetAllUsers, wsAddUser, wsUpdateUser };
+export {
+    wsAddCarImage, wsGetCarImages, wsGetCameraImage,
+    wsLogin, wsCheckLogin, wsLogout, wsChangePassword,
+    wsGetAllUsers, wsAddUser, wsUpdateUser, wsGetRoles, wsChangeRole4User
+};

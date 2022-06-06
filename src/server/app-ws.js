@@ -24,6 +24,20 @@ app.use(session({
     saveUninitialized: true
 }));
 
+app.post('/changeRole4User', function (req, res) {
+    let postData = req.body;
+    console.log("Going to chage user access role:", postData);
+    if( !postData.userId || !postData.roleId){
+        res.send({ result: false, message: "Invalid fields definitions to change user role!" })
+    } else {
+        dbUtils.changeRole4User(postData).then(() => {
+            res.send({ result: true, message: "User role changed!" })
+        }).catch((err) => {
+            res.send({ result: false, message: err })
+        })    
+    }
+});
+
 app.post('/getAllUsers', function (req, res) {
     console.log("Going to get all users");
     let _result = [];
@@ -33,10 +47,15 @@ app.post('/getAllUsers', function (req, res) {
             _promises.push(new Promise((resolve, reject) => {
                 authUtils.getRoles(user).then((roles) => {
                     let _user = user.toJSON();
-                    _user.roles = [];
-                    roles.forEach((role) => {
-                        _user.roles.push({ id: role.id, desc: role.description })
-                    })
+                    if (roles.length) {
+                        _user.role = roles[0].id;
+                    } else {
+                        _user.role = 'blocked';
+                    }
+                    // _user.roles = [];
+                    // roles.forEach((role) => {
+                    //     _user.roles.push({ id: role.id, desc: role.description })
+                    // })
                     _result.push(_user);
                     // console.log("User found:", user.id);
                     resolve(_result);
@@ -49,6 +68,14 @@ app.post('/getAllUsers', function (req, res) {
     }).catch((err) => {
         res.send({ result: false, message: err });
     })
+});
+
+app.post('/getRoles', function (req, res) {
+    dbUtils.getRoles().then((roles) => {
+        res.send({ result: true, roles: roles })
+    }).catch((err) => {
+        res.send({ result: false, message: err })
+    });
 });
 
 app.post('/updateUser', function (req, res) {
