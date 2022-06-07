@@ -10,6 +10,6 @@ exports.seed = async function (knex) {
     { id: 'manager', description: 'Менеджер КПП' },
     { id: 'kpp', description: 'Оператор КПП' },
     { id: '1c', description: 'Оператор 1С' },
-    { id: 'blocked', description: 'Заблокирован' }
+    { id: 'registered', description: 'Заблокирован' }
   ]);
 };

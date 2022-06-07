@@ -22,6 +22,10 @@ const path2Photos = path.resolve(__dirname, '..', '..', 'dist', 'photos');
 console.log('Path to photos: ' + path2Photos);
 app.use('/photos', express.static(path2Photos));
 
+app.get("/kpp", (request, response) => {
+    response.redirect("/");
+});
+
 // Save incoming image
 app.post('/base64Jpeg2File', (request, response) => {
     console.log(request.body.dataURL.length);

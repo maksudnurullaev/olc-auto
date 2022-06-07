@@ -57,14 +57,23 @@ app.post('/base64Jpeg2File', (request, response) => {
   }
 });
 
-// ##################### SSL-footer part of module
-var httpServer = http.createServer(app);
+// Disable HTTP
+// var httpServer = http.createServer(app); 
+
+// SSL-footer part of module
 var httpsServer = https.createServer(credentials, app);
 
+// Disable HTTP
 // httpServer.listen(8080, () => { // we switch off it - camers don't works without https(ssl)
 //     console.log('http - listen for 8080 port')
 // });
 
+// redirect all unmatched to ROOT path
+app.use((req, res) => {
+    res.redirect("/");
+});
+
+// HTTPS listener
 httpsServer.listen(8443, () => {
     console.log('https - listen for 8443 port')
 });

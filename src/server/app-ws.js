@@ -7,6 +7,7 @@ const Fs = require('fs')
 const Axios = require('axios')
 const app = express();
 const authUtils = require('./auth/utils');
+const auth = require('./auth');
 const myCrypto = require('./crypto');
 const dbUtils = require('./knex/utils');
 const wsUtils = require('./utils/ws')
@@ -15,7 +16,7 @@ const wsUtils = require('./utils/ws')
 app.use(express.json({ extended: true, limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// express & session part - for auth
+// express & session & auth
 //   ... i.e.: https://www.codexpedia.com/node-js/a-very-basic-session-auth-in-node-js-with-express-js/
 const session = require('express-session');
 app.use(session({
@@ -23,6 +24,7 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
+app.use(auth);
 
 app.post('/changeRole4User', function (req, res) {
     let postData = req.body;
@@ -113,14 +115,6 @@ app.post('/addUser', function (req, res) {
         }
     })
 });
-
-
-function auth(req, res, next) { //TODO: add it to test user rights
-    if (req.session && req.session.user === "admin" && req.session.admin)
-        return next();
-    else
-        return res.status(401).send({ result: false, message: "Вы не авторизованы!" });
-};
 
 app.post('/checkLogin', function (req, res) {
     if (req.session.user) {
