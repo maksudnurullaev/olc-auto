@@ -57,7 +57,6 @@ const resources = reactive({ users: [], editUserIndex: -1, roles: [], rolesMap: 
 const userData = reactive({ id: '', password1: '', password2: '', phone: '', description: '', rowid: '', role: '', roleDesc: '' });
 
 function changeRole4User(userId, roleId) {
-    console.log('changeUserRole(user.id, role.id)', userId, roleId);
     wsChangeRole4User(globals, { userId: userId, roleId: roleId });
 }
 

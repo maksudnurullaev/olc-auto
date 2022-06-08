@@ -1,5 +1,10 @@
 import { defineStore } from 'pinia';
 import { commonFormateDate } from '../../utils/common.js';
+const roleAdmin = /^admin/;
+const roleKpp = /^(admin|kpp)/;
+const role1c = /^(admin|kpp|1c)/;
+const roleRegistered = /^(admin|kpp|1c|registered)/;
+
 export const useGlobalStore = defineStore('globals', {
     state: () => {
         return {
@@ -35,5 +40,21 @@ export const useGlobalStore = defineStore('globals', {
     },
     getters: {
         getWebServiceURL: (state) => '/', //state.webServer.dev,
+        roleAsAdmin: (state) => {
+            if (!state.user.role) { return false; }
+            return roleAdmin.test(state.user.role);
+        },
+        roleAsKpp: (state) => {
+            if (!state.user.role) { return false; }
+            return roleKpp.test(state.user.role);
+        },
+        roleAs1c: (state) => {
+            if (!state.user.role) { return false; }
+            return role1c.test(state.user.role);;
+        },
+        roleAsRegistered: (state) => {
+            if (!state.user.role) { return false; }
+            return roleRegistered.test(state.user.role);
+        }
     },
 })

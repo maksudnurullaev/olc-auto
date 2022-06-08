@@ -14,8 +14,11 @@ function wsGetRoles(globals, pageResources) {
 
 function wsChangeRole4User(globals, postData) {
     axios.post(globals.getWebServiceURL + "changeRole4User", postData).then(function (response) {
+        console.log(response.data.message);
         if (response.data.result) {
-            console.log(response.data.message);
+            alert("Роль для пользователя измернен!");
+        } else {
+            alert("Ошибка сервера!");
         }
     });
 }
@@ -172,14 +175,18 @@ function wsGetCarImages(globals) {
     globals.car.images = []; // reset car images
     axios.post(globals.getWebServiceURL + "getImages", myPostData)
         .then(function (response) {
-            if (response.data.imageUrls.length) {
-                response.data.imageUrls.forEach(element => {
-                    let imageUrl = getImageAccessUrl(globals.car.carID, element, globals.car.forDate);
-                    globals.car.images.push(imageUrl);
-                    // console.log("imageUrl:", imageUrl);
-                });
+            if( response.data.result ){
+                if (response.data.imageUrls.length) {
+                    response.data.imageUrls.forEach(element => {
+                        let imageUrl = getImageAccessUrl(globals.car.carID, element, globals.car.forDate);
+                        globals.car.images.push(imageUrl);
+                        // console.log("imageUrl:", imageUrl);
+                    });
+                }
+                console.log("Found:", response.data.imageUrls.length, "images!");    
+            } else if (response.data.message) {
+                console.error(response.data.message);    
             }
-            console.log("Found:", response.data.imageUrls.length, "images!");
         })
         .catch(function (error) {
             console.log(error);

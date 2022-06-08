@@ -16,6 +16,7 @@ function logout() {
 function isClass(id) {
   return subView.id == id;
 }
+
 </script>
 
 <template>
@@ -31,18 +32,17 @@ function isClass(id) {
         </p>
         <input type="submit" style="padding: 5px 10px" @click="logout" value="Выход">
         <input type="submit" style="padding: 5px 10px" @click="subView.id = 'passwordChange'"
-          :class="{ selected: isClass('passwordChange') }" value="Смена пароля">
+          :class="{ selected: isClass('passwordChange') }" v-if="globals.roleAsRegistered" value="Смена пароля">
         <input type="submit" style="padding: 5px 10px" @click="subView.id = 'reports'"
-          :class="{ selected: isClass('reports') }" value="Отчеты">
-        <input type="submit" style="padding: 5px 10px" @click="subView.id = 'users'"
+          :class="{ selected: isClass('reports') }" v-if="globals.roleAs1c" value="Отчеты">
+        <input type="submit" style="padding: 5px 10px" v-if="globals.roleAsAdmin" @click="subView.id = 'users'"
           :class="{ selected: isClass('users') }" value="Пользователи">
       </fieldset>
     </div>
     <div class="content subview">
-      <password-change v-if="subView.id == 'passwordChange'" />
-      <reports v-else-if="subView.id == 'reports'" />
-      <users v-else-if="subView.id == 'users'" />
-      <strong v-else>Undefined sub-component!</strong>
+      <password-change v-if="subView.id == 'passwordChange' && globals.roleAsRegistered" />
+      <reports v-else-if="subView.id == 'reports' && globals.roleAs1c" />
+      <users v-else-if="subView.id == 'users' && globals.roleAsAdmin" />
     </div>
   </template>
   <template v-else>

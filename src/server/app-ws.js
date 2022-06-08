@@ -7,7 +7,7 @@ const Fs = require('fs')
 const Axios = require('axios')
 const app = express();
 const authUtils = require('./auth/utils');
-const auth = require('./auth');
+const casl = require('./casl');
 const myCrypto = require('./crypto');
 const dbUtils = require('./knex/utils');
 const wsUtils = require('./utils/ws')
@@ -24,7 +24,7 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
-app.use(auth);
+app.use(casl.auth);
 
 app.post('/changeRole4User', function (req, res) {
     let postData = req.body;
@@ -52,7 +52,7 @@ app.post('/getAllUsers', function (req, res) {
                     if (roles.length) {
                         _user.role = roles[0].id;
                     } else {
-                        _user.role = 'blocked';
+                        _user.role = 'registered';
                     }
                     // _user.roles = [];
                     // roles.forEach((role) => {
