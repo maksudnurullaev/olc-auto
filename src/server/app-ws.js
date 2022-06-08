@@ -10,7 +10,8 @@ const authUtils = require('./auth/utils');
 const casl = require('./casl');
 const myCrypto = require('./crypto');
 const dbUtils = require('./knex/utils');
-const wsUtils = require('./utils/ws')
+const wsUtils = require('./utils/ws');
+const os = require('os');
 
 // Patch limit of size upload image
 app.use(express.json({ extended: true, limit: '50mb' }));
@@ -29,14 +30,14 @@ app.use(casl.auth);
 app.post('/changeRole4User', function (req, res) {
     let postData = req.body;
     console.log("Going to chage user access role:", postData);
-    if( !postData.userId || !postData.roleId){
+    if (!postData.userId || !postData.roleId) {
         res.send({ result: false, message: "Invalid fields definitions to change user role!" })
     } else {
         dbUtils.changeRole4User(postData).then(() => {
             res.send({ result: true, message: "User role changed!" })
         }).catch((err) => {
             res.send({ result: false, message: err })
-        })    
+        })
     }
 });
 
@@ -276,7 +277,7 @@ app.post('/getCameraImage', (request, response) => {
         let myFile = utils.getUniqueId(null, request.body.carState) + '.jpeg';
         let myPath2File = path.join(myPath, myFile);
 
-        let imageUrl = utils.isDevEnvironment() ?
+        let imageUrl = (os.hostname() !== '1ctest1') ?
             'https://via.placeholder.com/1200x800/'
             + (carState.indexOf('In') == 0 ? '008000' : '0000FF')
             + '/808080.JPEG?text=OLC+KPP+Test-Image\n' + myFile :
