@@ -12,6 +12,17 @@ function wsGetRoles(globals, pageResources) {
     });
 }
 
+function wsGetTransportTypes(globals, pageResources) {
+    axios.post(globals.getWebServiceURL + "getTransportTypes").then(function (response) {
+        if (response.data.result) {
+            pageResources.transportTypes = response.data.transportTypes;
+            response.data.transportTypes.forEach((ttype) => {
+                pageResources.codeLengthLimits[ttype.id] = ttype.code_length;
+            })
+        }
+    });
+}
+
 function wsChangeRole4User(globals, postData) {
     axios.post(globals.getWebServiceURL + "changeRole4User", postData).then(function (response) {
         console.log(response.data.message);
@@ -197,5 +208,6 @@ function wsGetCarImages(globals) {
 export {
     wsAddCarImage, wsGetCarImages, wsGetCameraImage,
     wsLogin, wsCheckLogin, wsLogout, wsChangePassword,
-    wsGetAllUsers, wsAddUser, wsUpdateUser, wsGetRoles, wsChangeRole4User
+    wsGetAllUsers, wsAddUser, wsUpdateUser, wsGetRoles, wsChangeRole4User,
+    wsGetTransportTypes
 };

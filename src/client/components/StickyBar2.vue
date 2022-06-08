@@ -1,22 +1,25 @@
 <template>
     <div class="sticky">
         <template v-if="globals.roleAsKpp">
-            <input type="radio" id="AutoIn" name="inOrOut" v-model="globals.car.state" value="In"
-                checked="true" /><label for="AutoIn">Въезд</label>
-            <input type="radio" id="AutoOut" name="inOrOut" v-model="globals.car.state" value="Out" /><label
-                for="AutoOut">Выезд</label>
-            | Камеры:
-            <input type="submit" value="Въезда" @click="getOutCameraImage('192.168.4.150')"
-                v-if="globals.car.state == 'In'" />
-            <input type="submit" value="Выезда" @click="getOutCameraImage('192.168.4.151')"
-                v-if="globals.car.state == 'Out'" />
             <input type="submit" @click="switchCamera" v-if="globals.roleAsKpp" :value="getCameraBtnTitle()" />
             |
+            История:
+            <select name="History" v-model="globals.car.forDate">
+                <option :value="commonFormateDate()">Сегодня</option>
+            </select>
+            <template v-if="globals.camera.isComponentOpen">
+                |
+                <input type="radio" id="AutoIn" name="inOrOut" v-model="globals.car.state" value="In"
+                    checked="true" /><label for="AutoIn">Въезд</label>
+                <input type="radio" id="AutoOut" name="inOrOut" v-model="globals.car.state" value="Out" /><label
+                    for="AutoOut">Выезд</label>
+                | Камеры:
+                <input type="submit" value="Въезда" @click="getOutCameraImage('192.168.4.150')"
+                    v-if="globals.car.state == 'In'" />
+                <input type="submit" value="Выезда" @click="getOutCameraImage('192.168.4.151')"
+                    v-if="globals.car.state == 'Out'" />
+            </template>
         </template>
-        История:
-        <select name="History" v-model="globals.car.forDate">
-            <option :value="commonFormateDate()">Сегодня</option>
-        </select>
     </div>
 </template>
 
@@ -33,7 +36,7 @@ function switchCamera() {
 }
 
 function getCameraBtnTitle() {
-    return (globals.camera.isComponentOpen ? 'Выкл.' : 'Вкл.') + " камеру планшета";
+    return (globals.camera.isComponentOpen ? 'Офомление' : 'Фотографии');
 }
 
 function getOutCameraImage(ip) {

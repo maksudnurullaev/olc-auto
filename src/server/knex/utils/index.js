@@ -2,11 +2,17 @@ const Car = require('../models/Car');
 // const photo = require('../models/Photo');
 const User = require('../models/User');
 const Role = require('../models/Role');
+const TranportTypes = require('../models/TransportTypes');
 
 function getRoles(){
     return Role.query().select(['id', 'description']);
 }
 exports.getRoles = getRoles;
+
+function getTransportTypes(){
+    return TranportTypes.query();
+}
+exports.getTransportTypes = getTransportTypes;
 
 function changeRole4User(postData){
     return User.relatedQuery('roles').for(postData.userId).unrelate().then(() => {

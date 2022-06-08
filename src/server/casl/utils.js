@@ -22,7 +22,7 @@ const LEVELS = ['NOT_REGISTERED', 'REGISTERED', '1C', 'KPP', 'ADMIN'];
 const reRoot = /^\/$/;
 const reAll = /^\/(assets|favicon|login|checkLogin)/;
 const reRegistered = /^\/(logout|changePassword)/;
-const re1C = /^\/(cars|getImages|photos)/
+const re1C = /^\/(cars|getImages|photos|getTransportTypes)/
 const re1Kpp = /^\/(base64Jpeg2File|getCameraImage|base64Jpeg2File)/
 const reAdmin = /^\/(getAllUsers|getRoles|changeRole4User|addUser|updateUser)/;
 

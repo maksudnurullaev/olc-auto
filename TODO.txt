@@ -3,12 +3,13 @@
 2. (DONE!) Fix: close camera when switching camera is OFF
 3. (DONE!) Add Image gallery
 4. (DONE!) Implement SQLITE3/knex 
-5. Add user management wuth admin user|role
+5. (DONE!) Add user management wuth admin user|role
 6. (DONE!) Install objectction knex better-sqlite3
-6.1 npm -i -D objectction knex better-sqlite3 jest jest-extended supertest ts-test ts-node
-7. Refactor knex|objectction files due generating with babel
-8. HTTP Basic Auth "SEEMS" does not works!
+7. Refactor knex|objectction fbiles due generating with babel
+8. (DONE!cv-08 nbHTTP Basic Auth "SEEMS" does not works!
 9. Add create new user tests (ad admin)
+10. Add owners of records for cars & photos
+11. Add catalogs
 
 # --- SSL Self signed certificate for development ---
 openssl genrsa -out key.pem

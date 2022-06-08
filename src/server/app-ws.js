@@ -81,6 +81,14 @@ app.post('/getRoles', function (req, res) {
     });
 });
 
+app.post('/getTransportTypes', function (req, res) {
+    dbUtils.getTransportTypes().then((ttypes) => {
+        res.send({ result: true, transportTypes: ttypes })
+    }).catch((err) => {
+        res.send({ result: false, message: err })
+    });
+});
+
 app.post('/updateUser', function (req, res) {
     console.log("Going to update user data");
     let userData = req.body;
@@ -320,7 +328,10 @@ async function downloadImageFromURL(url, path, callback) {
     const response = await Axios({
         url,
         method: 'GET',
-        responseType: 'stream'
+        responseType: 'stream',
+        defaults: {
+            timeout: 5000
+        }
     })
 
     response.data.pipe(writer)

@@ -1,5 +1,5 @@
 <template>
-    <div id="container" v-if="globals.camera.isComponentOpen">
+    <div id="container">
 
         <h1>Камера</h1>
 

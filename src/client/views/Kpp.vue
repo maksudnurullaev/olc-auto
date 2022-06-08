@@ -5,9 +5,12 @@
       <sticky-bar-1 />
     </pane>
     <pane size="65">
-      <strong>Фотограции</strong>
+      <strong>Данные по грузу и авто</strong>
       <sticky-bar-2 />
-      <web-cam-2 v-if="globals.roleAsKpp" />
+      <template v-if="globals.roleAsKpp">
+        <web-cam-2 v-if="globals.camera.isComponentOpen" />
+        <CarInOutInfo v-else />
+      </template>
       <image-thumbnails />
     </pane>
   </splitpanes>
@@ -20,6 +23,7 @@ import "splitpanes/dist/splitpanes.css";
 import StickyBar1 from "../components/StickyBar1.vue";
 import StickyBar2 from "../components/StickyBar2.vue";
 import WebCam2 from "../components/WebCam2.vue";
+import CarInOutInfo from "../components/CarInOutInfo.vue";
 import ImageThumbnails from "../components/ImageThumbnails.vue"
 
 import { useGlobalStore } from '../stores/globals';
