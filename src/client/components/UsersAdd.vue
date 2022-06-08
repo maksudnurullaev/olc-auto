@@ -39,13 +39,13 @@ function addUser() {
         _userData.description = userData.description;
     }
     wsAddUser(_userData, globals).then((response) => {
-        // if (response.data.result) {
-        //     userData.id = '';
-        //     userData.password2 = '';
-        //     userData.password1 = '';
-        //     userData.phone = '';
-        //     userData.description = '';
-        // }
+        if (response.data.result) {
+            userData.id = '';
+            userData.password2 = '';
+            userData.password1 = '';
+            userData.phone = '';
+            userData.description = '';
+        }
         alert(response.data.message)
     });
 }
