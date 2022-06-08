@@ -7,7 +7,7 @@
     <pane size="65">
       <strong>Фотограции</strong>
       <sticky-bar-2 />
-      <web-cam-2 />
+      <web-cam-2 v-if="globals.roleAsKpp" />
       <image-thumbnails />
     </pane>
   </splitpanes>
