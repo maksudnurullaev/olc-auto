@@ -1,7 +1,23 @@
 const request = require("supertest");
-const app = require("../../app-ws");
+const app_ws = require("../../app-ws");
 const knex = require("../../knex/knex")
 const testUtils = require('../utils')
+
+const express = require('express');
+var app = express();
+const session = require('express-session');
+app.use(session({
+  secret: 'TEST-WppQ38S-4D44-2C44',
+  resave: true,
+  saveUninitialized: true
+}));
+
+app.all('*', function (req, res, next) {
+  req.session.userRole = 'admin';
+  next();
+});
+
+app.use(app_ws);
 
 var tables = [
   'users',

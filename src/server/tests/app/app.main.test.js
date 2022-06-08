@@ -8,8 +8,6 @@ app.use(session({
 }));
 
 app.all('*', function (req, res, next) {
-  //authenticated(req, res, next);
-  //OR
   req.session.userRole = 'admin';
   next();
 });
