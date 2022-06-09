@@ -20,10 +20,10 @@ const LEVEL_UKNOWN_USER = -999;
 const LEVELS = ['NOT_REGISTERED', 'REGISTERED', '1C', 'KPP', 'ADMIN'];
 
 const reRoot = /^\/$/;
-const reAll = /^\/(assets|favicon|login|checkLogin)/;
-const reRegistered = /^\/(logout|changePassword)/;
-const re1C = /^\/(cars|getImages|photos|getTransportTypes)/
-const re1Kpp = /^\/(base64Jpeg2File|getCameraImage|base64Jpeg2File)/
+const reAll = /^\/(assets|favicon|login|logout|checkLogin|kpp)/;
+const reRegistered = /^\/changePassword/;
+const re1C = /^\/(car|getImages|photos|getTransportTypes|)/
+const re1Kpp = /^\/(base64Jpeg2File|getCameraImage|base64Jpeg2File|addInOutInfos|updateInOutInfos)/
 const reAdmin = /^\/(getAllUsers|getRoles|changeRole4User|addUser|updateUser)/;
 
 function hasAccess(req) {

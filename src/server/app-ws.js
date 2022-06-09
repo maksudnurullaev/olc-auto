@@ -89,6 +89,18 @@ app.post('/getTransportTypes', function (req, res) {
     });
 });
 
+app.post('/addInOutInfos', function (req, res) {
+    let postData = req.body;
+    postData.who_in_checked = req.session.user;
+
+    dbUtils.addInOutInfos(postData).then(() => {
+        res.send({ result: true })
+    }).catch((err) => {
+        res.send({ result: false, message: err })
+    });
+
+});
+
 app.post('/updateUser', function (req, res) {
     console.log("Going to update user data");
     let userData = req.body;
@@ -210,6 +222,7 @@ app.get('/', (request, response) => {
 // get objection's Cars
 const Cars = require('./knex/models/Car');
 const User = require('./knex/models/User.js');
+const InOutInfo = require('./knex/models/InOutInfo.js');
 app.get('/cars', (request, response) => {
     Cars.query().then((cars) => {
         console.log('Found', cars.length, 'cars');
@@ -217,24 +230,90 @@ app.get('/cars', (request, response) => {
     });
 });
 
-app.get('/cars/:id', (req, res) => {
-    const { id } = req.params;
-    console.log("Car's ID:", id)
+app.get('/cars/:number', (req, res) => {
+    const { number } = req.params;
+    console.log("Car's ID:", number)
     try {
-        Cars.query().findById(id).then((car) => {
+        Cars.query().findOne("number", number).then((car) => {
             if (!car) {
-                // throw new Error('Car not found!');
-                res.status(404).send({ result: false, message: "Car not found!" })
+                res.status(404).send({ result: false, message: ("Invalid car number: " + number) })
             } else {
-                car.$relatedQuery('photos').then((photos) => {
-                    if (photos) {
-                        // console.log("Photos:", photos);
-                        car['photos'] = photos;
+                res.status(200).send({ result: true, car: car });
+            }
+        })
+    } catch (error) {
+        res.status(500).send({ result: false, message: error.message })
+    }
+});
+
+app.get('/cars/:number/infos', (req, res) => {
+    const { number } = req.params;
+    console.log("Car's ID:", number)
+    try {
+        Cars.query().findOne("number", number).then((car) => {
+            if (!car) {
+                res.status(404).send({ result: false, message: ("Invalid car number: " + number) })
+            } else {
+                car.$relatedQuery('infos').then((infos) => {
+                    if (infos) {
+                        car['infos'] = infos;
                     }
+                }).finally(() => {
                     res.status(200).send({ result: true, car: car });
                 })
             }
-            // res.status(200).send({ result: true, car: car });
+        })
+    } catch (error) {
+        res.status(500).send({ result: false, message: error.message })
+    }
+});
+
+app.get('/cars/:number/infos/:ioInfosId', (req, res) => {
+    const { number, ioInfosId } = req.params;
+    console.log("Car's ID:", number)
+    console.log("IoInfo's ID:", ioInfosId)
+    try {
+        Cars.query().findOne("number", number).then((car) => {
+            if (!car) {
+                res.status(404).send({ result: false, message: ("Invalid car number: " + number) })
+            } else {
+                car.$relatedQuery('infos').findById(ioInfosId).then((info) => {
+                    if (info) {
+                        car['info'] = info;
+                    }
+                }).finally(() => {
+                    res.status(200).send({ result: true, car: car });
+                })
+            }
+        })
+    } catch (error) {
+        res.status(500).send({ result: false, message: error.message })
+    }
+});
+
+app.get('/cars/:number/infos/:ioInfosId/photos', (req, res) => {
+    const { number, ioInfosId } = req.params;
+    console.log("Car's ID:", number)
+    console.log("IoInfo's ID:", ioInfosId)
+    try {
+        Cars.query().findOne("number", number).then((car) => {
+            if (!car) {
+                res.status(404).send({ result: false, message: ("Invalid car number: " + number) })
+            } else {
+                car.$relatedQuery('infos').findById(ioInfosId).then((ioInfo) => {
+                    if (ioInfo) {
+                        ioInfo.$relatedQuery("photos").then((photos) => {
+                            if (photos) {
+                                car['photos'] = photos;
+                            }
+                        }).finally(() => {
+                            res.status(200).send({ result: true, car: car });
+                        })                        
+                    } else {
+                        res.send({ result: false, message: `Photos not found for car number(${number}) and ioInfoId(${ioInfosId})!`})
+                    }
+                })
+            }
         })
     } catch (error) {
         res.status(500).send({ result: false, message: error.message })
@@ -268,6 +347,7 @@ app.post('/getImages', (request, response) => {
 
 app.post('/getCameraImage', (request, response) => {
     let carID = request.body.carID,
+        ioInfoId = request.body.ioInfoId,
         forDate = request.body.forDate,
         cameraIp = request.body.cameraIp,
         carState = request.body.carState;
@@ -276,7 +356,7 @@ app.post('/getCameraImage', (request, response) => {
     console.log(" ... for date:", forDate);
     console.log(" ... from camera IP:", cameraIp);
     console.log(" ... with car state:", carState);
-    if (!carID || !forDate || !cameraIp || !carState) {
+    if (!carID || !ioInfoId || !forDate || !cameraIp || !carState) {
         response.status(400).send({ result: false, message: "Parameters are not properly defined!" });
         return;
     }
@@ -293,21 +373,15 @@ app.post('/getCameraImage', (request, response) => {
 
         downloadImageFromURL(imageUrl, myPath2File, () => { console.log('done'); })
             .then(() => {
-                dbUtils.isCarExists(carID).then((car) => {
-                    if (car) {
-                        dbUtils.addPhoto4Car(carID, { url: myFile, date_ymd: forDate }).then((photo) => {
+                dbUtils.isIoInfoExists(ioInfoId).then((ioInfo) => {
+                    if (ioInfo) {
+                        dbUtils.addPhoto4ioInfoId(ioInfoId, { url: myFile, date_ymd: forDate }).then((photo) => {
                             response.send({ result: true, imageUrl: myFile });
                         }).catch((err) => {
                             response.send({ result: false, message: err });
                         })
                     } else {
-                        dbUtils.addNewCar(carID, carState).then((car) => {
-                            dbUtils.addPhoto4Car(carID, { url: myFile, date_ymd: forDate }).then((photo) => {
-                                response.send({ result: true, imageUrl: myFile });
-                            }).catch((err) => {
-                                response.send({ result: false, message: err });
-                            })
-                        });
+                        response.send({ result: false, message: ("Invalid parent ioIdoId: " + ioInfoId) });
                     }
                 });
             })

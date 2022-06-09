@@ -33,7 +33,7 @@ function loginUser(user, userPassword, req, res) {
     if (myCrypto.checkUserAndPassword(user.id, userPassword, user.hashedPassword)) {
         req.session.user = user.id;
         authUtils.getRoles(user).then((roles) => {
-            if (roles[0]) {
+            if (roles.length) {
                 req.session.userRole = roles[0].id;
                 res.send({
                     result: true,

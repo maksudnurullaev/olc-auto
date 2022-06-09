@@ -14,13 +14,6 @@ const credentials = {
 
 const app = require("./app-ws");
 
-// ... just for DEVELOPMENT-CORS using from localhost
-if (utils.isDevEnvironment() || utils.isTestEnvironment()) {
-    const cors = require('cors')
-    app.use(cors());
-    console.warn("!!!WARNING!!! We're using CORS just for DEVELOPMENT!");
-}
-
 // ... to front files
 const path2Front = path.resolve(__dirname, '..', '..', 'dist', 'front');
 console.log('Path to photos: ' + path2Front);

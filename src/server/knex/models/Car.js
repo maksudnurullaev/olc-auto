@@ -8,15 +8,15 @@ class Car extends Model {
     }
 
     static get relationMappings(){
-        const Photo = require('./Photo');
+        const Infos = require('./InOutInfo');
 
         return {
-            photos: {
+            infos: {
                 relation: Model.HasManyRelation,
-                modelClass: Photo,
+                modelClass: Infos,
                 join: {
-                    from: 'cars.id',
-                    to: 'photos.car_id'
+                    from: 'cars.number',
+                    to: 'in_out_infos.car_number'
                 }
             }
         };

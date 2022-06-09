@@ -19,11 +19,6 @@ const testUtils = require('../utils')
 
 app.use(app_ws);
 
-var tables = [
-  'cars',
-  'photos'
-];
-
 describe("Test WS-API for:", () => {
 
   test(" ... GET  /: root path", () => {
@@ -47,7 +42,7 @@ describe("Test WS-API for:", () => {
 describe("Test WS-API vs Objection.js for:", () => {
 
   beforeAll(() => {
-    return testUtils.beforeAll(tables);
+    return testUtils.beforeAll();
   });
 
   test(" ... GET  /cars/: get all test cars", () => {
@@ -71,43 +66,60 @@ describe("Test WS-API vs Objection.js for:", () => {
       });
   });
 
-  test(" ... GET  /cars/car-1: valid Car ID #1", () => {
-    let carId = 'car-1';
+  let car_number_1 = 'TESTCAR-1';
+  let url_1 = `/cars/${car_number_1}`;
+  test(" ... GET  " + url_1, () => {
     return request(app)
-      .get("/cars/" + carId)
+      .get(url_1)
       .then(response => {
         let _data = eval(response.body);
         expect(_data.result);
-        expect(_data.car.id).toBe(carId);
-        expect(_data.car.photos);
-        expect(_data.car.photos.length).toBe(1);
+        expect(_data.car.number).toBe(car_number_1);
         expect(response.statusCode).toBe(200);
       });
   });
 
-  test(" ... GET  /cars/car-2: valid Car ID #2", () => {
-    let carId = 'car-2';
+  let car_number_2 = 'TESTCAR-2';
+  let url_2 = `/cars/${car_number_2}/infos`;
+  test(" ... GET  " + url_2, () => {
+    let car_number = 'TESTCAR-2';
     return request(app)
-      .get("/cars/" + carId)
+      .get("/cars/" + car_number + "/infos")
       .then(response => {
         let _data = eval(response.body);
-        expect(_data.result);
-        expect(_data.car.id).toBe(carId);
-        expect(_data.car.photos);
-        expect(_data.car.photos.length).toBe(2);
+        expect(_data.result).toEqual(true);
+        expect(_data.car.number).toEqual(car_number_2);
+        expect(_data.car.infos).toBeDefined();
+        expect(_data.car.infos.length).toBe(1);
         expect(response.statusCode).toBe(200);
       });
   });
 
-  test(" ... GET  /cars/car-2: valid Car ID #3", () => {
-    let carId = 'car-3';
+  // test URL: /cars/:carId/infos/:ioInfosId
+  let car_number_3 = 'TESTCAR-3';
+  let ioInfosId = 3;
+  let url_3 = `/cars/${car_number_3}/infos/${ioInfosId}`;
+  test(" ... GET  " + url_3, () => {
     return request(app)
-      .get("/cars/" + carId)
+      .get(url_3)
       .then(response => {
         let _data = eval(response.body);
         expect(_data.result);
-        expect(_data.car.id).toBe(carId);
-        expect(_data.car.photos);
+        expect(_data.car.number).toBe(car_number_3);
+        expect(_data.car.info).toBeDefined();
+        expect(_data.car.info.id).toBe(ioInfosId);
+        expect(response.statusCode).toBe(200);
+      });
+  });
+
+  // test URL: /cars/:carId/infos/:ioInfosId/photos
+  let url_4 = `/cars/${car_number_3}/infos/${ioInfosId}/photos`;
+  test(" ... GET  " + url_4, () => {
+    return request(app)
+      .get(url_4)
+      .then(response => {
+        let _data = eval(response.body);
+        expect(_data.car.photos).toBeDefined();
         expect(_data.car.photos.length).toBe(3);
         expect(response.statusCode).toBe(200);
       });

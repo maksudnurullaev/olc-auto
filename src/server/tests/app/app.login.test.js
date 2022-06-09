@@ -19,15 +19,16 @@ app.all('*', function (req, res, next) {
 
 app.use(app_ws);
 
-var tables = [
-  'users',
-  'roles',
-  'users_roles'
-];
+//  var tables = [
+//   'users',
+//   'roles',
+//   'users_roles'
+// ];
 
 describe("Test WS-API vs Objection.js for:", () => {
   beforeAll(() => {
-    return testUtils.beforeAll(tables);
+    // return testUtils.beforeAll(tables);
+    return testUtils.beforeAll();
   });
 
   test(" ... POST  /checkLogin: check login status", () => {

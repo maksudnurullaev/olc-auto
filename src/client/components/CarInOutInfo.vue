@@ -4,7 +4,7 @@
             <legend>Информация о въезде/выезде транспорта</legend>
             <template v-if="resources.transportTypes.length">
                 Тип транспорта:<br />
-                <select v-model="resources.inOutInfo.transportType" @change="updateType">
+                <select v-model="resources.inOutInfo.ttype_id" @change="updateTransportType">
                     <option disabled value="0">Выберите один из вариантов</option>
                     <option v-for="tt in resources.transportTypes" :value="tt.id">
                         {{ tt.name + (tt.code_length ? ('/' + tt.code_length) : '') }}
@@ -23,7 +23,7 @@
             <input type="datetime-local" v-model="resources.inOutInfo.in_datetime" disabled /><br />
             Время выезда:<br />
             <input type="datetime-local" v-model="resources.inOutInfo.out_datetime" disabled /><br />
-            Контрагент:<br />
+            Номер телефона контрагента:<br />
             <input ref="code" type="text" v-model="resources.inOutInfo.contragent" placeholder="Контрагент" /><br />
             Телефон водителя:<br />
             <input ref="code" type="text" v-model="resources.inOutInfo.driver_phone"
@@ -39,17 +39,23 @@
 </template>
 
 <script setup>
+import axios from 'axios';
 import { reactive, onMounted, ref } from 'vue';
-import { wsGetTransportTypes } from '../axios/ws'
+import { wsGetTransportTypes, wsAddInOutInfos } from '../axios/ws'
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
 
 const resources = reactive({
     inOutInfo: {
-        transportType: 0,
+        // mandatory fields to insert
+        car_id: null,
+        date_ymd: null,
+        ttype_id: 0,
         code: "",
         in_datetime: null,
+        // mandatory field to update
         out_datetime: null,
+        // ... other fields
         contragent: null,
         driver_phone: null,
         comment: null
@@ -72,12 +78,34 @@ function validCode() {
     return resources.inOutInfo.code.trim().length >= resources.codeSize;
 }
 
-function updateType() {
-    resources.codeSize = resources.codeLengthLimits[resources.inOutInfo.transportType];
+function updateTransportType() {
+    resources.codeSize = resources.codeLengthLimits[resources.inOutInfo.ttype_id];
 }
 
 function setInState() {
+    if (!globals.car.carID) {
+        alert('Нет номера авто!');
+        return;
+    }
+    if (!resources.inOutInfo.ttype_id) {
+        alert('Выберите тип транспорта!');
+        return;
+    }
+
+    resources.inOutInfo.car_id = globals.car.carID;
     resources.inOutInfo.in_datetime = getNow()
+    resources.inOutInfo.date_ymd = globals.car.forDate;
+    axios.post(globals.getWebServiceURL + "addInOutInfos", resources.inOutInfo).then(function (response) {
+        if (response.data.result) {
+            // pageResources.roles = response.data.roles;
+            // response.data.roles.forEach((role) => {
+            //     pageResources.rolesMap[role.id] = role.description;
+            // })
+            alert('Информация добавлена!');
+        } else {
+            alert('Ошибка!');
+        }
+    });
 }
 
 function setOutState() {
@@ -96,9 +124,9 @@ div.content input {
     margin-right: 3px;
     margin-top: 3px;
 }
+
 div.content button {
     margin-right: 3px;
     margin-top: 3px;
 }
-
 </style>

@@ -16,6 +16,7 @@ export const useGlobalStore = defineStore('globals', {
                 state: 'In',
                 images: [],
                 carID: '',
+                in_out_infos: 0,
                 forDate: commonFormateDate(),
             },
             camera: {

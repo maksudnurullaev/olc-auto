@@ -1,0 +1,75 @@
+@baseUrl = https://localhost:8443
+
+POST  {{baseUrl}}/login HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+    "id": "admin",
+    "password": "admin"
+}
+
+###
+
+POST  {{baseUrl}}/logout HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+###
+
+POST  {{baseUrl}}/checkLogin HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+    "userId": "admin",
+    "password": "admin"
+}
+
+###
+
+POST  {{baseUrl}}/getTransportTypes HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+    "userId": "admin",
+    "password": "admin"
+}
+
+###
+
+POST  {{baseUrl}}/addInOutInfos HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "car_id": "TEST1",
+  "date_ymd": "2022-06-09",
+  "ttype_id": 1,
+  "code": "",
+  "in_datetime": "2022-06-09T05:58",
+  "out_datetime": null,
+  "contragent": null,
+  "driver_phone": null,
+  "comment": null,
+  "who_in_checked": "admin"
+}
+
+### 
+
+GET  {{baseUrl}}/cars/TESTCAR-1 HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+####
+
+GET  {{baseUrl}}/cars/invalidIoInfoId HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+###
+
+GET  {{baseUrl}}/cars/TESTCAR-2/infos HTTP/1.1
+Content-Type: application/json
+Accept: application/json

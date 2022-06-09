@@ -26,11 +26,11 @@ function prepareDb3() {
     return tasks;
 };
 
-function beforeAll (tables) {
+function beforeAll(tables) {
     return Promise.all(prepareDb1()).then(() => {
-        return Promise.all(prepareDb2(tables)).then(() => {
-            return Promise.all(prepareDb3());
-        });
+        // return Promise.all(prepareDb2(tables)).then(() => {
+        return Promise.all(prepareDb3());
+        // });
     })
 };
 exports.beforeAll = beforeAll;
