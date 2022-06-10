@@ -375,7 +375,7 @@ app.post('/getCameraImage', (request, response) => {
             .then(() => {
                 dbUtils.isIoInfoExists(ioInfoId).then((ioInfo) => {
                     if (ioInfo) {
-                        dbUtils.addPhoto4ioInfoId(ioInfoId, { url: myFile, date_ymd: forDate }).then((photo) => {
+                        dbUtils.addPhoto4ioInfoId(ioInfoId, { url: myFile }).then((photo) => {
                             response.send({ result: true, imageUrl: myFile });
                         }).catch((err) => {
                             response.send({ result: false, message: err });

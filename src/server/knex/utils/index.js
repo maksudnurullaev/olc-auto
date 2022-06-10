@@ -112,7 +112,7 @@ function getPhotos(ioInfoId) {
 }
 exports.getPhotos = getPhotos;
 
-function addPhoto4ioInfoId(carId, ioInfoId) {
+function addPhoto4ioInfoId(ioInfoId, photo) {
     return InOutInfo.relatedQuery('photos').for(ioInfoId).insert(photo);
 }
 exports.addPhoto4ioInfoId = addPhoto4ioInfoId;
