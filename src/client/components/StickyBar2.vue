@@ -3,10 +3,15 @@
         <template v-if="globals.roleAsKpp">
             <input type="submit" @click="switchCamera" v-if="globals.roleAsKpp" :value="getCameraBtnTitle()" />
             |
-            История:
-            <select name="History" v-model="globals.car.forDate">
-                <option :value="commonFormateDate()">Сегодня</option>
-            </select>
+            История ({{ globals.car.infosByDates.length }}):
+            <select v-model="globals.car.forDate" @change="showCarInfos4Date()">
+                <option :value="commonFormateDate()">Сегодня ({{ todayInfos() }})</option>
+                <template v-for="carInfoDate in globals.car.infosByDates">
+                    <option v-if="carInfoDate.date_ymd != commonFormateDate()" :value="carInfoDate.date_ymd">
+                        {{ carInfoDate.date_ymd }} ({{ carInfoDate.records }})
+                    </option>
+                </template>
+            </select> <!-- button @click="showCarInfos4Date()">Показать</button -->
             <template v-if="globals.camera.isComponentOpen">
                 |
                 <input type="radio" id="AutoIn" name="inOrOut" v-model="globals.car.state" value="In"
@@ -25,9 +30,24 @@
 
 <script setup>
 import { commonFormateDate } from '../../utils/common.js';
-import { wsGetCameraImage } from '../axios/ws.js';
+import { wsGetCameraImage, wsGetCarInfos4Date } from '../axios/ws.js';
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
+
+function showCarInfos4Date() {
+    wsGetCarInfos4Date(globals);
+}
+
+function todayInfos() {
+    let _today = commonFormateDate();
+    for (let index = 0; index < globals.car.infosByDates.length; index++) {
+        const infoDate = globals.car.infosByDates[index];
+        if (infoDate.date_ymd == _today) {
+            return infoDate.records;
+        }
+    }
+    return 0;
+}
 
 function switchCamera() {
     globals.$patch({ camera: { isComponentOpen: !globals.camera.isComponentOpen } });

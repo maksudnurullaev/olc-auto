@@ -15,10 +15,29 @@ export const useGlobalStore = defineStore('globals', {
             car: {
                 state: 'In',
                 images: [],
-                carID: '',
-                in_out_infos: 0,
+                search_number: '',
+                current_number: '',
                 forDate: commonFormateDate(),
+                infos: [],
+                infosByDates: [],
+                infoCurrentId: 0,
+                infoCurrent: {
+                    // mandatory fields to insert
+                    car_number: null,
+                    date_ymd: null,
+                    ttype_id: 0,
+                    code: "",
+                    in_datetime: null,
+                    // mandatory field to update
+                    out_datetime: null,
+                    // ... other fields
+                    contragent: null,
+                    driver_phone: null,
+                    comment: null,
+                    is_sent_to_1c: 0
+                }
             },
+            cars: [],
             camera: {
                 isComponentOpen: false,
                 isCameraOpen: false,
@@ -38,6 +57,18 @@ export const useGlobalStore = defineStore('globals', {
         }
     },
     actions: {
+        setCarInfoID(id) {
+            console.log('setCarInfoID:', id);
+            this.car.infoCurrentId = id;
+            if (!id) { return; }
+            for (let index = 0; index < this.car.infos.length; index++) {
+                const info = this.car.infos[index];
+                if (info.id == id) {
+                    this.car.infoCurrent = info;
+                    return;
+                }
+            }
+        },
     },
     getters: {
         getWebServiceURL: (state) => '/', //state.webServer.dev,

@@ -36,7 +36,7 @@ function finish() {
 function generate(cars_number, infos_number, photos_max_number) {
     cleanTestData().then(async () => {
         for (var i = 1; i <= cars_number; i++) {
-            let next_car = 'GTESTCAR-' + i;
+            let next_car = 'TESTCAR' + i;
             let p = await knex('cars').insert({ number: next_car }).then(async () => {
                 console.log('Created car: ' + next_car);
 

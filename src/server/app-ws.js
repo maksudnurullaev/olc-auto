@@ -223,20 +223,25 @@ app.get('/', (request, response) => {
 const Cars = require('./knex/models/Car');
 const User = require('./knex/models/User.js');
 const InOutInfo = require('./knex/models/InOutInfo.js');
-app.get('/cars', (request, response) => {
-    Cars.query().then((cars) => {
+app.post('/cars', (request, response) => {
+    const filters = request.body;
+    const q = Cars.query();
+    if (filters) {
+        dbUtils.setFilters(q, filters)
+    }
+    q.then((cars) => {
         console.log('Found', cars.length, 'cars');
         response.json({ restul: true, cars: cars });
     });
 });
 
-app.get('/cars/:number', (req, res) => {
+app.post('/cars/:number', (req, res) => {
     const { number } = req.params;
     console.log("Car's ID:", number)
     try {
         Cars.query().findOne("number", number).then((car) => {
             if (!car) {
-                res.status(404).send({ result: false, message: ("Invalid car number: " + number) })
+                res.status(200).send({ result: false, message: ("Invalid car number: " + number) })
             } else {
                 res.status(200).send({ result: true, car: car });
             }
@@ -246,21 +251,33 @@ app.get('/cars/:number', (req, res) => {
     }
 });
 
-app.get('/cars/:number/infos', (req, res) => {
+app.post('/cars/:number/infos', (req, res) => {
     const { number } = req.params;
+    let filters = req.body;
+
     console.log("Car's ID:", number)
     try {
         Cars.query().findOne("number", number).then((car) => {
             if (!car) {
-                res.status(404).send({ result: false, message: ("Invalid car number: " + number) })
+                res.status(200).send({ result: false, message: ("Invalid car number: " + number) })
             } else {
-                car.$relatedQuery('infos').then((infos) => {
-                    if (infos) {
+                let q = car.$relatedQuery('infos');
+                if (filters) {
+                    dbUtils.setFilters(q, filters)
+                }
+                q.then((infos) => {
+                    if (infos.length) {
                         car['infos'] = infos;
+                    } else {
+                        console.warn("Infos not found for car: " + number)
                     }
-                }).finally(() => {
                     res.status(200).send({ result: true, car: car });
-                })
+                }).catch((err) => {
+                    res.status(200).send({ result: false, message: err });
+                });
+                // .finally(() => {
+                //     res.status(200).send({ result: true, car: car });
+                // })
             }
         })
     } catch (error) {
@@ -268,14 +285,14 @@ app.get('/cars/:number/infos', (req, res) => {
     }
 });
 
-app.get('/cars/:number/infos/:ioInfosId', (req, res) => {
+app.post('/cars/:number/infos/:ioInfosId', (req, res) => {
     const { number, ioInfosId } = req.params;
     console.log("Car's ID:", number)
     console.log("IoInfo's ID:", ioInfosId)
     try {
         Cars.query().findOne("number", number).then((car) => {
             if (!car) {
-                res.status(404).send({ result: false, message: ("Invalid car number: " + number) })
+                res.status(200).send({ result: false, message: ("Invalid car number: " + number) })
             } else {
                 car.$relatedQuery('infos').findById(ioInfosId).then((info) => {
                     if (info) {
@@ -291,14 +308,14 @@ app.get('/cars/:number/infos/:ioInfosId', (req, res) => {
     }
 });
 
-app.get('/cars/:number/infos/:ioInfosId/photos', (req, res) => {
+app.post('/cars/:number/infos/:ioInfosId/photos', (req, res) => {
     const { number, ioInfosId } = req.params;
     console.log("Car's ID:", number)
     console.log("IoInfo's ID:", ioInfosId)
     try {
         Cars.query().findOne("number", number).then((car) => {
             if (!car) {
-                res.status(404).send({ result: false, message: ("Invalid car number: " + number) })
+                res.status(200).send({ result: false, message: ("Invalid car number: " + number) })
             } else {
                 car.$relatedQuery('infos').findById(ioInfosId).then((ioInfo) => {
                     if (ioInfo) {
@@ -308,9 +325,9 @@ app.get('/cars/:number/infos/:ioInfosId/photos', (req, res) => {
                             }
                         }).finally(() => {
                             res.status(200).send({ result: true, car: car });
-                        })                        
+                        })
                     } else {
-                        res.send({ result: false, message: `Photos not found for car number(${number}) and ioInfoId(${ioInfosId})!`})
+                        res.send({ result: false, message: `Photos not found for car number(${number}) and ioInfoId(${ioInfosId})!` })
                     }
                 })
             }

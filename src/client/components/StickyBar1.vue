@@ -1,23 +1,25 @@
 <template>
     <div class="sticky">
-        <input type="text" v-model="globals.car.carID" @input="uppercase" placeholder="Номер авто" />
-        <input type="submit" value="Обновить" @click="updateCar" />
+        <input type="text" v-model="globals.car.search_number" @input="uppercase" placeholder="Номер авто" />
+        <input type="submit" value="Поиск" @click="updateCar" />
     </div>
 </template>
 
 <script setup>
-import { wsGetCarImages } from '../axios/ws.js';
+import { wsGetCarInfosDates, wsGetCarInfos4Date } from '../axios/ws';
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
 
 function uppercase() {
-    if (globals.car.carID) {
-        globals.car.carID = globals.car.carID.toUpperCase().replace(/[^0-9A-Z]/gi, '');
+    if (globals.car.search_number) {
+        globals.car.search_number = globals.car.search_number.toUpperCase().replace(/[^0-9A-Z]/gi, '');
     }
 }
 
 function updateCar() {
-    wsGetCarImages(globals);
+    globals.car.current_number = globals.car.search_number;
+    wsGetCarInfosDates(globals);
+    wsGetCarInfos4Date(globals);
 }
 
 </script>

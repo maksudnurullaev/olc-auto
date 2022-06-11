@@ -151,7 +151,7 @@ function handleError(error) {
 }
 
 function takeSnapshot() {
-    if (!globals.car.carID) {
+    if (!globals.car.current_number) {
         alert('Нет номера авто!');
         return;
     }
@@ -164,7 +164,7 @@ function takeSnapshot() {
     console.log(dataURL.length);
     let myPostData = {
         dataURL: dataURL,
-        carNumber: globals.car.carID,
+        carNumber: globals.car.current_number,
         carState: globals.car.state
     }
     wsAddCarImage(myPostData, globals);

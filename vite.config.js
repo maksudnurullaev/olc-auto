@@ -10,8 +10,8 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
-      fs: require.resolve('rollup-plugin-node-builtins'),
-      require: require.resolve('rollup-plugin-node-builtins'),
+      // fs: require.resolve('rollup-plugin-node-builtins'),
+      // require: require.resolve('rollup-plugin-node-builtins'),
     },
   },
   server: {

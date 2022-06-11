@@ -1,6 +1,74 @@
 import axios from 'axios';
 import { getImageAccessUrl } from '../../utils/common';
 
+function wsGetCarInfos4Date(globals) {
+    const car = globals.car.current_number;
+    const forDate = globals.car.forDate;
+    if (!car) {
+        alert('Нет номера авто!');
+        return;
+    }
+    if (!forDate) {
+        alert('Нет даты!');
+        return;
+    }
+    const filter = {
+        "where": ["date_ymd", forDate]
+    }
+
+    axios.post(`/cars/${car}/infos`, filter).then((response) => {
+        globals.car.infos = [];
+        if (response.data.result) {
+            if (response.data.car && response.data.car.infos) {
+                globals.car.infos = response.data.car.infos;
+                if (globals.car.infos.length == 1) {
+                    globals.setCarInfoID(response.data.car.infos[0].id);
+                } else {
+                    globals.setCarInfoID(0);
+                }
+            } else {
+                globals.setCarInfoID(0);
+            }
+        } else {
+            globals.setCarInfoID(0);
+            console.warn(response.data.message);
+        }
+    });
+}
+
+
+function wsGetCarInfosDates(globals) {
+    const car = globals.car.current_number;
+    if (!car) {
+        alert('На заполнено номера авто!')
+    }
+
+    const filter = {
+        "count": "* as records",
+        "select": "date_ymd",
+        "groupBy": "date_ymd"
+    }
+
+    axios.post(`/cars/${car}/infos`, filter).then((response) => {
+        globals.car.infosByDates = [];
+        if (response.data.result) {
+            if (response.data.car && response.data.car.infos) {
+                for (let index = 0; index < response.data.car.infos.length; index++) {
+                    globals.car.infosByDates.push(response.data.car.infos[index]);
+                }
+            } else {
+                globals.car.infos = [];
+                globals.car.infoCurrentId = 0;
+            }
+        } else {
+            globals.car.infos = [];
+            globals.car.infoCurrentId = 0;
+            console.warn(response.data.message);
+        }
+    });
+}
+
+
 function wsGetRoles(globals, pageResources) {
     axios.post(globals.getWebServiceURL + "getRoles").then(function (response) {
         if (response.data.result) {
@@ -144,15 +212,15 @@ function wsAddCarImage(postData, globals) {
 }
 
 function wsGetCameraImage(cameraIp, globals) {
-    if (!globals.car.carID) {
+    if (!globals.car.current_number) {
         alert('Нет номера авто!');
         return;
     }
-    console.log("Get images for car:", globals.car.carID);
+    console.log("Get images for car:", globals.car.current_number);
     console.log(" ... and  from camera(ip):", cameraIp);
     console.log(" ... and  for date:", globals.car.forDate);
     let myPostData = {
-        carID: globals.car.carID,
+        carID: globals.car.current_number,
         forDate: globals.car.forDate,
         carState: globals.car.state,
         cameraIp: cameraIp
@@ -160,7 +228,7 @@ function wsGetCameraImage(cameraIp, globals) {
     axios.post(globals.getWebServiceURL + "getCameraImage", myPostData)
         .then(function (response) {
             if (response.data.result) {
-                let imageUrl = getImageAccessUrl(globals.car.carID, response.data.imageUrl, globals.car.forDate);
+                let imageUrl = getImageAccessUrl(globals.car.current_number, response.data.imageUrl, globals.car.forDate);
                 globals.car.images.push(imageUrl);
                 console.log("imageUrl:", imageUrl);
             } else {
@@ -173,30 +241,35 @@ function wsGetCameraImage(cameraIp, globals) {
 }
 
 function wsGetCarImages(globals) {
-    if (!globals.car.carID) {
+    if (!globals.car.current_number) {
         alert('Нет номера авто!');
         return;
     }
-    console.log("Get images for car:", globals.car.carID);
+    if (!globals.car.forDate) {
+        alert('Не выбрана дата!');
+        return;
+    }
+
+    console.log("Get images for car:", globals.car.current_number);
     console.log(" ... and  for date:", globals.car.forDate);
     let myPostData = {
-        carID: globals.car.carID,
+        carID: globals.car.current_number,
         forDate: globals.car.forDate
     }
     globals.car.images = []; // reset car images
     axios.post(globals.getWebServiceURL + "getImages", myPostData)
         .then(function (response) {
-            if( response.data.result ){
+            if (response.data.result) {
                 if (response.data.imageUrls.length) {
                     response.data.imageUrls.forEach(element => {
-                        let imageUrl = getImageAccessUrl(globals.car.carID, element, globals.car.forDate);
+                        let imageUrl = getImageAccessUrl(globals.car.current_number, element, globals.car.forDate);
                         globals.car.images.push(imageUrl);
                         // console.log("imageUrl:", imageUrl);
                     });
                 }
-                console.log("Found:", response.data.imageUrls.length, "images!");    
+                console.log("Found:", response.data.imageUrls.length, "images!");
             } else if (response.data.message) {
-                console.error(response.data.message);    
+                console.error(response.data.message);
             }
         })
         .catch(function (error) {
@@ -209,5 +282,5 @@ export {
     wsAddCarImage, wsGetCarImages, wsGetCameraImage,
     wsLogin, wsCheckLogin, wsLogout, wsChangePassword,
     wsGetAllUsers, wsAddUser, wsUpdateUser, wsGetRoles, wsChangeRole4User,
-    wsGetTransportTypes
+    wsGetTransportTypes, wsGetCarInfosDates, wsGetCarInfos4Date
 };

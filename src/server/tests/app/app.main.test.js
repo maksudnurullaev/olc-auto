@@ -47,7 +47,7 @@ describe("Test WS-API vs Objection.js for:", () => {
 
   test(" ... GET  /cars/: get all test cars", () => {
     return request(app)
-      .get("/cars/")
+    .post("/cars/")
       .then(response => {
         let _data = eval(response.body);
         expect(_data.result);
@@ -58,11 +58,11 @@ describe("Test WS-API vs Objection.js for:", () => {
 
   test(" ... GET  /cars/invalidCarID: Invalid car ID", () => {
     return request(app)
-      .get("/cars/invalidCarId")
+      .post("/cars/invalidCarId")
       .then(response => {
         let _data = eval(response.body);
         expect(_data.result).toBe(false);
-        expect(response.statusCode).toBe(404);
+        expect(response.statusCode).toBe(200);
       });
   });
 
@@ -70,7 +70,7 @@ describe("Test WS-API vs Objection.js for:", () => {
   let url_1 = `/cars/${car_number_1}`;
   test(" ... GET  " + url_1, () => {
     return request(app)
-      .get(url_1)
+      .post(url_1)
       .then(response => {
         let _data = eval(response.body);
         expect(_data.result);
@@ -84,7 +84,7 @@ describe("Test WS-API vs Objection.js for:", () => {
   test(" ... GET  " + url_2, () => {
     let car_number = 'TESTCAR-2';
     return request(app)
-      .get("/cars/" + car_number + "/infos")
+      .post("/cars/" + car_number + "/infos")
       .then(response => {
         let _data = eval(response.body);
         expect(_data.result).toEqual(true);
@@ -101,7 +101,7 @@ describe("Test WS-API vs Objection.js for:", () => {
   let url_3 = `/cars/${car_number_3}/infos/${ioInfosId}`;
   test(" ... GET  " + url_3, () => {
     return request(app)
-      .get(url_3)
+      .post(url_3)
       .then(response => {
         let _data = eval(response.body);
         expect(_data.result);
@@ -116,7 +116,7 @@ describe("Test WS-API vs Objection.js for:", () => {
   let url_4 = `/cars/${car_number_3}/infos/${ioInfosId}/photos`;
   test(" ... GET  " + url_4, () => {
     return request(app)
-      .get(url_4)
+      .post(url_4)
       .then(response => {
         let _data = eval(response.body);
         expect(_data.car.photos).toBeDefined();
