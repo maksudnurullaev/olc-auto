@@ -1,11 +1,11 @@
-const myCrypto = require('../../crypto');
+const myCrypto = require('../../crypto')
 
-describe("Test user & password:", () => {
-    test(" ... initialization:", () => {
-        let userId = 'testUserId',
-            userPassword = 'testUserPassword';
-        let myHash = myCrypto.hashUserAndPassword(userId, userPassword);
-        expect(myHash).not.toBeNull();        // console.log(myHash, 'length: ' + myHash.length);
-        expect(myCrypto.checkUserAndPassword(userId, userPassword, myHash));
-    });
-});
+describe('Test user & password:', () => {
+  test(' ... initialization:', () => {
+    const userId = 'testUserId'
+    const userPassword = 'testUserPassword'
+    const myHash = myCrypto.hashUserAndPassword(userId, userPassword)
+    expect(myHash).not.toBeNull() // console.log(myHash, 'length: ' + myHash.length);
+    expect(myCrypto.checkUserAndPassword(userId, userPassword, myHash))
+  })
+})

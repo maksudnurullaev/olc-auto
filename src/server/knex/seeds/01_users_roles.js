@@ -1,6 +1,6 @@
 /**
  * @param { import("knex").Knex } knex
- * @returns { Promise<void> } 
+ * @returns { Promise<void> }
  */
 exports.seed = async function (knex) {
   // Deletes ALL existing entries
@@ -13,5 +13,5 @@ exports.seed = async function (knex) {
     { id: 'kpp', description: 'Оператор КПП' },
     { id: '1c', description: 'Оператор 1С' },
     { id: 'registered', description: 'Заблокирован' }
-  ]);
-};
+  ])
+}

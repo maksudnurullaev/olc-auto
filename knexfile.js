@@ -3,7 +3,7 @@
  * @type { Object.<string, import("knex").Knex.Config> }
  */
 
-const path = require('path');
+const path = require('path')
 
 module.exports = {
   development: {
@@ -53,4 +53,4 @@ module.exports = {
     },
     useNullAsDefault: true
   }
-};
+}

@@ -1,11 +1,11 @@
-const knex = require('../knex');
-const { Model } = require('objection');
-Model.knex(knex);
+const knex = require('../knex')
+const { Model } = require('objection')
+Model.knex(knex)
 
 class TranportTypes extends Model {
-    static get tableName() {
-        return 'transports_types';
-    }
+  static get tableName () {
+    return 'transports_types'
+  }
 }
 
-module.exports = TranportTypes;
+module.exports = TranportTypes

@@ -1,24 +1,24 @@
-import { createWebHistory, createRouter } from "vue-router";
+import { createWebHistory, createRouter } from 'vue-router'
 
-import LogInOut from "../views/LogInOut.vue"
-import Kpp from "../views/Kpp.vue"
+import LogInOut from '../views/LogInOut.vue'
+import Kpp from '../views/Kpp.vue'
 
 const routes = [
   {
-    path: "/",
-    name: "LogInOut",
-    component: LogInOut,
+    path: '/',
+    name: 'LogInOut',
+    component: LogInOut
   },
   {
-    path: "/kpp",
-    name: "Kpp",
-    component: Kpp,
+    path: '/kpp',
+    name: 'Kpp',
+    component: Kpp
   }
-];
+]
 
 const router = createRouter({
   history: createWebHistory(),
-  routes,
-});
+  routes
+})
 
-export default router;
+export default router

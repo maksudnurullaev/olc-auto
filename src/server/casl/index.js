@@ -1,13 +1,12 @@
-'use strict';
+'use strict'
 
-const caslUtils = require('./utils');
+const caslUtils = require('./utils')
 
-function auth(req, res, next) {
-    if (!caslUtils.hasAccess(req)) {
-        res.status(200).send({ result: false, message: "INVALID ACCESS LEVEL!" })
-    } else {
-        return next();
-    }
+function auth (req, res, next) {
+  if (!caslUtils.hasAccess(req)) {
+    res.status(200).send({ result: false, message: 'INVALID ACCESS LEVEL!' })
+  } else {
+    return next()
+  }
 };
-exports.auth = auth;
-
+exports.auth = auth
