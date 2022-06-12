@@ -6,7 +6,8 @@
       <div class="buttons" v-if="globals.cars.length">
         <button @click="setCarID(car)" v-for="car in globals.cars">{{ car }}</button>
       </div>
-      <pre name="4debugger">
+      <div name="4debugger" v-if="globals.debugMode">
+        <pre>
   globals.user.id: {{ globals.user.id }}
   globals.user.role: {{ globals.user.role }}
 
@@ -22,12 +23,13 @@
   globals.car.infos.length: {{ globals.car.infos.length }} 
   globals.car.infosByDates.length: {{ globals.car.infosByDates.length }} 
       </pre>
-      <div>
-        <ul>
-          <li v-for="[n, v] in Object.entries(globals.car.infoCurrent)">{{ n }}: {{ v ? v.toString().trim().length : 0
-          }}
-          </li>
-        </ul>
+        <div>
+          <ul>
+            <li v-for="[n, v] in Object.entries(globals.car.infoCurrent)">{{ n }}: {{ v ? v.toString().trim().length : 0
+            }}
+            </li>
+          </ul>
+        </div>
       </div>
     </pane>
     <pane size="65">
@@ -91,7 +93,7 @@ function setCarID(car) {
 
 onMounted(() => {
   // if (!globals.cars.length) {
-    globals.updateCarsList();
+  globals.updateCarsList();
   // }
 })
 
