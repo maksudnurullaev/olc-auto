@@ -6,13 +6,13 @@ import Kpp from "../views/Kpp.vue"
 const routes = [
   {
     path: "/",
-    name: "LogInOut",
-    component: LogInOut,
-  },
-  {
-    path: "/kpp",
     name: "Kpp",
     component: Kpp,
+  },
+  {
+    path: "/config",
+    name: "LogInOut",
+    component: LogInOut,
   }
 ];
 

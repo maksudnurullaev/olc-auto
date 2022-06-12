@@ -9,6 +9,41 @@ Accept: application/json
     "password": "admin"
 }
 
+###
+
+POST  {{baseUrl}}/cars/TESTCAR34/add/info HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "date_ymd": "2022-06-11",
+  "ttype_id": 1,
+  "code": "",
+  "in_datetime": "2022-06-09T05:58",
+  "out_datetime": null,
+  "contragent": "+998-90-222-11-22",
+  "driver_phone": "+998-90-111-11-11",
+  "comment": null
+}
+
+###
+
+POST  {{baseUrl}}/cars/TESTCAR34/update/info/93 HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "date_ymd": "2022-06-11",
+  "ttype_id": 1,
+  "code": "",
+#   "in_datetime": null,
+  "out_datetime": "2022-06-09T05:58",
+  "contragent": "+998-90-222-11-22",
+  "driver_phone": "+998-90-111-11-11",
+  "comment": "Updated!!!"  ,
+  "who_in_checked": "admin"
+}
+
 ###     
 
 POST  {{baseUrl}}/cars/TESTCAR1/infos/ HTTP/1.1
@@ -71,25 +106,6 @@ Accept: application/json
 {
     "userId": "admin",
     "password": "admin"
-}
-
-###
-
-POST  {{baseUrl}}/addInOutInfos HTTP/1.1
-Content-Type: application/json
-Accept: application/json
-
-{
-  "car_id": "TEST1",
-  "date_ymd": "2022-06-09",
-  "ttype_id": 1,
-  "code": "",
-  "in_datetime": "2022-06-09T05:58",
-  "out_datetime": null,
-  "contragent": null,
-  "driver_phone": null,
-  "comment": null,
-  "who_in_checked": "admin"
 }
 
 ### 

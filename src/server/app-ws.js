@@ -89,18 +89,6 @@ app.post('/getTransportTypes', function (req, res) {
     });
 });
 
-app.post('/addInOutInfos', function (req, res) {
-    let postData = req.body;
-    postData.who_in_checked = req.session.user;
-
-    dbUtils.addInOutInfos(postData).then(() => {
-        res.send({ result: true })
-    }).catch((err) => {
-        res.send({ result: false, message: err })
-    });
-
-});
-
 app.post('/updateUser', function (req, res) {
     console.log("Going to update user data");
     let userData = req.body;
@@ -239,7 +227,7 @@ app.post('/cars/:number', (req, res) => {
     const { number } = req.params;
     console.log("Car's ID:", number)
     try {
-        Cars.query().findOne("number", number).then((car) => {
+        Cars.query().findById(number).then((car) => {
             if (!car) {
                 res.status(200).send({ result: false, message: ("Invalid car number: " + number) })
             } else {
@@ -251,13 +239,47 @@ app.post('/cars/:number', (req, res) => {
     }
 });
 
+app.post('/cars/:carNumber/add/info', function (req, res) {
+    const { carNumber } = req.params;
+    let postData = req.body;
+    postData.who_in_checked = req.session.user;
+
+    try {
+        dbUtils.addInOutInfos(carNumber, postData).then(() => {
+            res.send({ result: true, message: `New info added for car(Number:${carNumber})!` })
+        }).catch((err) => {
+            res.send({ result: false, message: err.message })
+        });
+    } catch (error) {
+        res.send({ result: false, message: error.message })
+    }
+
+});
+
+app.post('/cars/:carNumber/update/info/:infoId', function (req, res) {
+    const { carNumber, infoId } = req.params;
+    let postData = req.body;
+    postData.who_out_checked = req.session.user;
+
+    try {
+        dbUtils.updateInOutInfos(carNumber, infoId, postData).then((count) => {
+            res.send({ result: true, message: `Info(Id: ${infoId}) updated!` })
+        }).catch((error) => {
+            res.send({ result: false, message: error.message })
+        });
+    } catch (error) {
+        res.send({ result: false, message: error.message })
+    }
+
+});
+
 app.post('/cars/:number/infos', (req, res) => {
     const { number } = req.params;
     let filters = req.body;
 
     console.log("Car's ID:", number)
     try {
-        Cars.query().findOne("number", number).then((car) => {
+        Cars.query().findById(number).then((car) => {
             if (!car) {
                 res.status(200).send({ result: false, message: ("Invalid car number: " + number) })
             } else {
@@ -281,7 +303,7 @@ app.post('/cars/:number/infos', (req, res) => {
             }
         })
     } catch (error) {
-        res.status(500).send({ result: false, message: error.message })
+        Dres.status(500).send({ result: false, message: error.message })
     }
 });
 
@@ -290,7 +312,7 @@ app.post('/cars/:number/infos/:ioInfosId', (req, res) => {
     console.log("Car's ID:", number)
     console.log("IoInfo's ID:", ioInfosId)
     try {
-        Cars.query().findOne("number", number).then((car) => {
+        Cars.query().findById(number).then((car) => {
             if (!car) {
                 res.status(200).send({ result: false, message: ("Invalid car number: " + number) })
             } else {
@@ -313,7 +335,7 @@ app.post('/cars/:number/infos/:ioInfosId/photos', (req, res) => {
     console.log("Car's ID:", number)
     console.log("IoInfo's ID:", ioInfosId)
     try {
-        Cars.query().findOne("number", number).then((car) => {
+        Cars.query().findById(number).then((car) => {
             if (!car) {
                 res.status(200).send({ result: false, message: ("Invalid car number: " + number) })
             } else {

@@ -7,7 +7,7 @@ const InOutInfo = require('../models/InOutInfo');
 
 // InOutInfos - fields
 // ... mandatory fields to INSERT
-// car_id
+// car_number
 // ttype_id
 // in_datetime
 // who_in_checked
@@ -27,30 +27,59 @@ function InOutInfoException(message) {
     this.name = "AuthException";
 }
 
-function addInOutInfos(postData) {
+function addInOutInfos(carNumber, postData) {
     if (!postData) {
         throw new InOutInfoException("Not valid fields to insert record!");
     }
 
-    let m_fields = ['car_id', 'ttype_id', 'in_datetime', 'who_in_checked']
+    let m_fields = ['ttype_id', 'in_datetime', 'who_in_checked']
     for (let index = 0; index < m_fields.length; index++) {
         const field = m_fields[index];
         if (!postData[field]) {
-            throw new InOutInfoException("Not valid field [" + field + "] to insert record!");
+            throw new InOutInfoException("Invalid field [" + field + "] to insert info!");
         }
     }
 
-    return isCarExists(postData['car_id']).then((car) => {
+    return isCarExists(carNumber).then((car) => {
         if (car) {
-            return InOutInfo.query().insert(postData);
+            return car.$relatedQuery('infos').insert(postData);
         } else {
-            addNewCar(carID).then((car) => {
-                return InOutInfo.query().insert(postData);
+            addNewCar(carNumber).then((car) => {
+                return car.$relatedQuery('infos').insert(postData);
             });
         }
-    }).catch((err) => response.send({ result: false, message: err }));
+    });
 }
 exports.addInOutInfos = addInOutInfos;
+
+function updateInOutInfos(carNumber, infoId, postData) {
+    if (!postData) {
+        throw new InOutInfoException("Not valid fields to insert record!");
+    }
+
+    let m_fields = ['out_datetime', 'who_out_checked']
+    for (let index = 0; index < m_fields.length; index++) {
+        const field = m_fields[index];
+        if (!postData[field]) {
+            throw new InOutInfoException("Invalid field [" + field + "] to update info!");
+        }
+    }
+
+    return isCarExists(carNumber).then((car) => {
+        if (car) {
+            return car.$relatedQuery('infos').findById(infoId).then((info) => {
+                if (info) {
+                    return info.$query().patch(postData)
+                } else {
+                    throw new InOutInfoException(`Car(Number: ${carNumber}) could not find Info(Id:${infoId})`);
+                }
+            });
+        } else {
+            throw new InOutInfoException(`Car(Number: ${carNumber}) not found for Info(Id:${infoId})`);
+        }
+    });
+}
+exports.updateInOutInfos = updateInOutInfos;
 
 function getRoles() {
     return Role.query().select(['id', 'description']);
@@ -74,8 +103,8 @@ function getAllUsers(columns) {
 }
 exports.getAllUsers = getAllUsers;
 
-function isCarExists(carId) {
-    return Car.query().findOne('number', carId);
+function isCarExists(carNumber) {
+    return Car.query().findOne('number', carNumber);
 }
 exports.isCarExists = isCarExists
 
@@ -95,12 +124,12 @@ function addUser(userData) {
 }
 exports.addUser = addUser;
 
-function addNewCar(carId) {
-    if (!carId) {
+function addNewCar(carNumber) {
+    if (!carNumber) {
         throw new DbException("Invalid car number!");
     } else {
         const car = Car.query().insert({
-            number: carId
+            number: carNumber
         })
         return car;
     }
@@ -117,11 +146,11 @@ function addPhoto4ioInfoId(ioInfoId, photo) {
 }
 exports.addPhoto4ioInfoId = addPhoto4ioInfoId;
 
-function setFilters(q, filters){
+function setFilters(q, filters) {
     if (filters.count) {
         q.count(filters.count)
     }
-    if(filters.select) {
+    if (filters.select) {
         q.select(filters.select);
     }
     if (filters.where) {

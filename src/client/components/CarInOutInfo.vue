@@ -9,9 +9,10 @@
                     <option v-for="info in globals.car.infos" :value="info.id">{{ info.in_datetime }}</option>
                 </select>
             </template>
-            <button v-if="globals.car.current_number.length > 4" style="margin-left: 3px;">Добавить</button>
+            <button @click="setNewFormData()" v-if="globals.car.current_number.length > 4"
+                style="margin-left: 3px;">Добавить</button>
         </fieldset>
-        <fieldset v-if="globals.car.infos.length && globals.car.infoCurrentId">
+        <fieldset v-if="globals.car.infoCurrentId">
             <legend>Информация о въезде/выезде транспорта</legend>
             <template v-if="resources.transportTypes.length">
                 Тип транспорта:<br />
@@ -44,8 +45,10 @@
             <textarea id="w3review" name="w3review" rows="4" cols="50"
                 v-model="globals.car.infoCurrent.comment"></textarea><br />
 
-            <button @click="setInState()">Оформить въезд</button>
-            <button @click="setOutState()">Оформить выезд</button>
+            <button @click="setInState()" :disabled="globals.car.infoCurrent.in_datetime">Оформить въезд</button>
+            <button @click="setOutState()"
+                :disabled="globals.car.infoCurrent.out_datetime || (!globals.car.infoCurrent.in_datetime && !globals.car.infoCurrent.out_datetime)">Оформить
+                выезд</button>
         </fieldset>
     </div>
 </template>
@@ -56,6 +59,11 @@ import { reactive, onMounted, ref } from 'vue';
 import { wsGetTransportTypes } from '../axios/ws'
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
+
+function setNewFormData() {
+    globals.car.infoCurrentId = -1;
+    globals.car.infoCurrent = resources.inOutInfoDefaults;
+}
 
 function setFormData() {
     globals.setCarInfoID(globals.car.infoCurrentId)
@@ -109,18 +117,13 @@ function setInState() {
         return;
     }
 
-    globals.car.infoCurrent.car_number = globals.car.current_number;
     globals.car.infoCurrent.in_datetime = getNow()
     globals.car.infoCurrent.date_ymd = globals.car.forDate;
-    axios.post(globals.getWebServiceURL + "addInOutInfos", globals.car.infoCurrent).then(function (response) {
+    axios.post(globals.getWebServiceURL + (`/cars/${globals.car.current_number}/add/info`), globals.car.infoCurrent).then(function (response) {
         if (response.data.result) {
-            // pageResources.roles = response.data.roles;
-            // response.data.roles.forEach((role) => {
-            //     pageResources.rolesMap[role.id] = role.description;
-            // })
             alert('Информация добавлена!');
         } else {
-            alert('Ошибка!');
+            alert(response.data.message);
         }
     });
 }

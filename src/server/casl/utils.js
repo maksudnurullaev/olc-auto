@@ -23,7 +23,7 @@ const reRoot = /^\/$/;
 const reAll = /^\/(assets|favicon|login|logout|checkLogin|kpp)/;
 const reRegistered = /^\/changePassword/;
 const re1C = /^\/(car|getImages|photos|getTransportTypes|)/
-const re1Kpp = /^\/(base64Jpeg2File|getCameraImage|base64Jpeg2File|addInOutInfos|updateInOutInfos)/
+const re1Kpp = /^\/(base64Jpeg2File|getCameraImage|base64Jpeg2File)/
 const reAdmin = /^\/(getAllUsers|getRoles|changeRole4User|addUser|updateUser)/;
 
 function hasAccess(req) {

@@ -13,6 +13,11 @@
   globals.car.infos.length: {{ globals.car.infos.length }} 
   globals.car.infosByDates.length: {{ globals.car.infosByDates.length }} 
       </pre>
+      <div>
+        <ul>
+          <li v-for="[n,v] in Object.entries(globals.car.infoCurrent)">{{ n }}: {{ v ? v.toString().trim().length : 0 }}</li>
+        </ul>
+      </div>
     </pane>
     <pane size="65">
       <template v-if="globals.car.current_number">
@@ -99,5 +104,4 @@ button {
   border: 3px solid green;
   text-align: center;
 }
-
 </style>

@@ -3,11 +3,14 @@ const { Model } = require('objection');
 Model.knex(knex);
 
 class Car extends Model {
-    static get tableName(){
+    static get tableName() {
         return 'cars';
     }
+    static get idColumn() {
+        return 'number';
+    }
 
-    static get relationMappings(){
+    static get relationMappings() {
         const Infos = require('./InOutInfo');
 
         return {
