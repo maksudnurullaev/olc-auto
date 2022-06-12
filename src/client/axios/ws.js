@@ -16,7 +16,7 @@ function wsGetCarInfos4Date(globals) {
         "where": ["date_ymd", forDate]
     }
 
-    axios.post(`/cars/${car}/infos`, filter).then((response) => {
+    return axios.post(globals.getWebServiceURL + `cars/${car}/infos`, filter).then((response) => {
         globals.car.infos = [];
         if (response.data.result) {
             if (response.data.car && response.data.car.infos) {
@@ -49,7 +49,7 @@ function wsGetCarInfosDates(globals) {
         "groupBy": "date_ymd"
     }
 
-    axios.post(`/cars/${car}/infos`, filter).then((response) => {
+    axios.post(globals.getWebServiceURL + `cars/${car}/infos`, filter).then((response) => {
         globals.car.infosByDates = [];
         if (response.data.result) {
             if (response.data.car && response.data.car.infos) {
@@ -80,15 +80,19 @@ function wsGetRoles(globals, pageResources) {
     });
 }
 
-function wsGetTransportTypes(globals, pageResources) {
-    axios.post(globals.getWebServiceURL + "getTransportTypes").then(function (response) {
-        if (response.data.result) {
-            pageResources.transportTypes = response.data.transportTypes;
-            response.data.transportTypes.forEach((ttype) => {
-                pageResources.codeLengthLimits[ttype.id] = ttype.code_length;
-            })
-        }
-    });
+function wsGetTransportTypes(globals) {
+    if(!globals.car.form.transportTypes.length){
+        axios.post(globals.getWebServiceURL + "getTransportTypes").then(function (response) {
+            if (response.data.result) {
+                globals.car.form.transportTypes = response.data.transportTypes;
+                response.data.transportTypes.forEach((ttype) => {
+                    globals.car.form.codeLengthLimits[ttype.id] = ttype.code_length;
+                })
+            }
+        });    
+    } else{
+        console.log("Trasnports types already loaded!");
+    }
 }
 
 function wsChangeRole4User(globals, postData) {

@@ -1,4 +1,4 @@
-function commonFormateDate(date) {
+function ymdFormateDate(date) {
     var d = date ? date : new Date(),
         month = '' + (d.getMonth() + 1),
         day = '' + d.getDate(),
@@ -13,7 +13,7 @@ function commonFormateDate(date) {
 };
 
 function getImageAccessUrl(carNumber, fileName, forDate) {
-    return ['photos',carNumber, commonFormateDate(string2Date(forDate)), fileName].join('/');
+    return ['photos',carNumber, ymdFormateDate(string2Date(forDate)), fileName].join('/');
 };
 
 function string2Date(dateString) {
@@ -24,7 +24,7 @@ function string2Date(dateString) {
     return new Date();
 }
 // const utils = require('./utils')
-// var commonFormateDate = utils.formateDate;
+// var ymdFormateDate = utils.formateDate;
 // var getImageAccessUrl= utils.getImageAccessUrl;
 // var string2Date = utils.string2Date;
-export { commonFormateDate, getImageAccessUrl, string2Date }
+export { ymdFormateDate, getImageAccessUrl, string2Date }

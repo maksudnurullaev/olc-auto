@@ -1,5 +1,6 @@
+import axios from 'axios';
 import { defineStore } from 'pinia';
-import { commonFormateDate } from '../../utils/common.js';
+import { ymdFormateDate } from '../../utils/common.js';
 const roleAdmin = /^admin/;
 const roleKpp = /^(admin|kpp)/;
 const role1c = /^(admin|kpp|1c)/;
@@ -17,7 +18,7 @@ export const useGlobalStore = defineStore('globals', {
                 images: [],
                 search_number: '',
                 current_number: '',
-                forDate: commonFormateDate(),
+                forDate: ymdFormateDate(),
                 infos: [],
                 infosByDates: [],
                 infoCurrentId: 0,
@@ -35,6 +36,12 @@ export const useGlobalStore = defineStore('globals', {
                     driver_phone: null,
                     comment: null,
                     is_sent_to_1c: 0
+                },
+                form: {
+                    codeSize: 0,
+                    transportTypes: [],
+                    codeLengthLimits: {},
+                    isNew: false
                 }
             },
             cars: [],
@@ -65,13 +72,52 @@ export const useGlobalStore = defineStore('globals', {
                 const info = this.car.infos[index];
                 if (info.id == id) {
                     this.car.infoCurrent = info;
+                    // this.car.infoCurrentOld = JSON.parse(JSON.stringify(this.car.infoCurrent));
+                    this.car.form.codeSize = this.car.form.codeLengthLimits[this.car.infoCurrent.ttype_id];
+                    this.car.form.isNew = false;
                     return;
                 }
             }
         },
+        setNewIoInfosFormData() {
+            this.car.infoCurrent = {
+                // mandatory fields to insert
+                car_number: null,
+                date_ymd: null,
+                ttype_id: 0,
+                code: "",
+                in_datetime: null,
+                // mandatory field to update
+                out_datetime: null,
+                // ... other fields
+                contragent: null,
+                driver_phone: null,
+                comment: null,
+                is_sent_to_1c: 0
+            };
+            this.car.form.isNew = true;
+        },
+        updateCarsList() {
+            const filter = {
+                "select": ["number"]
+            }
+
+            axios.post('/cars', filter).then((response) => {
+                if (response.data.result) {
+                    this.cars = []; // clear cars array
+                    const cars = response.data.cars;
+                    for (let index = 0; index < cars.length; index++) {
+                        const car = cars[index];
+                        this.cars.push(car.number)
+                    }
+                } else {
+                    console.warn(response.data.message);
+                }
+            });
+        }
     },
     getters: {
-        getWebServiceURL: (state) => '/', //state.webServer.dev,
+        getWebServiceURL: () => '/', //state.webServer.dev,
         roleAsAdmin: (state) => {
             if (!state.user.role) { return false; }
             return roleAdmin.test(state.user.role);

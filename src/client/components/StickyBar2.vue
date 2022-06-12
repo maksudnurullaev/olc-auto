@@ -5,9 +5,9 @@
             |
             История ({{ globals.car.infosByDates.length }}):
             <select v-model="globals.car.forDate" @change="showCarInfos4Date()">
-                <option :value="commonFormateDate()">Сегодня ({{ todayInfos() }})</option>
+                <option :value="ymdFormateDate()">Сегодня ({{ todayInfos() }})</option>
                 <template v-for="carInfoDate in globals.car.infosByDates">
-                    <option v-if="carInfoDate.date_ymd != commonFormateDate()" :value="carInfoDate.date_ymd">
+                    <option v-if="carInfoDate.date_ymd != ymdFormateDate()" :value="carInfoDate.date_ymd">
                         {{ carInfoDate.date_ymd }} ({{ carInfoDate.records }})
                     </option>
                 </template>
@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { commonFormateDate } from '../../utils/common.js';
+import { ymdFormateDate } from '../../utils/common.js';
 import { wsGetCameraImage, wsGetCarInfos4Date } from '../axios/ws.js';
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
@@ -39,7 +39,7 @@ function showCarInfos4Date() {
 }
 
 function todayInfos() {
-    let _today = commonFormateDate();
+    let _today = ymdFormateDate();
     for (let index = 0; index < globals.car.infosByDates.length; index++) {
         const infoDate = globals.car.infosByDates[index];
         if (infoDate.date_ymd == _today) {

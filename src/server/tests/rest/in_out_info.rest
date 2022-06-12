@@ -122,8 +122,14 @@ Accept: application/json
 
 ###
 
-GET  {{baseUrl}}/cars/TESTCAR-2/infos HTTP/1.1
+POST  {{baseUrl}}/cars/TESTCAR2/infos HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 
+
+###
+
+POST  {{baseUrl}}/cars/TESTCAR1/infos/61 HTTP/1.1
+Content-Type: application/json
+Accept: application/json
 

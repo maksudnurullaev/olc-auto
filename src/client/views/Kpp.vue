@@ -7,15 +7,26 @@
         <button @click="setCarID(car)" v-for="car in globals.cars">{{ car }}</button>
       </div>
       <pre name="4debugger">
+  globals.user.id: {{ globals.user.id }}
+  globals.user.role: {{ globals.user.role }}
+
+  globals.roleAsRegistered: {{ globals.roleAsRegistered }}
+  globals.roleAs1c: {{ globals.roleAs1c }}
+  globals.roleAsAdmin: {{ globals.roleAsAdmin }}
+  globals.roleAsKpp: {{ globals.roleAsKpp }}
+
   globals.car.current_number: {{ globals.car.current_number }} 
   globals.car.forDate: {{ globals.car.forDate }} 
   globals.car.infoCurrentId: {{ globals.car.infoCurrentId }} 
+  globals.car.form.isNew: {{ globals.car.form.isNew }} 
   globals.car.infos.length: {{ globals.car.infos.length }} 
   globals.car.infosByDates.length: {{ globals.car.infosByDates.length }} 
       </pre>
       <div>
         <ul>
-          <li v-for="[n,v] in Object.entries(globals.car.infoCurrent)">{{ n }}: {{ v ? v.toString().trim().length : 0 }}</li>
+          <li v-for="[n, v] in Object.entries(globals.car.infoCurrent)">{{ n }}: {{ v ? v.toString().trim().length : 0
+          }}
+          </li>
         </ul>
       </div>
     </pane>
@@ -50,36 +61,38 @@ import { useGlobalStore } from '../stores/globals';
 import { onMounted } from "vue";
 import axios from "axios";
 import { wsGetCarInfosDates, wsGetCarInfos4Date } from "../axios/ws";
-import { commonFormateDate } from "../../utils/common";
+import { ymdFormateDate } from "../../utils/common";
 const globals = useGlobalStore();
 
 function setCarID(car) {
   globals.car.current_number = car;
-  globals.car.forDate = commonFormateDate();
+  globals.car.forDate = ymdFormateDate();
   wsGetCarInfosDates(globals);
   wsGetCarInfos4Date(globals);
 }
 
-function updateCarList() {
-  const filter = {
-    "select": ["number"]
-  }
+// function updateCarList() {
+//   const filter = {
+//     "select": ["number"]
+//   }
 
-  axios.post('/cars', filter).then((response) => {
-    const cars = response.data.cars;
-    for (let index = 0; index < cars.length; index++) {
-      const car = cars[index];
-      globals.cars.push(car.number)
-
-    }
-    // console.log(cars);
-  });
-};
+//   axios.post('/cars', filter).then((response) => {
+//     if (response.data.result) {
+//       const cars = response.data.cars;
+//       for (let index = 0; index < cars.length; index++) {
+//         const car = cars[index];
+//         globals.cars.push(car.number)
+//       }
+//     } else {
+//       console.warn(response.data.message);
+//     }
+//   });
+// };
 
 onMounted(() => {
-  if (!globals.cars.length) {
-    updateCarList();
-  }
+  // if (!globals.cars.length) {
+    globals.updateCarsList();
+  // }
 })
 
 </script>

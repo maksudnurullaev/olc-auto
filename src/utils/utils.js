@@ -1,5 +1,5 @@
-// import { commonFormateDate, getImageAccessUrl, string2Date } from './common';
-function commonFormateDate(date) {
+// import { ymdFormateDate, getImageAccessUrl, string2Date } from './common';
+function ymdFormateDate(date) {
     var d = date ? date : new Date(),
         month = '' + (d.getMonth() + 1),
         day = '' + d.getDate(),
@@ -14,7 +14,7 @@ function commonFormateDate(date) {
 };
 
 function getImageAccessUrl(carNumber, fileName, forDate) {
-    return ['photos',carNumber, commonFormateDate(string2Date(forDate)), fileName].join('/');
+    return ['photos',carNumber, ymdFormateDate(string2Date(forDate)), fileName].join('/');
 };
 
 function string2Date(dateString) {
@@ -25,15 +25,15 @@ function string2Date(dateString) {
     return new Date();
 }
 
-// export { commonFormateDate, getImageAccessUrl, string2Date }
-exports.formateDate = commonFormateDate;
+// export { ymdFormateDate, getImageAccessUrl, string2Date }
+exports.ymdFormateDate = ymdFormateDate; //formateDate
 exports.string2Date = string2Date; 
 exports.getImageAccessUrl = getImageAccessUrl;
 
 const path = require('path');
 
 function getImagesDirectoryPath(path2Photos, carNumber, date) {
-    return path.join(path2Photos, carNumber, commonFormateDate(string2Date(date)));
+    return path.join(path2Photos, carNumber, ymdFormateDate(string2Date(date)));
 }
 exports.getImagesDirectoryPath = getImagesDirectoryPath;
 

@@ -20,7 +20,7 @@ function isClass(id) {
 </script>
 
 <template>
-  <template v-if="globals.user.id">
+  <template v-if="globals.roleAsRegistered">
     <div class="content">
       <fieldset>
         <legend>Действия:</legend>

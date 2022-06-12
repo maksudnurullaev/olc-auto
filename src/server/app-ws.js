@@ -219,7 +219,7 @@ app.post('/cars', (request, response) => {
     }
     q.then((cars) => {
         console.log('Found', cars.length, 'cars');
-        response.json({ restul: true, cars: cars });
+        response.json({ result: true, cars: cars });
     });
 });
 
@@ -243,6 +243,7 @@ app.post('/cars/:carNumber/add/info', function (req, res) {
     const { carNumber } = req.params;
     let postData = req.body;
     postData.who_in_checked = req.session.user;
+    postData.date_ymd = utils.ymdFormateDate();
 
     try {
         dbUtils.addInOutInfos(carNumber, postData).then(() => {

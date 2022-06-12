@@ -42,7 +42,7 @@ function generate(cars_number, infos_number, photos_max_number) {
 
                 for (var ini = 1; ini <= infos_number; ini++) {
                     let _date = randomDate(new Date(2022, 0, 1), new Date()),
-                        next_date = utils.formateDate(_date)
+                        next_date = utils.ymdFormateDate(_date)
                     let next_info = {
                         // id: ini,
                         car_number: next_car,

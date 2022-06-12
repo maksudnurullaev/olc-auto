@@ -1,8 +1,8 @@
 <template>
   <div class="f-container fixed-hf">
     <header v-if="globals.roleAsRegistered">
-      <router-link v-if="globals.roleAs1c" to="/">Контроль на КПП</router-link>
-      <router-link to="/config">Настройки</router-link>
+      <router-link to="/">Настройки</router-link>
+      <router-link v-if="globals.roleAs1c" to="/kpp">Контроль на КПП</router-link>
     </header>
     <header v-else>
       <h1>Система котроля транспорта на КПП</h1>
