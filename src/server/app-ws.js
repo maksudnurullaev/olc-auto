@@ -198,7 +198,7 @@ app.post('/logout', function (req, res) {
   res.send({ result: true, message: 'logout success!', user: { id: '', role: '' } })
 })
 
-function getModuleInfo () {
+function getModuleInfo() {
   return WS_NAME + ': ' + WS_VERSION
 }
 
@@ -211,6 +211,7 @@ app.get('/', (request, response) => {
 const Cars = require('./knex/models/Car')
 const User = require('./knex/models/User.js')
 const InOutInfo = require('./knex/models/InOutInfo.js')
+const { raw } = require('objection')
 app.post('/cars', (request, response) => {
   const filters = request.body
   const q = Cars.query()
@@ -221,6 +222,25 @@ app.post('/cars', (request, response) => {
     console.log('Found', cars.length, 'cars')
     response.json({ result: true, cars })
   })
+})
+
+app.post('/cars/like/:partNumber', (req, res) => {
+  const { partNumber } = req.params
+  const partNumberLike = `%${partNumber}%`
+  console.log("Looking for cars like:", partNumberLike)
+  try {
+    let q = Cars.query().select('number').where(raw('number like ?', [partNumberLike]))
+    console.log(q.toKnexQuery().toQuery());
+    q.then((cars) => {
+      if (cars.length) {
+        res.status(200).send({ result: true, cars: cars })
+      } else {
+        res.status(200).send({ result: false, message: 'No cars foud for part of number: ' + partNumber })
+      }
+    })
+  } catch (error) {
+    res.status(500).send({ result: false, message: error.message })
+  }
 })
 
 app.post('/cars/:number', (req, res) => {
@@ -405,8 +425,8 @@ app.post('/getCameraImage', (request, response) => {
 
     const imageUrl = (os.hostname() !== '1ctest1')
       ? 'https://via.placeholder.com/1200x800/' +
-            (carState.indexOf('In') == 0 ? '008000' : '0000FF') +
-            '/808080.JPEG?text=OLC+KPP+Test-Image\n' + myFile
+      (carState.indexOf('In') == 0 ? '008000' : '0000FF') +
+      '/808080.JPEG?text=OLC+KPP+Test-Image\n' + myFile
       : 'http://kpp:Kpp_1234@' + cameraIp + '/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG'
 
     downloadImageFromURL(imageUrl, myPath2File, () => { console.log('done') })
@@ -432,7 +452,7 @@ app.post('/getCameraImage', (request, response) => {
 
 // ############### Web service part
 
-async function downloadImageFromURL (url, path, callback) {
+async function downloadImageFromURL(url, path, callback) {
   console.log('Image from url: ' + url)
   console.log(' ... we going to saved as: ' + path)
   const writer = Fs.createWriteStream(path)

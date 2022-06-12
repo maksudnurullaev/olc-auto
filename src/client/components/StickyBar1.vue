@@ -6,6 +6,7 @@
 </template>
 
 <script setup>
+import axios from 'axios';
 import { wsGetCarInfosDates, wsGetCarInfos4Date } from '../axios/ws';
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
@@ -17,9 +18,33 @@ function uppercase() {
 }
 
 function updateCar() {
-    globals.car.current_number = globals.car.search_number;
-    wsGetCarInfosDates(globals);
-    wsGetCarInfos4Date(globals);
+    // if (globals.car.search_number.length > 4) {
+    //     wsGetCarInfosDates(globals);
+    //     wsGetCarInfos4Date(globals);
+    // } else {
+
+    let urLike = 'cars/like/' + globals.car.search_number
+    axios.post(globals.getWebServiceURL + urLike).then((response) => {
+        if (response.data.result) {
+            globals.cars = [] // clear cars array
+            const cars = response.data.cars
+            for (let index = 0; index < cars.length; index++) {
+                const car = cars[index]
+                globals.cars.push(car.number)
+            }
+        } else {
+            console.warn(response.data.message)
+            if (globals.car.search_number.length > 4) {
+                globals.car.current_number = globals.car.search_number
+                // globals.car.current_number = car;
+                globals.car.forDate = ymdFormateDate();
+                wsGetCarInfosDates(globals);
+                wsGetCarInfos4Date(globals);
+            }
+        }
+    })
+
+    // }
 }
 
 </script>

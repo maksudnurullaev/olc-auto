@@ -99,22 +99,22 @@ export const useGlobalStore = defineStore('globals', {
       this.car.form.isNew = true
     },
     updateCarsList () {
-      const filter = {
-        select: ['number']
-      }
+      // const filter = {
+      //   select: ['number']
+      // }
 
-      axios.post('/cars', filter).then((response) => {
-        if (response.data.result) {
-          this.cars = [] // clear cars array
-          const cars = response.data.cars
-          for (let index = 0; index < cars.length; index++) {
-            const car = cars[index]
-            this.cars.push(car.number)
-          }
-        } else {
-          console.warn(response.data.message)
-        }
-      })
+      // axios.post('/cars', filter).then((response) => {
+      //   if (response.data.result) {
+      //     this.cars = [] // clear cars array
+      //     const cars = response.data.cars
+      //     for (let index = 0; index < cars.length; index++) {
+      //       const car = cars[index]
+      //       this.cars.push(car.number)
+      //     }
+      //   } else {
+      //     console.warn(response.data.message)
+      //   }
+      // })
     }
   },
   getters: {
