@@ -17,7 +17,7 @@ export const useGlobalStore = defineStore('globals', {
       },
       carSearchNumber: '',
       car: {
-        state: 'In',
+        state: 'In', // [In|Out]
         photos: [],
         current_number: '',
         forDate: ymdFormateDate(),

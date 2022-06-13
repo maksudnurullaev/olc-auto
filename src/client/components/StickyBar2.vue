@@ -6,14 +6,14 @@
                 |
             </template>
             <template v-if="globals.camera.isComponentOpen">
+                Камеры/Режим:
                 <input type="radio" id="AutoIn" name="inOrOut" v-model="globals.car.state" value="In"
                     checked="true" /><label for="AutoIn">Въезд</label>
                 <input type="radio" id="AutoOut" name="inOrOut" v-model="globals.car.state" value="Out" /><label
                     for="AutoOut">Выезд</label>
-                | Камеры:
-                <input type="submit" value="Въезда" @click="getStreetCameraImage('192.168.4.150')"
+                <input type="submit" value="Фото" style="margin-left: 6px;" @click="getStreetCameraImage('192.168.4.150')"
                     v-if="globals.car.state == 'In'" />
-                <input type="submit" value="Выезда" @click="getStreetCameraImage('192.168.4.151')"
+                <input type="submit" value="Фото" style="margin-left: 6px;" @click="getStreetCameraImage('192.168.4.151')"
                     v-if="globals.car.state == 'Out'" />
             </template>
             <template v-else>
@@ -59,7 +59,7 @@ function switchCamera() {
 }
 
 function getCameraBtnTitle() {
-    return (globals.camera.isComponentOpen ? 'Оформления' : 'Камеры');
+    return (globals.camera.isComponentOpen ? 'Данные' : 'Камеры');
 }
 
 function getStreetCameraImage(ip) {
