@@ -58,12 +58,12 @@ import StickyBar2 from "../components/StickyBar2.vue";
 import WebCam2 from "../components/WebCam2.vue";
 import CarInOutInfo from "../components/CarInOutInfo.vue";
 import ImageThumbnails from "../components/ImageThumbnails.vue"
-
-import { useGlobalStore } from '../stores/globals';
 import { onMounted } from "vue";
 import axios from "axios";
 import { wsGetCarInfosDates, wsGetCarInfos4Date } from "../axios/ws";
 import { ymdFormateDate } from "../../utils/common";
+
+import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
 
 function setCarID(car) {

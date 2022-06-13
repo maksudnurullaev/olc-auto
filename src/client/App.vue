@@ -1,7 +1,7 @@
 <template>
   <div class="f-container fixed-hf">
     <header v-if="globals.roleAsRegistered">
-      <router-link to="/">Настройки</router-link>
+      <router-link to="/">Настройки/Отчеты</router-link>
       <router-link v-if="globals.roleAs1c" to="/kpp">Контроль на КПП</router-link>
     </header>
     <header v-else>

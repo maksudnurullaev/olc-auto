@@ -1,5 +1,5 @@
 1. (DONE!) Add making foto from device camera (VueJS)
-1.2 (DONE!) Keep local storage to save picture
+1.2 Keep local storage to save picture
 2. (DONE!) Fix: close camera when switching camera is OFF
 3. (DONE!) Add Image gallery
 4. (DONE!) Implement SQLITE3/knex 
@@ -7,10 +7,13 @@
 6. (DONE!) Install objectction knex better-sqlite3
 7. Refactor knex|objectction files due generating with babel
 8. (DONE!cv-08 nbHTTP Basic Auth "SEEMS" does not works!
-9. Add create new user tests (ad admin)
+9. Add create new user tests (as admin)
 10. Add owners of records for cars & photos
-11. Add catalogs
+11. (DONE!) Add catalogs
 12. Add created_at title for new images from cameras
+13. Add owner column to photos
+14. Resize video output
+15. Change home page by default 
 
 # --- SSL Self signed certificate for development ---
 openssl genrsa -out key.pem

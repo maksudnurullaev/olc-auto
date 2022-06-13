@@ -1,13 +1,13 @@
 import { createWebHistory, createRouter } from 'vue-router'
 
-import LogInOut from '../views/LogInOut.vue'
+import Config from '../views/Config.vue'
 import Kpp from '../views/Kpp.vue'
 
 const routes = [
   {
     path: '/',
-    name: 'LogInOut',
-    component: LogInOut
+    name: 'Config',
+    component: Config
   },
   {
     path: '/kpp',
