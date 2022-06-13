@@ -11,6 +11,17 @@ Accept: application/json
 
 ###
 
+POST  {{baseUrl}}/cars/TESTCAR1/infos/61/photos HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+    "select": ["url", "description", "created_at"]
+}
+
+
+###
+
 POST  {{baseUrl}}/cars/like/33 HTTP/1.1
 Content-Type: application/json
 Accept: application/json

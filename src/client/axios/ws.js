@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { getImageAccessUrl } from '../../utils/common'
 
-function wsGetCarInfos4Date (globals) {
+function wsGetCarInfos4Date(globals) {
   const car = globals.car.current_number
   const forDate = globals.car.forDate
   if (!car) {
@@ -36,7 +36,7 @@ function wsGetCarInfos4Date (globals) {
   })
 }
 
-function wsGetCarInfosDates (globals) {
+function wsGetCarInfosDates(globals) {
   const car = globals.car.current_number
   if (!car) {
     alert('На заполнено номера авто!')
@@ -67,7 +67,7 @@ function wsGetCarInfosDates (globals) {
   })
 }
 
-function wsGetRoles (globals, pageResources) {
+function wsGetRoles(globals, pageResources) {
   axios.post(globals.getWebServiceURL + 'getRoles').then(function (response) {
     if (response.data.result) {
       pageResources.roles = response.data.roles
@@ -78,7 +78,7 @@ function wsGetRoles (globals, pageResources) {
   })
 }
 
-function wsGetTransportTypes (globals) {
+function wsGetTransportTypes(globals) {
   if (!globals.car.form.transportTypes.length) {
     axios.post(globals.getWebServiceURL + 'getTransportTypes').then(function (response) {
       if (response.data.result) {
@@ -93,7 +93,7 @@ function wsGetTransportTypes (globals) {
   }
 }
 
-function wsChangeRole4User (globals, postData) {
+function wsChangeRole4User(globals, postData) {
   axios.post(globals.getWebServiceURL + 'changeRole4User', postData).then(function (response) {
     console.log(response.data.message)
     if (response.data.result) {
@@ -104,7 +104,7 @@ function wsChangeRole4User (globals, postData) {
   })
 }
 
-function wsGetAllUsers (globals, pageResources) {
+function wsGetAllUsers(globals, pageResources) {
   axios.post(globals.getWebServiceURL + 'getAllUsers')
     .then(function (response) {
       if (response.data.result) {
@@ -124,7 +124,7 @@ function wsGetAllUsers (globals, pageResources) {
     })
 }
 
-function wsLogout (globals) {
+function wsLogout(globals) {
   axios.post(globals.getWebServiceURL + 'logout')
     .then(function (response) {
       if (response.data.result) {
@@ -142,7 +142,7 @@ function wsLogout (globals) {
     })
 }
 
-function wsCheckLogin (globals) {
+function wsCheckLogin(globals) {
   axios.post(globals.getWebServiceURL + 'checkLogin')
     .then(function (response) {
       if (response.data.result) {
@@ -159,20 +159,20 @@ function wsCheckLogin (globals) {
     })
 }
 
-function wsAddUser (userData, globals) {
+function wsAddUser(userData, globals) {
   return axios.post(globals.getWebServiceURL + 'addUser', userData)
 }
 
-function wsUpdateUser (userData, globals) {
+function wsUpdateUser(userData, globals) {
   return axios.post(globals.getWebServiceURL + 'updateUser', userData)
 }
 
-function wsChangePassword (userData, globals) {
+function wsChangePassword(userData, globals) {
   const postData = { userId: userData.userId, newUserPassword: userData.newUserPassword }
   return axios.post(globals.getWebServiceURL + 'changePassword', postData)
 }
 
-function wsLogin (userData, globals) {
+function wsLogin(userData, globals) {
   const postData = {
     id: userData.id,
     password: userData.password
@@ -196,13 +196,17 @@ function wsLogin (userData, globals) {
     })
 }
 
-function wsAddCarImage (postData, globals) {
+function wsAddCarImage(postData, globals) {
   // const globals = useGlobalStore();
   axios.post(globals.getWebServiceURL + 'base64Jpeg2File', postData)
     .then(function (response) {
       if (response.data.result) {
-        console.log(response.data.image)
-        globals.car.images.push(response.data.image)
+        let newPhoto = response.data.photo
+        newPhoto.imageUrl = globals.getWebServiceURL + getImageAccessUrl(globals.car.current_number, newPhoto.url, globals.car.forDate)
+        globals.car.photos.push(newPhoto)
+        // wsGetCarImages(globals)
+        // console.log(response.data.image)
+        // globals.car.photos.push(response.data.image)
       } else {
         console.warn(response.data.message ? response.data.message : 'Error returns from server, check logs!')
       }
@@ -212,7 +216,7 @@ function wsAddCarImage (postData, globals) {
     })
 }
 
-function wsGetCameraImage (cameraIp, globals) {
+function wsGetCameraImage(cameraIp, globals) {
   if (!globals.car.current_number) {
     alert('Нет номера авто!')
     return
@@ -226,11 +230,12 @@ function wsGetCameraImage (cameraIp, globals) {
     carState: globals.car.state,
     cameraIp
   }
+  //TODO: Fix it
   axios.post(globals.getWebServiceURL + 'getCameraImage', myPostData)
     .then(function (response) {
       if (response.data.result) {
         const imageUrl = getImageAccessUrl(globals.car.current_number, response.data.imageUrl, globals.car.forDate)
-        globals.car.images.push(imageUrl)
+        globals.car.photos.push(imageUrl)
         console.log('imageUrl:', imageUrl)
       } else {
         alert(response.data.message)
@@ -241,7 +246,7 @@ function wsGetCameraImage (cameraIp, globals) {
     })
 }
 
-function wsGetCarImages (globals) {
+function wsGetCarImages(globals) {
   if (!globals.car.current_number) {
     alert('Нет номера авто!')
     return
@@ -252,25 +257,22 @@ function wsGetCarImages (globals) {
   }
 
   console.log('Get images for car:', globals.car.current_number)
-  console.log(' ... and  for date:', globals.car.forDate)
-  const myPostData = {
-    carID: globals.car.current_number,
-    forDate: globals.car.forDate
-  }
-  globals.car.images = [] // reset car images
-  axios.post(globals.getWebServiceURL + 'getImages', myPostData)
+  console.log(' ...    and infoId:', globals.car.infoCurrentId)
+  console.log(' ...  and for date:', globals.car.forDate)
+  // const myPostData = {
+  //   carID: globals.car.current_number,
+  //   forDate: globals.car.forDate
+  // }
+  globals.car.photos = [] // reset car images
+  let wsUrl = "cars/" + globals.car.current_number + "/infos/" + globals.car.infoCurrentId + "/photos"
+  // axios.post(globals.getWebServiceURL + 'getImages', myPostData)
+  axios.post(globals.getWebServiceURL + wsUrl)
     .then(function (response) {
       if (response.data.result) {
-        if (response.data.imageUrls.length) {
-          response.data.imageUrls.forEach(element => {
-            const imageUrl = getImageAccessUrl(globals.car.current_number, element, globals.car.forDate)
-            globals.car.images.push(imageUrl)
-            // console.log("imageUrl:", imageUrl);
-          })
-        }
-        console.log('Found:', response.data.imageUrls.length, 'images!')
-      } else if (response.data.message) {
-        console.error(response.data.message)
+        globals.car.photos = response.data.car.photos;
+        globals.car.photos.forEach(element => {
+          element.imageUrl = globals.getWebServiceURL + getImageAccessUrl(globals.car.current_number, element.url, globals.car.forDate)
+        })
       }
     })
     .catch(function (error) {

@@ -28,11 +28,11 @@ describe('Test WS-API for:', () => {
       })
   })
 
-  test(' ... POST /getImages: bad request, no parameters', () => {
+  test(' ... POST /base64Jpeg2File: bad request, no parameters', () => {
     return request(app)
-      .post('/getImages')
+      .post('/base64Jpeg2File')
       .then(response => {
-        expect(response.statusCode).toBe(400)
+        expect(response.statusCode).toBe(404)
       })
   })
 })

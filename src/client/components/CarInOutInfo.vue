@@ -129,7 +129,8 @@ function setInState() {
     axios.post(globals.getWebServiceURL + url2Add, postData).then((response) => {
         if (response.data.result) {
             wsGetCarInfosDates(globals);
-            globals.updateCarsList();
+            // globals.getAllCarsList();
+            globals.cars.push(car_number)
             wsGetCarInfos4Date(globals).then(() => {
                 // set  globals.car.infoCurrentId
                 for (let index = 0; index < globals.car.infos.length; index++) {

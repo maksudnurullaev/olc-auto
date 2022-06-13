@@ -1,5 +1,5 @@
 <template>
-    <div id="container">
+    <div v-if="globals.car.infoCurrentId" id="container">
 
         <h1>Камера</h1>
 
@@ -38,6 +38,9 @@
 
         <p ref="errormessageblock" id="errormessage"></p>
         <canvas ref="canvas"></canvas>
+    </div>
+    <div class="center" v-else>
+        <h3>Нет оформленных данных!</h3>
     </div>
 </template>
 
@@ -155,6 +158,10 @@ function takeSnapshot() {
         alert('Нет номера авто!');
         return;
     }
+    if (!globals.car.state || !globals.car.infoCurrentId) {
+        alert('Нет инормации о въезде или выезде авто!');
+        return;
+    }
 
     canvas.value.width = video.value.videoWidth;
     canvas.value.height = video.value.videoHeight;
@@ -165,7 +172,9 @@ function takeSnapshot() {
     let myPostData = {
         dataURL: dataURL,
         carNumber: globals.car.current_number,
-        carState: globals.car.state
+        carState: globals.car.state,
+        forDate: globals.car.forDate,
+        infoId: globals.car.infoCurrentId
     }
     wsAddCarImage(myPostData, globals);
 };
@@ -175,14 +184,16 @@ function takeSnapshot() {
 // }
 
 function closeCamera() {
-    if (video.value.srcObject) {
+    if (video.value && video.value.srcObject) {
         let tracks = video.value.srcObject.getTracks();
 
         tracks.forEach(track => {
             track.stop();
         });
     }
-    videoblock.value.style.display = 'none';
+    if (videoblock.value) {
+        videoblock.value.style.display = 'none';
+    }
 }
 
 function getMedia(constraints) {
@@ -319,5 +330,12 @@ video {
     background: none;
     height: auto;
     width: auto;
+}
+
+.center {
+    margin: 10px 10px;
+    padding: 10px 10px;
+    border: 3px solid red;
+    text-align: center;
 }
 </style>

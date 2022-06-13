@@ -4,6 +4,7 @@ const utils = require('../utils/utils.js')
 const http = require('http')
 const https = require('https')
 const express = require('express')
+const dbUtils = require('./knex/utils')
 
 // setup SSL for https
 const credentials = {
@@ -25,12 +26,24 @@ app.use('/photos', express.static(path2Photos))
 
 // Save incoming image
 app.post('/base64Jpeg2File', (request, response) => {
-  console.log(request.body.dataURL.length)
+  const carNumber = request.body.carNumber
+  const infoId = request.body.infoId
+  const forDate = request.body.forDate
+  const carState = request.body.carState
+  if (!carNumber || !infoId || !forDate || !carState) {
+    response.status(400).send({ result: false, message: 'Parameters are not properly defined!' })
+    return
+  }
+  console.log('Get device camera image:')
+  console.log(' ...          for carID:', carNumber)
+  console.log(' ...           for date:', forDate)
+  console.log(' ...     with car state:', carState)
+  console.log(' ...         image size:', request.body.dataURL.length)
   const base64String = request.body.dataURL
   const base64Image = base64String.split(';base64,').pop()
-  const myPath = utils.getImagesDirectoryPath(path2Photos, request.body.carNumber)
+  const myPath = utils.getImagesDirectoryPath(path2Photos, carNumber, forDate)
   if (utils.validateDir(myPath)) {
-    const myFile = utils.getUniqueId(null, request.body.carState) + '.jpeg'
+    const myFile = utils.getUniqueId(null, carState) + '.jpeg'
     const myPath2File = path.join(myPath, myFile)
     console.log('File going to be saved as: ' + myPath2File)
     fs.writeFile(myPath2File, base64Image, { encoding: 'base64' }, function (err) {
@@ -39,9 +52,15 @@ app.post('/base64Jpeg2File', (request, response) => {
         response.send({ result: false, errMessage: err.toString() })
       } else {
         console.log('File saved:', myPath2File)
-        const _imageUrl = utils.getImageAccessUrl(request.body.carNumber, myFile)
-        console.log('Image access URL:', _imageUrl)
-        response.send({ result: true, image: _imageUrl })
+        if (!request.body.infoId) {
+          response.send({ result: true, message: "Invalid infoId to add photos!" })
+        } else {
+          dbUtils.addPhoto4ioInfoId(infoId, { url: myFile }).then((photo) => {
+            response.send({ result: true, photo: photo })
+          }).catch((err) => {
+            response.send({ result: false, message: err.message })
+          })
+        }
       }
     })
   } else {

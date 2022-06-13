@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
 import { ymdFormateDate } from '../../utils/common.js'
+import { wsGetCarImages } from '../axios/ws.js'
 const roleAdmin = /^admin/
 const roleKpp = /^(admin|kpp)/
 const role1c = /^(admin|kpp|1c)/
@@ -9,15 +10,15 @@ const roleRegistered = /^(admin|kpp|1c|registered)/
 export const useGlobalStore = defineStore('globals', {
   state: () => {
     return {
-      debugMode: false,
+      debugMode: true,
       user: {
         id: '',
         role: ''
       },
+      carSearchNumber: '',
       car: {
         state: 'In',
-        images: [],
-        search_number: '',
+        photos: [],
         current_number: '',
         forDate: ymdFormateDate(),
         infos: [],
@@ -72,10 +73,13 @@ export const useGlobalStore = defineStore('globals', {
       for (let index = 0; index < this.car.infos.length; index++) {
         const info = this.car.infos[index]
         if (info.id == id) {
+          // set info for car
           this.car.infoCurrent = info
-          // this.car.infoCurrentOld = JSON.parse(JSON.stringify(this.car.infoCurrent));
           this.car.form.codeSize = this.car.form.codeLengthLimits[this.car.infoCurrent.ttype_id]
           this.car.form.isNew = false
+          // set photos for car
+          console.log('Get photos for car', this.car.current_number, 'and infoId', this.car.infoCurrentId)
+          wsGetCarImages(this)
           return
         }
       }
@@ -98,7 +102,7 @@ export const useGlobalStore = defineStore('globals', {
       }
       this.car.form.isNew = true
     },
-    updateCarsList () {
+    getAllCarsList () {
       // const filter = {
       //   select: ['number']
       // }

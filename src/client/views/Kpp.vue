@@ -43,7 +43,7 @@
         <image-thumbnails />
       </template>
       <div class="center" v-else>
-        <h3>Необходимо выбрать номер машины или выполнить поиск!</h3>
+        <h3>Необходимо выполнить поиск и выбрать номер машины!</h3>
       </div>
     </pane>
   </splitpanes>
@@ -91,11 +91,11 @@ function setCarID(car) {
 //   });
 // };
 
-onMounted(() => {
-  // if (!globals.cars.length) {
-  globals.updateCarsList();
-  // }
-})
+// onMounted(() => {
+//   // if (!globals.cars.length) {
+//   globals.getAllCarsList();
+//   // }
+// })
 
 </script>
 
@@ -116,7 +116,7 @@ button {
 .center {
   margin: 10px 10px;
   padding: 10px 10px;
-  border: 3px solid green;
+  border: 3px solid red;
   text-align: center;
 }
 </style>

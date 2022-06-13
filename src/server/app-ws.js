@@ -360,7 +360,12 @@ app.post('/cars/:number/infos/:ioInfosId/photos', (req, res) => {
       } else {
         car.$relatedQuery('infos').findById(ioInfosId).then((ioInfo) => {
           if (ioInfo) {
-            ioInfo.$relatedQuery('photos').then((photos) => {
+            const q = ioInfo.$relatedQuery('photos');
+            const filters = req.body
+            if (filters) {
+              dbUtils.setFilters(q, filters)
+            }          
+            q.then((photos) => {
               if (photos) {
                 car.photos = photos
               }
@@ -380,45 +385,45 @@ app.post('/cars/:number/infos/:ioInfosId/photos', (req, res) => {
 
 // ... to photos
 const path2Photos = path.resolve(__dirname, '..', '..', 'dist', 'photos')
-app.post('/getImages', (request, response) => {
-  const carID = request.body.carID
-  const forDate = request.body.forDate
-  if (!carID || !forDate) {
-    response.status(400).send({ result: false, message: 'Parameters are not properly defined!' })
-    return
-  }
-  const myPath = utils.getImagesDirectoryPath(path2Photos, carID, forDate)
-  if (utils.validateDir(myPath)) {
-    const imageUrls = []
-    Fs.readdir(myPath, (err, files) => {
-      files.forEach(file => {
-        imageUrls.push(file)
-        // console.log(file, imageUrls.length);
-      })
-      response.send({ result: true, imageUrls })
-      console.log('Found', imageUrls.length, 'images for:', carID)
-    })
-  } else {
-    response.status(400).send({ result: false, errMessage: ("Couldn't implemented yet: " + myPath) })
-  }
-})
+// app.post('/getImages', (request, response) => {
+//   const carID = request.body.carID
+//   const forDate = request.body.forDate
+//   if (!carID || !forDate) {
+//     response.status(400).send({ result: false, message: 'Parameters are not properly defined!' })
+//     return
+//   }
+//   const myPath = utils.getImagesDirectoryPath(path2Photos, carID, forDate)
+//   if (utils.validateDir(myPath)) {
+//     const imageUrls = []
+//     Fs.readdir(myPath, (err, files) => {
+//       files.forEach(file => {
+//         imageUrls.push(file)
+//         // console.log(file, imageUrls.length);
+//       })
+//       response.send({ result: true, imageUrls })
+//       console.log('Found', imageUrls.length, 'images for:', carID)
+//     })
+//   } else {
+//     response.status(400).send({ result: false, errMessage: ("Couldn't implemented yet: " + myPath) })
+//   }
+// })
 
 app.post('/getCameraImage', (request, response) => {
-  const carID = request.body.carID
+  const carNumber = request.body.carNumber
   const ioInfoId = request.body.ioInfoId
   const forDate = request.body.forDate
   const cameraIp = request.body.cameraIp
   const carState = request.body.carState
-  console.log('Get image:')
-  console.log(' ... for carID:', carID)
-  console.log(' ... for date:', forDate)
-  console.log(' ... from camera IP:', cameraIp)
-  console.log(' ... with car state:', carState)
-  if (!carID || !ioInfoId || !forDate || !cameraIp || !carState) {
+  if (!carNumber || !ioInfoId || !forDate || !cameraIp || !carState) {
     response.status(400).send({ result: false, message: 'Parameters are not properly defined!' })
     return
   }
-  const myPath = utils.getImagesDirectoryPath(path2Photos, carID, forDate)
+  console.log('Get street camera image:')
+  console.log(' ...          for carNumber:', carNumber)
+  console.log(' ...           for date:', forDate)
+  console.log(' ...     with car state:', carState)
+  console.log(' ...     from camera IP:', cameraIp)
+  const myPath = utils.getImagesDirectoryPath(path2Photos, carNumber, forDate)
   if (utils.validateDir(myPath)) {
     const myFile = utils.getUniqueId(null, request.body.carState) + '.jpeg'
     const myPath2File = path.join(myPath, myFile)

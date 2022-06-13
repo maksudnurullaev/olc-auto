@@ -1,19 +1,11 @@
 <template>
     <div class="sticky">
         <template v-if="globals.roleAsKpp">
-            <input type="submit" @click="switchCamera" v-if="globals.roleAsKpp" :value="getCameraBtnTitle()" />
-            |
-            История ({{ globals.car.infosByDates.length }}):
-            <select v-model="globals.car.forDate" @change="showCarInfos4Date()">
-                <option :value="ymdFormateDate()">Сегодня ({{ todayInfos() }})</option>
-                <template v-for="carInfoDate in globals.car.infosByDates">
-                    <option v-if="carInfoDate.date_ymd != ymdFormateDate()" :value="carInfoDate.date_ymd">
-                        {{ carInfoDate.date_ymd }} ({{ carInfoDate.records }})
-                    </option>
-                </template>
-            </select> <!-- button @click="showCarInfos4Date()">Показать</button -->
-            <template v-if="globals.camera.isComponentOpen">
+            <template v-if="globals.car.current_number">
+                <input type="submit" @click="switchCamera" v-if="globals.roleAsKpp" :value="getCameraBtnTitle()" />
                 |
+            </template>
+            <template v-if="globals.camera.isComponentOpen">
                 <input type="radio" id="AutoIn" name="inOrOut" v-model="globals.car.state" value="In"
                     checked="true" /><label for="AutoIn">Въезд</label>
                 <input type="radio" id="AutoOut" name="inOrOut" v-model="globals.car.state" value="Out" /><label
@@ -23,6 +15,17 @@
                     v-if="globals.car.state == 'In'" />
                 <input type="submit" value="Выезда" @click="getOutCameraImage('192.168.4.151')"
                     v-if="globals.car.state == 'Out'" />
+            </template>
+            <template v-else>
+                История ({{ globals.car.infosByDates.length }}):
+                <select v-model="globals.car.forDate" @change="showCarInfos4Date()">
+                    <option :value="ymdFormateDate()">Сегодня ({{ todayInfos() }})</option>
+                    <template v-for="carInfoDate in globals.car.infosByDates">
+                        <option v-if="carInfoDate.date_ymd != ymdFormateDate()" :value="carInfoDate.date_ymd">
+                            {{ carInfoDate.date_ymd }} ({{ carInfoDate.records }})
+                        </option>
+                    </template>
+                </select>
             </template>
         </template>
     </div>
@@ -56,7 +59,7 @@ function switchCamera() {
 }
 
 function getCameraBtnTitle() {
-    return (globals.camera.isComponentOpen ? 'Офомление' : 'Фотографии');
+    return (globals.camera.isComponentOpen ? 'Оформления' : 'Камеры');
 }
 
 function getOutCameraImage(ip) {
