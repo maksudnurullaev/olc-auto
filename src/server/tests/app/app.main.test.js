@@ -63,7 +63,7 @@ describe('Test WS-API vs Objection.js for:', () => {
       })
   })
 
-  const car_number_1 = 'TESTCAR-1'
+  const car_number_1 = 'TESTCAR1'
   const url_1 = `/cars/${car_number_1}`
   test(' ... GET  ' + url_1, () => {
     return request(app)
@@ -76,10 +76,10 @@ describe('Test WS-API vs Objection.js for:', () => {
       })
   })
 
-  const car_number_2 = 'TESTCAR-2'
+  const car_number_2 = 'TESTCAR2'
   const url_2 = `/cars/${car_number_2}/infos`
   test(' ... GET  ' + url_2, () => {
-    const car_number = 'TESTCAR-2'
+    const car_number = 'TESTCAR2'
     return request(app)
       .post('/cars/' + car_number + '/infos')
       .then(response => {
@@ -93,7 +93,7 @@ describe('Test WS-API vs Objection.js for:', () => {
   })
 
   // test URL: /cars/:carId/infos/:ioInfosId
-  const car_number_3 = 'TESTCAR-3'
+  const car_number_3 = 'TESTCAR3'
   const ioInfosId = 3
   const url_3 = `/cars/${car_number_3}/infos/${ioInfosId}`
   test(' ... GET  ' + url_3, () => {

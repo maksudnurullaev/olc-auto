@@ -364,7 +364,7 @@ app.post('/cars/:number/infos/:ioInfosId/photos', (req, res) => {
             const filters = req.body
             if (filters) {
               dbUtils.setFilters(q, filters)
-            }          
+            }
             q.then((photos) => {
               if (photos) {
                 car.photos = photos
@@ -373,7 +373,7 @@ app.post('/cars/:number/infos/:ioInfosId/photos', (req, res) => {
               res.status(200).send({ result: true, car })
             })
           } else {
-            res.send({ result: false, message: `Photos not found for car number(${number}) and ioInfoId(${ioInfosId})!` })
+            res.send({ result: false, message: `Photos not found for car number(${number}) and infoId(${ioInfosId})!` })
           }
         })
       }
@@ -408,18 +408,18 @@ const path2Photos = path.resolve(__dirname, '..', '..', 'dist', 'photos')
 //   }
 // })
 
-app.post('/getCameraImage', (request, response) => {
+app.post('/getStreetCameraImage', (request, response) => {
   const carNumber = request.body.carNumber
-  const ioInfoId = request.body.ioInfoId
+  const infoId = request.body.infoId
   const forDate = request.body.forDate
   const cameraIp = request.body.cameraIp
   const carState = request.body.carState
-  if (!carNumber || !ioInfoId || !forDate || !cameraIp || !carState) {
+  if (!carNumber || !infoId || !forDate || !cameraIp || !carState) {
     response.status(400).send({ result: false, message: 'Parameters are not properly defined!' })
     return
   }
   console.log('Get street camera image:')
-  console.log(' ...          for carNumber:', carNumber)
+  console.log(' ...      for carNumber:', carNumber)
   console.log(' ...           for date:', forDate)
   console.log(' ...     with car state:', carState)
   console.log(' ...     from camera IP:', cameraIp)
@@ -436,15 +436,15 @@ app.post('/getCameraImage', (request, response) => {
 
     downloadImageFromURL(imageUrl, myPath2File, () => { console.log('done') })
       .then(() => {
-        dbUtils.isIoInfoExists(ioInfoId).then((ioInfo) => {
+        dbUtils.isIoInfoExists(infoId).then((ioInfo) => {
           if (ioInfo) {
-            dbUtils.addPhoto4ioInfoId(ioInfoId, { url: myFile }).then((photo) => {
-              response.send({ result: true, imageUrl: myFile })
+            dbUtils.addPhoto4ioInfoId(infoId, { url: myFile }).then((photo) => {
+              response.send({ result: true, photo })
             }).catch((err) => {
               response.send({ result: false, message: err })
             })
           } else {
-            response.send({ result: false, message: ('Invalid parent ioIdoId: ' + ioInfoId) })
+            response.send({ result: false, message: ('Invalid parent ioIdoId: ' + infoId) })
           }
         })
       })

@@ -83,7 +83,7 @@ Accept: application/json
 {
     "select": ["number"],
     "ddistinct": ["date_ymd"],
-    "dwhere": ["CAR_NUMBER","GTESTCAR-3"],
+    "dwhere": ["CAR_NUMBER","GTESTCAR3"],
     "dwhere": ["date_ymd","2022-06-08"]
 }
 
@@ -128,7 +128,7 @@ Accept: application/json
 
 ### 
 
-GET  {{baseUrl}}/cars/TESTCAR-1 HTTP/1.1
+GET  {{baseUrl}}/cars/TESTCAR1 HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 

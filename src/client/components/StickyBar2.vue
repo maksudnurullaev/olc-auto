@@ -11,9 +11,9 @@
                 <input type="radio" id="AutoOut" name="inOrOut" v-model="globals.car.state" value="Out" /><label
                     for="AutoOut">Выезд</label>
                 | Камеры:
-                <input type="submit" value="Въезда" @click="getOutCameraImage('192.168.4.150')"
+                <input type="submit" value="Въезда" @click="getStreetCameraImage('192.168.4.150')"
                     v-if="globals.car.state == 'In'" />
-                <input type="submit" value="Выезда" @click="getOutCameraImage('192.168.4.151')"
+                <input type="submit" value="Выезда" @click="getStreetCameraImage('192.168.4.151')"
                     v-if="globals.car.state == 'Out'" />
             </template>
             <template v-else>
@@ -33,7 +33,7 @@
 
 <script setup>
 import { ymdFormateDate } from '../../utils/common.js';
-import { wsGetCameraImage, wsGetCarInfos4Date } from '../axios/ws.js';
+import { wsGetStreetCameraImage, wsGetCarInfos4Date } from '../axios/ws.js';
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
 
@@ -62,8 +62,8 @@ function getCameraBtnTitle() {
     return (globals.camera.isComponentOpen ? 'Оформления' : 'Камеры');
 }
 
-function getOutCameraImage(ip) {
-    wsGetCameraImage(ip, globals);
+function getStreetCameraImage(ip) {
+    wsGetStreetCameraImage(ip, globals);
 }
 
 </script>

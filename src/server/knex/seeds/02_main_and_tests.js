@@ -3,9 +3,9 @@
  * @returns { Promise<void> }
  */
 
-const test_car_1 = 'TESTCAR-1'
-const test_car_2 = 'TESTCAR-2'
-const test_car_3 = 'TESTCAR-3'
+const test_car_1 = 'TESTCAR1'
+const test_car_2 = 'TESTCAR2'
+const test_car_3 = 'TESTCAR3'
 
 exports.seed = async function (knex) {
   // Deletes ALL existing entries

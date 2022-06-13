@@ -15,7 +15,7 @@ module.exports = {
       directory: path.resolve(__dirname, 'src', 'server', 'knex', 'migrations')
     },
     seeds: {
-      directory: path.resolve(__dirname, 'src', 'server', 'knex', 'seeds')
+      directory: path.resolve(__dirname, 'src', 'server', 'knex', 'seeds', 'prod')
     },
     useNullAsDefault: true
   },
@@ -45,7 +45,7 @@ module.exports = {
       directory: path.resolve(__dirname, 'src', 'server', 'knex', 'migrations')
     },
     seeds: {
-      directory: path.resolve(__dirname, 'src', 'server', 'knex', 'seeds')
+      directory: path.resolve(__dirname, 'src', 'server', 'knex', 'seeds', 'prod')
     },
     pool: {
       min: 2,

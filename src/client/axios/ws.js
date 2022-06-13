@@ -216,27 +216,42 @@ function wsAddCarImage(postData, globals) {
     })
 }
 
-function wsGetCameraImage(cameraIp, globals) {
-  if (!globals.car.current_number) {
-    alert('Нет номера авто!')
+function wsGetStreetCameraImage(cameraIp, globals) {
+  const carNumber = globals.car.current_number,
+    infoId = globals.car.infoCurrentId,
+    forDate = globals.car.forDate,
+    carState = globals.car.state
+
+  if (!cameraIp || !carNumber || !infoId || !forDate || !carState) {
+    response.status(400).send({ result: false, message: 'Parameters are not properly defined!' })
     return
   }
-  console.log('Get images for car:', globals.car.current_number)
-  console.log(' ... and  from camera(ip):', cameraIp)
-  console.log(' ... and  for date:', globals.car.forDate)
+
+  console.log('Get street images for car:', carNumber)
+  console.log(' ...  and from camera(ip):', cameraIp)
+  console.log(' ...           and infoId:', infoId)
+  console.log(' ...             for date:', forDate)
+  console.log(' ...       and car number:', carState)
   const myPostData = {
-    carID: globals.car.current_number,
-    forDate: globals.car.forDate,
-    carState: globals.car.state,
-    cameraIp
+    carNumber,
+    forDate,
+    carState,
+    cameraIp,
+    infoId
   }
   //TODO: Fix it
-  axios.post(globals.getWebServiceURL + 'getCameraImage', myPostData)
+  axios.post(globals.getWebServiceURL + 'getStreetCameraImage', myPostData)
     .then(function (response) {
       if (response.data.result) {
-        const imageUrl = getImageAccessUrl(globals.car.current_number, response.data.imageUrl, globals.car.forDate)
-        globals.car.photos.push(imageUrl)
-        console.log('imageUrl:', imageUrl)
+        //        newPhoto.imageUrl = globals.getWebServiceURL + getImageAccessUrl(globals.car.current_number, newPhoto.url, globals.car.forDate)
+        let newPhoto = response.data.photo
+        newPhoto.imageUrl = globals.getWebServiceURL + getImageAccessUrl(carNumber, newPhoto.url, forDate)
+        globals.car.photos.push(newPhoto)
+
+        // let newPhoto = response.data.photo
+        // const newPhoto = getImageAccessUrl(carNumber, response.data.imageUrl, forDate)
+        // globals.car.photos.push(imageUrl)
+        console.log('New image created:', newPhoto.uls, 'for car', carNumber);
       } else {
         alert(response.data.message)
       }
@@ -281,7 +296,7 @@ function wsGetCarImages(globals) {
 }
 
 export {
-  wsAddCarImage, wsGetCarImages, wsGetCameraImage,
+  wsAddCarImage, wsGetCarImages, wsGetStreetCameraImage,
   wsLogin, wsCheckLogin, wsLogout, wsChangePassword,
   wsGetAllUsers, wsAddUser, wsUpdateUser, wsGetRoles, wsChangeRole4User,
   wsGetTransportTypes, wsGetCarInfosDates, wsGetCarInfos4Date
