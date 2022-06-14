@@ -1,6 +1,7 @@
 <template>
     <div class="sticky">
-        <input type="text" v-model="globals.carSearchNumber" @input="uppercase" placeholder="Номер авто" v-on:keyup.enter="findCars" />
+        <input type="text" v-model="globals.carSearchNumber" @input="uppercase" placeholder="Номер авто"
+            v-on:keyup.enter="findCars" />
         <input type="submit" value="Поиск" @click="findCars" />
     </div>
 </template>
@@ -24,11 +25,10 @@ function findCars() {
         return
     }
 
-    globals.cars = [] // clear cars array
     let urLike = 'cars/like/' + globals.carSearchNumber
     axios.post(globals.getWebServiceURL + urLike).then((response) => {
-        if (response.data.result) {
-            globals.cars = [] // clear cars array
+        if (response.data.result && response.data.cars && response.data.cars.length) {
+            globals.cars = [] // update global cars if found 
             const cars = response.data.cars
             for (let index = 0; index < cars.length; index++) {
                 const car = cars[index]

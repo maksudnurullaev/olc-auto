@@ -81,6 +81,36 @@ function updateInOutInfos (carNumber, infoId, postData) {
 }
 exports.updateInOutInfos = updateInOutInfos
 
+function update1cInOutInfos (carNumber, infoId, postData) {
+  if (!postData) {
+    throw new InOutInfoException('Not valid fields to insert record!')
+  }
+
+  const m_fields = ['is_sent_to_1c', 'who_sent_to_1c']
+  for (let index = 0; index < m_fields.length; index++) {
+    const field = m_fields[index]
+    if (typeof postData[field] === 'undefined') {
+      throw new InOutInfoException('Invalid field [' + field + '] to update info!')
+    }
+  }
+
+  return isCarExists(carNumber).then((car) => {
+    if (car) {
+      return car.$relatedQuery('infos').findById(infoId).then((info) => {
+        if (info) {
+          return info.$query().patch(postData)
+        } else {
+          throw new InOutInfoException(`Car(Number: ${carNumber}) could not find Info(Id:${infoId})`)
+        }
+      })
+    } else {
+      throw new InOutInfoException(`Car(Number: ${carNumber}) not found for Info(Id:${infoId})`)
+    }
+  })
+}
+exports.update1cInOutInfos = update1cInOutInfos
+
+
 function getRoles () {
   return Role.query().select(['id', 'description'])
 }

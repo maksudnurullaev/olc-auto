@@ -292,6 +292,22 @@ app.post('/cars/:carNumber/update/info/:infoId', function (req, res) {
   }
 })
 
+app.post('/cars/:carNumber/update1c/info/:infoId', function (req, res) {
+  const { carNumber, infoId } = req.params
+  const postData = req.body
+  postData.who_sent_to_1c = req.session.user
+
+  try {
+    dbUtils.update1cInOutInfos(carNumber, infoId, postData).then((count) => {
+      res.send({ result: true, message: `Info(Id: ${infoId}) updated!` })
+    }).catch((error) => {
+      res.send({ result: false, message: error.message })
+    })
+  } catch (error) {
+    res.send({ result: false, message: error.message })
+  }
+})
+
 app.post('/cars/:number/infos', (req, res) => {
   const { number } = req.params
   const filters = req.body
@@ -328,6 +344,7 @@ app.post('/cars/:number/infos', (req, res) => {
 
 app.post('/cars/:number/infos/:ioInfosId', (req, res) => {
   const { number, ioInfosId } = req.params
+
   console.log("Car's ID:", number)
   console.log("IoInfo's ID:", ioInfosId)
   try {
@@ -335,7 +352,12 @@ app.post('/cars/:number/infos/:ioInfosId', (req, res) => {
       if (!car) {
         res.status(200).send({ result: false, message: ('Invalid car number: ' + number) })
       } else {
-        car.$relatedQuery('infos').findById(ioInfosId).then((info) => {
+        const filters = req.body
+        const q = car.$relatedQuery('infos').findById(ioInfosId);
+        if (filters) {
+          dbUtils.setFilters(q, filters)
+        }
+        q.then((info) => {
           if (info) {
             car.info = info
           }

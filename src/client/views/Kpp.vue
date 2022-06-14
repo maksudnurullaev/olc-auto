@@ -36,10 +36,8 @@
       <template v-if="globals.car.current_number">
         <strong>Данные по грузу и авто №: {{ globals.car.current_number }}</strong>
         <sticky-bar-2 />
-        <template v-if="globals.roleAsKpp">
-          <web-cam-2 v-if="globals.camera.isComponentOpen" />
-          <CarInOutInfo v-else />
-        </template>
+        <web-cam-2 v-if="globals.camera.isComponentOpen" />
+        <CarInOutInfo v-else />
         <image-thumbnails />
       </template>
       <div class="center" v-else>

@@ -10,10 +10,9 @@
 9. Add create new user tests (as admin)
 10. Add owners of records for cars & photos
 11. (DONE!) Add catalogs
-12. Add created_at title for new images from cameras
-13. Add owner column to photos
-14. Resize video output
-15. Change home page by default 
+13. Resize video output
+14. Add simple reports system
+15. Restict actions for KPP & 1C roles
 
 # --- SSL Self signed certificate for development ---
 openssl genrsa -out key.pem
