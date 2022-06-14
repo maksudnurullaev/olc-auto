@@ -10,6 +10,16 @@ Accept: application/json
 }
 
 ###
+POST  {{baseUrl}}/reports/infos/from/2022-01-14/to/2022-07-15 HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+    "select": ["id", "car_number", "date_ymd"],
+    "limit": 2
+}
+
+###
 
 POST  {{baseUrl}}/cars/TESTCAR2/infos/4 HTTP/1.1
 Content-Type: application/json

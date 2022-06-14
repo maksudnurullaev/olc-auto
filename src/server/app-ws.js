@@ -371,6 +371,26 @@ app.post('/cars/:number/infos/:ioInfosId', (req, res) => {
   }
 })
 
+app.post('/reports/infos/from/:dateFrom/to/:dateTo', (req, res) => {
+  const { dateFrom, dateTo } = req.params
+  const filters = req.body
+  try {
+    const q = InOutInfo.query()
+    if (filters) {
+      dbUtils.setFilters(q, filters)
+    }
+    q.whereBetween('date_ymd', [dateFrom, dateTo])
+    // q.where('date_ymd', '>=', dateFrom)
+    //   .andWhere('date_ymd', '<=', dateTo)
+    console.log(q.toKnexQuery().toQuery())
+    q.then((infos) => {
+      res.send({ result: true, infos })
+    })
+  } catch (error) {
+    res.status(500).send({ result: false, message: error.message })
+  }
+})
+
 app.post('/cars/:number/infos/:ioInfosId/photos', (req, res) => {
   const { number, ioInfosId } = req.params
   console.log("Car's ID:", number)

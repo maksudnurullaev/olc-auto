@@ -188,5 +188,8 @@ function setFilters (q, filters) {
   if (filters.groupBy) {
     q.groupBy(filters.groupBy)
   }
+  if( filters.limit){
+    q.limit(filters.limit)
+  }
 }
 exports.setFilters = setFilters

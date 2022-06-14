@@ -21,7 +21,7 @@ const utils = require('../../../utils/utils')
 const req = request(app)
 const knex = require('../../knex/knex')
 
-function cleanTestData () {
+function cleanTestData() {
   return knex('photos').delete().then(() => {
     return knex('in_out_infos').delete().then(() => {
       return knex('cars').delete()
@@ -29,11 +29,11 @@ function cleanTestData () {
   })
 }
 
-function finish () {
+function finish() {
   knex.destroy()
 }
 
-function generate (cars_number, infos_number, photos_max_number) {
+function generate(cars_number, infos_number, photos_max_number) {
   cleanTestData().then(async () => {
     for (let i = 1; i <= cars_number; i++) {
       const next_car = 'TESTCAR' + i
@@ -87,7 +87,10 @@ function generate (cars_number, infos_number, photos_max_number) {
                   }
                 }
               })
+
+              
           })
+
         };
       })
     }
@@ -95,14 +98,14 @@ function generate (cars_number, infos_number, photos_max_number) {
   })
 };
 
-function randomDate (start, end) {
+function randomDate(start, end) {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
 }
 
-function main () {
-  cars_number = 5
-  infos_number = 5
-  photos_max_number = 10
+function main() {
+  cars_number = 2
+  infos_number = 2
+  photos_max_number = 4
   console.log('Generate data for', cars_number, 'cars,', ' and', photos_max_number, 'random phoros!')
   generate(cars_number, infos_number, photos_max_number)
 }
