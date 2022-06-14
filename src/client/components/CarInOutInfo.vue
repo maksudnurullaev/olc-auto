@@ -9,7 +9,7 @@
                     <option v-for="info in globals.car.infos" :value="info.id">{{ info.in_datetime }}</option>
                 </select>
             </template>
-            <button :disabled="!globals.roleAsKpp" @click="globals.setNewIoInfosFormData()"
+            <button :disabled="!globals.roleAsKpp || globals.car.forDate !== ymdFormateDate()" @click="globals.setNewIoInfosFormData()"
                 style="margin-left: 3px;">Добавить</button>
         </fieldset>
         <fieldset v-if="globals.car.infoCurrentId || globals.car.form.isNew">
@@ -65,10 +65,10 @@
 <script setup>
 import axios from 'axios';
 import { onMounted } from 'vue';
+import { ymdFormateDate } from '../../utils/common';
 import { wsGetCarInfos4Date, wsGetCarInfosDates, wsGetTransportTypes } from '../axios/ws'
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
-
 function changeFormData() {
     globals.setCarInfoID(globals.car.infoCurrentId);
 }
