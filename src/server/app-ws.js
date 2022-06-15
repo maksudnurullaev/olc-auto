@@ -372,7 +372,7 @@ app.post('/cars/:number/infos/:ioInfosId', (req, res) => {
 })
 
 app.post('/reports/infos/from/:dateFrom/to/:dateTo', (req, res) => {
-  const { dateFrom, dateTo } = req.params
+  const { dateFrom, dateTo, limits } = req.params
   const filters = req.body
   try {
     const q = InOutInfo.query()

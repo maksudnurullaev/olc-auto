@@ -22,12 +22,12 @@ const InOutInfo = require('../models/InOutInfo')
 // is_sent_to_1c
 // who_sent_to_1c
 
-function InOutInfoException (message) {
+function InOutInfoException(message) {
   this.message = message
   this.name = 'AuthException'
 }
 
-function addInOutInfos (carNumber, postData) {
+function addInOutInfos(carNumber, postData) {
   if (!postData) {
     throw new InOutInfoException('Not valid fields to insert record!')
   }
@@ -52,7 +52,7 @@ function addInOutInfos (carNumber, postData) {
 }
 exports.addInOutInfos = addInOutInfos
 
-function updateInOutInfos (carNumber, infoId, postData) {
+function updateInOutInfos(carNumber, infoId, postData) {
   if (!postData) {
     throw new InOutInfoException('Not valid fields to insert record!')
   }
@@ -81,7 +81,7 @@ function updateInOutInfos (carNumber, infoId, postData) {
 }
 exports.updateInOutInfos = updateInOutInfos
 
-function update1cInOutInfos (carNumber, infoId, postData) {
+function update1cInOutInfos(carNumber, infoId, postData) {
   if (!postData) {
     throw new InOutInfoException('Not valid fields to insert record!')
   }
@@ -111,49 +111,49 @@ function update1cInOutInfos (carNumber, infoId, postData) {
 exports.update1cInOutInfos = update1cInOutInfos
 
 
-function getRoles () {
+function getRoles() {
   return Role.query().select(['id', 'description'])
 }
 exports.getRoles = getRoles
 
-function getTransportTypes () {
+function getTransportTypes() {
   return TranportTypes.query()
 }
 exports.getTransportTypes = getTransportTypes
 
-function changeRole4User (postData) {
+function changeRole4User(postData) {
   return User.relatedQuery('roles').for(postData.userId).unrelate().then(() => {
     return User.relatedQuery('roles').for(postData.userId).relate(postData.roleId)
   })
 }
 exports.changeRole4User = changeRole4User
 
-function getAllUsers (columns) {
+function getAllUsers(columns) {
   return User.query().select(columns)
 }
 exports.getAllUsers = getAllUsers
 
-function isCarExists (carNumber) {
+function isCarExists(carNumber) {
   return Car.query().findOne('number', carNumber)
 }
 exports.isCarExists = isCarExists
 
-function isIoInfoExists (ioInfoId) {
+function isIoInfoExists(ioInfoId) {
   return InOutInfo.query().findById(ioInfoId)
 }
 exports.isIoInfoExists = isIoInfoExists
 
-function DbException (message) {
+function DbException(message) {
   this.message = message
   this.name = 'DbException'
 }
 
-function addUser (userData) {
+function addUser(userData) {
   return User.query().insert(userData)
 }
 exports.addUser = addUser
 
-function addNewCar (carNumber) {
+function addNewCar(carNumber) {
   if (!carNumber) {
     throw new DbException('Invalid car number!')
   } else {
@@ -165,17 +165,17 @@ function addNewCar (carNumber) {
 }
 exports.addNewCar = addNewCar
 
-function getPhotos (ioInfoId) {
+function getPhotos(ioInfoId) {
   return InOutInfo.relatedQuery('photos').for(ioInfoId)
 }
 exports.getPhotos = getPhotos
 
-function addPhoto4ioInfoId (ioInfoId, photo) {
+function addPhoto4ioInfoId(ioInfoId, photo) {
   return InOutInfo.relatedQuery('photos').for(ioInfoId).insert(photo)
 }
 exports.addPhoto4ioInfoId = addPhoto4ioInfoId
 
-function setFilters (q, filters) {
+function setFilters(q, filters) {
   if (filters.count) {
     q.count(filters.count)
   }
@@ -188,8 +188,8 @@ function setFilters (q, filters) {
   if (filters.groupBy) {
     q.groupBy(filters.groupBy)
   }
-  if( filters.limit){
-    q.limit(filters.limit)
+  if (filters.limits) {
+    q.limit(filters.limits)
   }
 }
 exports.setFilters = setFilters

@@ -4,30 +4,87 @@
             <legend>Отчеты:</legend>
             По датам:
             <label for="dateFrom">oт:</label>
-            <input type="date" id="dateFrom" v-model="resources.dateFrom" min="2022-06-06" :max="resources.dateTo">
+            <input type="date" id="dateFrom" v-model="resources.dateFrom" min="2022-01-01" :max="resources.dateTo">
             <label for="dateTo">до:</label>
             <input type="date" id="dateTo" v-model="resources.dateTo" :min="resources.dateFrom" :max="ymdFormateDate()">
             <input type="button" value="Отчет" @click="makeReport()" />
-            <p>
-                <strong>From {{ resources.dateFrom }} to {{ resources.dateTo }}</strong>
-            </p>
+            |
+            Лимит записей:
+            <select name="limits" id="limits" v-model="resources.limits">
+                <option v-for="l in [10, 100, 200, 500, 1000, 0]" :id="'limits-' + l" :value="l">{{ l ? l : 'все' }}
+                </option>
+            </select>
+
+            <div v-if="resources.infos.length" style="padding: 1em;">
+                <table class="styled">
+                    <thead>
+                        <tr>
+                            <th>
+                                Номер машины
+                            </th>
+                            <th>
+                                Въезд
+                            </th>
+                            <th>
+                                Ответственный
+                            </th>
+                            <th>
+                                Выезд
+                            </th>
+                            <th>
+                                Ответственный
+                            </th>
+                            <th>Код груза</th>
+                            <th>Отравлено в 1С</th>
+                            <th>Телефон контрагента</th>
+                            <th>Телефон водителя</th>
+                        </tr>
+                    </thead>
+                    <tr v-for="info in resources.infos">
+                        <td>{{ info.car_number }}</td>
+                        <td>{{ info.in_datetime }}</td>
+                        <td>{{ info.who_in_checked }}</td>
+                        <td>{{ info.out_datetime ? info.out_datetime : '---' }}</td>
+                        <td>{{ info.who_out_checked ? info.who_out_checked : '---' }}</td>
+                        <td>{{ info.code ? info.code : '---' }}</td>
+                        <td>{{ info.is_sent_to_1c ? 'Да' : 'Нет' }}</td>
+                        <td>{{ info.contragent ? info.contragent : '---' }}</td>
+                        <td>{{ info.driver_phone ? info.driver_phone : '---' }}</td>
+                    </tr>
+                </table>
+            </div>
         </fieldset>
     </div>
 </template>
 
 <script setup>
+import axios from 'axios';
 import { reactive } from 'vue';
 import { ymdFormateDate } from '../../utils/common';
-
+import { useGlobalStore } from '../stores/globals';
+const globals = useGlobalStore();
 
 const resources = reactive({
     dateFrom: ymdFormateDate(),
-    dateTo: ymdFormateDate()
+    dateTo: ymdFormateDate(),
+    limits: 10,
+    infos: []
 })
 
-function makeReport(){
+function makeReport() {
     const url = `reports/infos/from/${resources.dateFrom}/to/${resources.dateTo}`
+    const filters = {
+        limits: resources.limits
+    }
     console.log('URL report:', url)
+    console.log('URL report filters:', filters)
+    axios.post(globals.getWebServiceURL + url, filters).then((response) => {
+        if (response.data.result) {
+            resources.infos = response.data.infos
+        } else {
+            console.warn(response.data.message)
+        }
+    });
 }
 </script>
 
@@ -36,5 +93,54 @@ function makeReport(){
 input {
     margin-right: 3px;
     margin-left: 3px;
+}
+
+table.styled {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.styled thead tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+}
+
+.styled th,
+.styled td {
+    padding: 12px 15px;
+}
+
+.styled tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+
+.styled tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}
+
+.styled input[type=checkbox] {
+    width: fit-content;
+}
+
+.styled input[type=radio] {
+    width: fit-content;
+}
+
+fieldset {
+    margin-bottom: 5px;
 }
 </style>
