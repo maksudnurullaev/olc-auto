@@ -1,7 +1,7 @@
 <template>
     <div class="sticky">
         Режим
-        <input :disabled="!globals.roleAsKpp" type="submit" @click="switchCamera" :value="getCameraBtnTitle()" />
+        <input :disabled="!globals.roleAsKpp || !globals.car.infoCurrentId" type="submit" @click="switchCamera" :value="getCameraBtnTitle()" />
         |
         <template v-if="globals.camera.isComponentOpen">
             Камеры/Режим:

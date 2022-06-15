@@ -1,8 +1,8 @@
 <template>
     <div class="sticky">
         <input type="text" v-model="globals.carSearchNumber" @input="uppercase" placeholder="Номер авто"
-            v-on:keyup.enter="findCars" />
-        <input type="submit" value="Поиск" @click="findCars" />
+            v-on:keyup.enter="findCars" :disabled="globals.camera.isComponentOpen" />
+        <input type="submit" value="Поиск" @click="findCars" :disabled="globals.camera.isComponentOpen" />
     </div>
 </template>
 

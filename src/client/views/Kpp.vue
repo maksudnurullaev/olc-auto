@@ -3,7 +3,7 @@
     <pane size="35">
       <strong>Номер авто</strong>
       <sticky-bar-1 />
-      <div class="buttons" v-if="globals.cars.length">
+      <div class="buttons" v-if="globals.cars.length && !globals.camera.isComponentOpen">
         <button @click="setCarID(car)" v-for="car in globals.cars">{{ car }}</button>
       </div>
       <div name="4debugger" v-if="globals.debugMode">
@@ -15,6 +15,9 @@
   globals.roleAs1c: {{ globals.roleAs1c }}
   globals.roleAsAdmin: {{ globals.roleAsAdmin }}
   globals.roleAsKpp: {{ globals.roleAsKpp }}
+
+  globals.camera.isComponentOpen: {{ globals.camera.isComponentOpen }}
+  globals.camera.isCameraOpen: {{ globals.camera.isCamersOpen }}
 
   globals.car.current_number: {{ globals.car.current_number }} 
   globals.car.forDate: {{ globals.car.forDate }} 
