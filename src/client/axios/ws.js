@@ -128,7 +128,7 @@ function wsLogout(globals) {
   axios.post(globals.getWebServiceURL + 'logout')
     .then(function (response) {
       if (response.data.result) {
-        globals.user = response.data.user
+        globals.resetAll()
       } else {
         if (response.data.message) {
           alert(response.data.message)

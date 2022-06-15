@@ -329,7 +329,7 @@ p#dimensions {
 video {
     background: none;
     height: auto;
-    width: auto;
+    width: 100%;
 }
 
 .center {
