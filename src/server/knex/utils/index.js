@@ -183,7 +183,7 @@ function setFilters(q, filters) {
     q.select(filters.select)
   }
   if (filters.where) {
-    q.where(filters.where[0], filters.where[1])
+    q.where(filters.where)
   }
   if (filters.groupBy) {
     q.groupBy(filters.groupBy)

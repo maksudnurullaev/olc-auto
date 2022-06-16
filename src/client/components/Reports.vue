@@ -14,26 +14,23 @@
                 <option v-for="l in [10, 100, 200, 500, 1000, 0]" :id="'limits-' + l" :value="l">{{ l ? l : 'все' }}
                 </option>
             </select>
+            |
+            Статус по 1С:
+            <select name="limits" id="limits" v-model="resources.stateOf1C">
+                <option v-for="s1c in [1, 0, 99]" :id="'stateOf1C-' + s1c" :value="s1c">
+                    {{ get1cStateName(s1c) }}
+                </option>
+            </select>
 
             <div v-if="resources.infos.length" style="padding: 1em;">
                 <table class="styled">
                     <thead>
                         <tr>
-                            <th>
-                                Номер машины
-                            </th>
-                            <th>
-                                Въезд
-                            </th>
-                            <th>
-                                Ответственный
-                            </th>
-                            <th>
-                                Выезд
-                            </th>
-                            <th>
-                                Ответственный
-                            </th>
+                            <th>Номер машины</th>
+                            <th>Въезд</th>
+                            <th>Ответственный</th>
+                            <th>Выезд</th>
+                            <th>Ответственный</th>
                             <th>Код груза</th>
                             <th>Отравлено в 1С</th>
                             <th>Телефон контрагента</th>
@@ -41,7 +38,7 @@
                         </tr>
                     </thead>
                     <tr v-for="info in resources.infos">
-                        <td>{{ info.car_number }}</td>
+                        <td><a :href="getLink2Details(info.id)" target="_blank">{{ info.car_number }}</a></td>
                         <td>{{ info.in_datetime }}</td>
                         <td>{{ info.who_in_checked }}</td>
                         <td>{{ info.out_datetime ? info.out_datetime : '---' }}</td>
@@ -68,14 +65,32 @@ const resources = reactive({
     dateFrom: ymdFormateDate(),
     dateTo: ymdFormateDate(),
     limits: 10,
-    infos: []
+    infos: [],
+    stateOf1C: 99
 })
+
+function getLink2Details(infoId){
+    return `/reports/info/${infoId}/details`
+}
+
+function get1cStateName(s1c) {
+    if (s1c == 0) {
+        return "не отправлено"
+    } else if (s1c == 1) {
+        return "отправлено"
+    }
+    return "нe важно"
+}
 
 function makeReport() {
     const url = `reports/infos/from/${resources.dateFrom}/to/${resources.dateTo}`
     const filters = {
         limits: resources.limits
     }
+    if (resources.stateOf1C != 99) {
+        filters.where = ['is_sent_to_1c', resources.stateOf1C]
+    }
+
     console.log('URL report:', url)
     console.log('URL report filters:', filters)
     axios.post(globals.getWebServiceURL + url, filters).then((response) => {
