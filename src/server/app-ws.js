@@ -322,6 +322,7 @@ app.post('/cars/:number/infos', (req, res) => {
         if (filters) {
           dbUtils.setFilters(q, filters)
         }
+        console.log(q.toKnexQuery().toQuery());
         q.then((infos) => {
           if (infos.length) {
             car.infos = infos
@@ -380,8 +381,6 @@ app.post('/reports/infos/from/:dateFrom/to/:dateTo', (req, res) => {
       dbUtils.setFilters(q, filters)
     }
     q.whereBetween('date_ymd', [dateFrom, dateTo])
-    // q.where('date_ymd', '>=', dateFrom)
-    //   .andWhere('date_ymd', '<=', dateTo)
     console.log(q.toKnexQuery().toQuery())
     q.then((infos) => {
       res.send({ result: true, infos })

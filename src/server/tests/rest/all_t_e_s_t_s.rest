@@ -10,6 +10,27 @@ Accept: application/json
 }
 
 ###
+
+POST  {{baseUrl}}/cars/GTESTCAR6/infos/635/photos HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+    "select": ["url", "description", "created_at"]
+}
+
+
+###
+
+POST  {{baseUrl}}/cars/GTESTCAR6/infos/ HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+    "where": {"date_ymd" : "2022-06-17"}
+}
+
+###
 POST  {{baseUrl}}/reports/infos/from/2022-01-14/to/2022-07-15 HTTP/1.1
 Content-Type: application/json
 Accept: application/json
@@ -38,17 +59,6 @@ Accept: application/json
 {
     "is_sent_to_1c": false
 }
-
-###
-
-POST  {{baseUrl}}/cars/TESTCAR1/infos/61/photos HTTP/1.1
-Content-Type: application/json
-Accept: application/json
-
-{
-    "select": ["url", "description", "created_at"]
-}
-
 
 ###
 
@@ -95,19 +105,8 @@ Accept: application/json
 {
     "select": ["number"],
     "ddistinct": ["date_ymd"],
-    "dwhere": ["CAR_NUMBER","GTESTCAR3"],
-    "dwhere": ["date_ymd","2022-06-08"]
-}
-
-
-###
-
-POST  {{baseUrl}}/cars/TESTCAR1/infos/ HTTP/1.1
-Content-Type: application/json
-Accept: application/json
-
-{
-    "where": ["date_ymd","2022-01-21"]
+    "dwhere": {"CAR_NUMBER":"GTESTCAR3"},
+    "dwhere": {"date_ymd":"2022-06-08"}
 }
 
 ###

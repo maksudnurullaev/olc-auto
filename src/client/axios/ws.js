@@ -13,7 +13,7 @@ function wsGetCarInfos4Date(globals) {
     return
   }
   const filter = {
-    where: ['date_ymd', forDate]
+    where: {'date_ymd': forDate}
   }
 
   return axios.post(globals.getWebServiceURL + `cars/${car}/infos`, filter).then((response) => {

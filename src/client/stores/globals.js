@@ -100,7 +100,9 @@ export const useGlobalStore = defineStore('globals', {
         comment: null,
         is_sent_to_1c: 0
       }
-      this.car.form.isNew = true
+      this.car.form.isNew = true,
+      this.car.infoCurrentId = 0,
+      this.car.photos = []
     },
     resetAll() {
       this.user = {

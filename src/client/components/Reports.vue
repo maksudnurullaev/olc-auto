@@ -38,7 +38,8 @@
                         </tr>
                     </thead>
                     <tr v-for="info in resources.infos">
-                        <td><a :href="getLink2Details(info.id)" target="_blank">{{ info.car_number }}</a></td>
+                        <td><a @click.prevent="showFullReport(info)" href="#" target="_blank">{{ info.car_number }}</a>
+                        </td>
                         <td>{{ info.in_datetime }}</td>
                         <td>{{ info.who_in_checked }}</td>
                         <td>{{ info.out_datetime ? info.out_datetime : '---' }}</td>
@@ -52,12 +53,17 @@
             </div>
         </fieldset>
     </div>
+    <ModalFullReport :info="resources.current.info" :photos="resources.current.photos" v-if="resources.showFullReport"
+        v-on:close-full-report="closeFullReport" />
 </template>
 
 <script setup>
 import axios from 'axios';
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import { ymdFormateDate } from '../../utils/common';
+
+import ModalFullReport from '../components/ModalFullReport.vue'
+
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
 
@@ -66,11 +72,36 @@ const resources = reactive({
     dateTo: ymdFormateDate(),
     limits: 10,
     infos: [],
-    stateOf1C: 99
+    stateOf1C: 99,
+    showFullReport: false,
+    current: {
+        info: null,
+        photos: []
+    }
 })
 
-function getLink2Details(infoId){
-    return `/reports/info/${infoId}/details`
+function showFullReport(info) {
+    if (info) {
+        const car_number = info.car_number,
+            infoId = info.id;
+
+        const url2photos = `cars/${car_number}/infos/${infoId}/photos`
+        console.log('Get photos:', url2photos)
+        axios.post(globals.getWebServiceURL + url2photos).then((response) => {
+            if (response.data.result && response.data.car) {
+                resources.current.info = info
+                resources.current.photos = response.data.car.photos
+                resources.showFullReport = true
+            } else {
+                console.warn(response.data.message)
+            }
+        })
+
+    }
+}
+
+function closeFullReport() {
+    resources.showFullReport = false
 }
 
 function get1cStateName(s1c) {
@@ -88,7 +119,7 @@ function makeReport() {
         limits: resources.limits
     }
     if (resources.stateOf1C != 99) {
-        filters.where = ['is_sent_to_1c', resources.stateOf1C]
+        filters.where = { is_sent_to_1c: resources.stateOf1C }
     }
 
     console.log('URL report:', url)

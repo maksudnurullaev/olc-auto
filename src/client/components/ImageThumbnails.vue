@@ -1,35 +1,23 @@
 <template>
-    <div id="container" v-if="globals.car.infoCurrentId">
-        <fieldset>
-            <legend>Фотографии</legend>
-            <template v-if="globals.car.photos.length > 0">
-                <p>Нажмите на картинку чтобы увеличить</p>
-                <a v-for="photo in globals.car.photos" target="_blank" :href="photo.imageUrl">
-                    <img :src="photo.imageUrl" :alt="photo.created_at" style="width:150px"
-                        :class="getImageClass(photo.url)" :title="photo.created_at">
-                </a>
-            </template>
-            <h3 v-else>Нет данных!</h3>
-        </fieldset>
-    </div>
-    <!-- 
-    Show Camera: {{ globals.camera.isCameraOpen }} <br />
-    Images count: {{ globals.car.photos.length }} <br />
-    -->
+    <fieldset>
+        <legend>Фотографии</legend>
+        <p>Нажмите на картинку чтобы увеличить</p>
+        <a v-for="photo in props.photos" target="_blank" :href="photo.imageUrl">
+            <img :src="photo.imageUrl" :alt="photo.created_at" style="width:150px" :class="getImageClass(photo.url)"
+                :title="photo.created_at">
+        </a>
+    </fieldset>
 </template>
 
 <script setup>
-import { useGlobalStore } from '../stores/globals';
-const globals = useGlobalStore();
+import { onMounted } from 'vue';
+import { getImageClass } from '../../utils/common';
 
-function getImageClass(fileName) {
-    if (fileName) {
-        var result = fileName.match(/.*-(.*).jpeg/);
-        return (result[1]);
-    }
-    return 'NaN';
-};
+const props = defineProps(['photos'])
 
+onMounted(() => {
+    console.log("Thumbtail photos:", props.photos.length)
+})
 
 </script>
 

@@ -2,7 +2,7 @@
   <splitpanes class="default-theme">
     <pane size="35">
       <strong>Номер авто</strong>
-      <sticky-bar-1 />
+      <StickyBar1 />
       <div class="buttons" v-if="globals.cars.length && !globals.camera.isComponentOpen">
         <button @click="setCarID(car)" v-for="car in globals.cars">{{ car }}</button>
       </div>
@@ -38,10 +38,12 @@
     <pane size="65">
       <template v-if="globals.car.current_number">
         <strong>Данные по грузу и авто №: {{ globals.car.current_number }}</strong>
-        <sticky-bar-2 />
-        <web-cam-2 v-if="globals.camera.isComponentOpen" />
+        <StickyBar2 />
+        <WebCam2 v-if="globals.camera.isComponentOpen" />
         <CarInOutInfo v-else />
-        <image-thumbnails />
+        <div id="container" v-if="globals.car.infoCurrentId">
+          <image-thumbnails :photos="globals.car.photos" />
+        </div>
       </template>
       <div class="center" v-else>
         <h3>Необходимо выполнить поиск и выбрать номер машины!</h3>
@@ -54,13 +56,12 @@
 
 import { Splitpanes, Pane } from "splitpanes";
 import "splitpanes/dist/splitpanes.css";
+
 import StickyBar1 from "../components/StickyBar1.vue";
 import StickyBar2 from "../components/StickyBar2.vue";
 import WebCam2 from "../components/WebCam2.vue";
 import CarInOutInfo from "../components/CarInOutInfo.vue";
 import ImageThumbnails from "../components/ImageThumbnails.vue"
-import { onMounted } from "vue";
-import axios from "axios";
 import { wsGetCarInfosDates, wsGetCarInfos4Date } from "../axios/ws";
 import { ymdFormateDate } from "../../utils/common";
 
@@ -73,30 +74,6 @@ function setCarID(car) {
   wsGetCarInfosDates(globals);
   wsGetCarInfos4Date(globals);
 }
-
-// function updateCarList() {
-//   const filter = {
-//     "select": ["number"]
-//   }
-
-//   axios.post('/cars', filter).then((response) => {
-//     if (response.data.result) {
-//       const cars = response.data.cars;
-//       for (let index = 0; index < cars.length; index++) {
-//         const car = cars[index];
-//         globals.cars.push(car.number)
-//       }
-//     } else {
-//       console.warn(response.data.message);
-//     }
-//   });
-// };
-
-// onMounted(() => {
-//   // if (!globals.cars.length) {
-//   globals.getAllCarsList();
-//   // }
-// })
 
 </script>
 
