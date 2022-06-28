@@ -3,32 +3,22 @@
   "private": true,
   "version": "0.0.1",
   "scripts": {
-    "dev-front": "vite",
-    "dev-server": "npx nodemon -w ./src/server -w ./src/utils -w ./scr/client --ignore **/tests/**",
-    "build-front": "vite build",
-    "preview": "vite preview",
-    "ws-transpile-server": "babel ./src/server --out-dir dist/server --ignore **/tests/**",
-    "ws-transpile-common": "babel ./src/utils --out-dir dist/utils",
-    "ws-clean": "rimraf dist/server dist/utils",
-    "ws-start": "node ./dist/server/apps.js",
-    "ws-build": "npm-run-all build-front ws-clean ws-transpile-server ws-transpile-common",
-    "ws-dev": "set NODE_ENV=development && npm-run-all ws-build ws-start",
-    "ws-prod": "set NODE_ENV=production && npm-run-all ws-build ws-start",
-    "start": "npm run ws-prod",
-    "watch:dev": "npx nodemon",
+    "front-dev": "vite",
+    "front-build": "vite build",
+    "front-preview": "vite preview",
+    "server-dev": "set NODE_ENV=development && npm-run-all server-build server-start",
+    "server-prod": "set NODE_ENV=production && npm-run-all server-build-prod server-start",
+    "server-transpile-server": "babel ./src/server --out-dir dist/server --ignore **/tests/**",
+    "server-transpile-common": "babel ./src/utils --out-dir dist/utils",
+    "server-clean": "rimraf dist/server dist/utils",
+    "server-start": "npx nodemon ./dist/server/apps.js -w ./src/server -w ./src/utils -w ./src/client --ignore **/tests/**",
+    "server-build": "npm-run-all server-clean server-transpile-server server-transpile-common",
+    "server-build-prod": "npm-run-all front-build server-clean server-transpile-server server-transpile-common",
     "test": "jest --silent"
   },
   "jest": {
     "modulePathIgnorePatterns": [
       "dist"
-    ]
-  },
-  "nodemonConfig": {
-    "exec": "npm run ws-dev",
-    "ignore": [
-      "**/__tests__/**",
-      "*.test.js",
-      "*.spec.js"
     ]
   },
   "dependencies": {
@@ -57,7 +47,6 @@
     "https": "^1.0.0",
     "jest": "^28.1.0",
     "jest-extended": "^2.0.0",
-    "nodemon": "^2.0.16",
     "npm-run-all": "^4.1.5",
     "pinia": "^2.0.14",
     "sass": "^1.51.0",

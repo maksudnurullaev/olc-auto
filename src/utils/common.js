@@ -40,8 +40,4 @@ function getImageClass(fileName) {
   return 'NaN';
 };
 
-// const utils = require('./utils')
-// var ymdFormateDate = utils.formateDate;
-// var getImageAccessUrl= utils.getImageAccessUrl;
-// var string2Date = utils.string2Date;
 export { ymdFormateDate, getImageAccessUrl, string2Date, getImageClass }

@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { defineStore } from 'pinia'
 import { ymdFormateDate } from '../../utils/common.js'
 import { wsGetCarImages } from '../axios/ws.js'
@@ -10,7 +9,7 @@ const roleRegistered = /^(admin|kpp|1c|registered)/
 export const useGlobalStore = defineStore('globals', {
   state: () => {
     return {
-      debugMode: false,
+      debugMode: true,
       user: {
         id: '',
         role: ''
@@ -101,8 +100,8 @@ export const useGlobalStore = defineStore('globals', {
         is_sent_to_1c: 0
       }
       this.car.form.isNew = true,
-      this.car.infoCurrentId = 0,
-      this.car.photos = []
+        this.car.infoCurrentId = 0,
+        this.car.photos = []
     },
     resetAll() {
       this.user = {
@@ -155,7 +154,13 @@ export const useGlobalStore = defineStore('globals', {
     }
   },
   getters: {
-    getWebServiceURL: () => '/', // state.webServer.dev,
+    getWebServiceURL: (state) => {
+      if( state.debugMode) {
+        return 'https://localhost:8443/' 
+      } else {
+        return '/'
+      }
+    },
     roleAsAdmin: (state) => {
       if (!state.user.role) { return false }
       return roleAdmin.test(state.user.role)

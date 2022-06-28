@@ -1,4 +1,5 @@
 import axios from 'axios'
+
 import { getImageAccessUrl } from '../../utils/common'
 
 function wsGetCarInfos4Date(globals) {
