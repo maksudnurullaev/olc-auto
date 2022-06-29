@@ -6,6 +6,7 @@ import { useGlobalStore } from '../stores/globals';
 import PasswordChange from '../components/PasswordChange.vue';
 import Reports from '../components/Reports.vue';
 import Users from '../components/Users.vue';
+import Kpps from '../components/Kpps.vue';
 const globals = useGlobalStore();
 const subView = reactive({ id: 'passwordChange' });
 
@@ -45,7 +46,7 @@ function isClass(id) {
       <password-change v-if="subView.id == 'passwordChange' && globals.roleAsRegistered" />
       <reports v-else-if="subView.id == 'reports' && globals.roleAs1c" />
       <users v-else-if="subView.id == 'users' && globals.roleAsAdmin" />
-      <users v-else-if="subView.id == 'users' && globals.roleAsAdmin" />
+      <kpps v-else-if="subView.id == 'kpps' && globals.roleAsAdmin" />
     </div>
   </template>
   <template v-else>

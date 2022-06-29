@@ -73,7 +73,7 @@ exports.validateDir = validateDir
 // Detect current environment: [prod|test|development]
 const NODE_ENV_TEST = 'test'
 const NODE_ENV_DEV = 'development'
-const NODE_ENV = (process.env.NODE_ENV || NODE_ENV_DEV).trim() // Why trim() maybe !!!BUGFIX!!!
+const NODE_ENV = (process.env.NODE_ENV || NODE_ENV_DEV).trim() // We have error without trim() here, maybe we found some !!!BUGFIX!!!
 
 console.log('API Server environment:', NODE_ENV)
 function isDevEnvironment () {

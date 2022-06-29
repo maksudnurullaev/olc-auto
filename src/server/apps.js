@@ -1,7 +1,6 @@
 const path = require('path')
 const fs = require('fs')
 const utils = require('../utils/utils.js')
-const http = require('http')
 const https = require('https')
 const express = require('express')
 const dbUtils = require('./knex/utils')
@@ -11,7 +10,7 @@ const credentials = {
   key: fs.readFileSync(path.resolve(__dirname, '..', '..', 'ssl', 'key.pem')),
   cert: fs.readFileSync(path.resolve(__dirname, '..', '..', 'ssl', 'cert.pem'))
 }
-// ##################### SSL-header part of module
+// ##################### SSL-header part of module 
 
 const app = require('./app-ws')
 

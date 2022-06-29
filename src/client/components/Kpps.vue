@@ -1,30 +1,40 @@
 <template>
     <div class="content">
         <fieldset>
-            <legend>Настройки всех КПП:</legend>
-            <input type="submit" style="padding: 5px 10px" @click="subView.id = 'list'"
-                :class="{ selected: isClass('list') }" value="Список">
-            <input type="submit" style="padding: 5px 10px" @click="subView.id = 'add'"
-                :class="{ selected: isClass('add') }"  value="Добавить">
+            <legend>Настройки КПП(контрольно-пропускных пунктов):</legend>
+            <ul v-if="configOrgs.orgs">
+                <li v-for="(org, orgKey) in configOrgs.orgs">
+                    {{ org.description }}
+                    <ul v-if="org.kpps">
+                        <li v-for="(kpp, kppKey) in org.kpps">
+                            {{ kpp.description }}
+                            <ul v-if="kpp.cameras">
+                                <li v-for="(camera, cameraKey) in kpp.cameras">
+                                [<a href="#" @click.prevent="getTestImage(orgKey, kppKey, cameraKey)">Тест</a>]
+                                {{ camera.description }}    
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <!-- <pre>
+            {{ configOrgs }}
+            </pre> -->
         </fieldset>
-    </div>
-    <div class="content subview">
-        <users-list v-if="subView.id == 'list'" />
-        <users-add v-else-if="subView.id == 'add'" />
-        <strong v-else>Undefined sub-component!</strong>
     </div>
 </template>
 
 <script setup>
 import { reactive } from 'vue';
-import UsersList from './UsersList.vue';
-import UsersAdd from './UsersAdd.vue';
+import configOrgs from '../../utils/Organizations.json'
+// import UsersList from './UsersList.vue';
+// import UsersAdd from './UsersAdd.vue';
 
 const subView = reactive({ id: 'list' });
 
-
-function isClass(id) {
-    return subView.id == id;
+function getTestImage(org, kpp, camera) {
+    console.log("Get test image for:", org, kpp, camera)
 }
 
 </script>
