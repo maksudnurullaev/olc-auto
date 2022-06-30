@@ -3,7 +3,7 @@
     "OLC": {
       "description": "Orient Logistic Center",
       "kpps": {
-        "kpp-1": {
+        "olc-kpp-1": {
           "description": "КПП №1 (Основной въезд в транспортный двор)",
           "cameras": {
             "In": {
@@ -16,20 +16,37 @@
             }
           }
         },
-        "kpp-2": {
-            "description": "КПП №2",
-            "cameras": {
-              "In": {
-                "description": "Камера въезда",
-                "url": "http://kpp:Kpp_1234@192.168.4.150/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG"
-              },
-              "Out": {
-                "description": "Камера выезда",
-                "url": "http://kpp:Kpp_1234@192.168.4.151/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG"
-              }
+        "olc-kpp-2": {
+          "description": "КПП №2",
+          "cameras": {
+            "In": {
+              "description": "Камера въезда",
+              "url": "http://kpp:Kpp_1234@192.168.4.150/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG"
+            },
+            "Out": {
+              "description": "Камера выезда",
+              "url": "http://kpp:Kpp_1234@192.168.4.151/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG"
             }
           }
-  
+        }
+      }
+    },
+    "ULS": {
+      "description": "Universal Logistic Services",
+      "kpps": {
+        "uls-kpp-1": {
+          "description": "КПП №1",
+          "cameras": {
+            "In": {
+              "description": "Камера въезда",
+              "url": "http://kpp:Kpp_1234@192.168.4.150/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG"
+            },
+            "Out": {
+              "description": "Камера выезда",
+              "url": "http://kpp:Kpp_1234@192.168.4.151/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG"
+            }
+          }
+        }
       }
     }
   }

@@ -4,7 +4,8 @@ import vue from "@vitejs/plugin-vue";
 export default defineConfig({
   build: {
     outDir: "dist/front",
-    minify: false, // TODO: remove later for production
+    minify: false, // WARNING! Remove later for production...
+    // sourcemap: true
   },
   plugins: [vue()],
 });

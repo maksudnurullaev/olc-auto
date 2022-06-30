@@ -2,7 +2,7 @@
   <div class="f-container fixed-hf">
     <header v-if="globals.roleAsRegistered">
       <router-link to="/">Настройки/Отчеты</router-link>
-      <router-link v-if="globals.roleAs1c" to="/kpp">Контроль на КПП</router-link>
+      <router-link v-if="globals.location.kpp && globals.roleAs1c" to="/kpp">Контроль на КПП</router-link>
     </header>
     <header v-else>
       <h1>Система котроля транспорта на КПП</h1>

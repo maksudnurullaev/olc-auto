@@ -8,7 +8,8 @@ import Reports from '../components/Reports.vue';
 import Users from '../components/Users.vue';
 import Kpps from '../components/Kpps.vue';
 const globals = useGlobalStore();
-const subView = reactive({ id: 'passwordChange' });
+// const subView = reactive({ id: 'passwordChange' });
+const subView = reactive({ id: 'kpps' });
 
 function logout() {
   wsLogout(globals);

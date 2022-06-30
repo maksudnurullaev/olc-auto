@@ -9,7 +9,7 @@
     "server-dev": "set NODE_ENV=development && npx nodemon -w ./dist/server/apps.js --ignore **/tests/** ./dist/server/apps.js",
     "server-prod": "set NODE_ENV=production && npx nodemon -w ./dist/server/apps.js --ignore **/tests/** ./dist/server/apps.js",
     "server-transpile-server": "babel ./src/server --out-dir dist/server --ignore **/tests/**",
-    "server-transpile-common": "babel ./src/utils --out-dir dist/utils",
+    "server-transpile-common": "babel ./src/utils --out-dir dist/utils --copy-files",
     "server-clean": "rimraf dist/server dist/utils",
     "server-build": "npm-run-all server-transpile-server server-transpile-common",
     "test": "jest --silent"
@@ -41,7 +41,6 @@
     "@vitejs/plugin-vue": "^2.3.1",
     "axios": "^0.27.2",
     "babel-preset-vite": "^1.0.4",
-    "cors": "^2.8.5",
     "express": "^4.18.1",
     "fs": "^0.0.1-security",
     "https": "^1.0.0",

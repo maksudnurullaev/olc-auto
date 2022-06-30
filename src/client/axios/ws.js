@@ -253,7 +253,7 @@ function wsGetStreetCameraImage(cameraIp, globals) {
         // globals.car.photos.push(imageUrl)
         console.log('New image created:', newPhoto.uls, 'for car', carNumber);
       } else {
-        alert(response.data.message)
+        console.log(response.data.message);
       }
     })
     .catch(function (error) {

@@ -1,4 +1,4 @@
-import { ymdFormateDate, getImageAccessUrl, string2Date } from './common';
+import { ymdFormateDate, getImageAccessUrl, string2Date, orgs } from './common';
 // function ymdFormateDate (date) {
 //   const d = date || new Date()
 //   let month = '' + (d.getMonth() + 1)
@@ -27,6 +27,7 @@ import { ymdFormateDate, getImageAccessUrl, string2Date } from './common';
 exports.ymdFormateDate = ymdFormateDate // formateDate
 exports.string2Date = string2Date
 exports.getImageAccessUrl = getImageAccessUrl
+exports.orgs = orgs
 
 const path = require('path')
 
