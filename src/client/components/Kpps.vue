@@ -8,7 +8,7 @@
                     <ul v-if="org.kpps">
                         <li v-for="(kpp, kppKey) in org.kpps">
                             <input type="radio" :value="kppKey" v-model="globals.location.kpp"
-                                @click="globals.location.org = orgKey" :id="[orgKey, kppKey].join('-')" />
+                                @click="selectLocation(orgKey, kppKey)" :id="[orgKey, kppKey].join('-')" />
                             <label :for="[orgKey, kppKey].join('-')">{{ kpp.description }}</label>
                             <ul v-if="kpp.cameras">
                                 <li v-for="(camera, cameraKey) in kpp.cameras">
@@ -21,7 +21,7 @@
                 </li>
             </ul>
             <!-- <pre>
-            {{ globals.location.org }} - {{ globals.location.kpp }}
+            {{ globals.location }}
             </pre> -->
         </fieldset>
         <fieldset v-if="resources.imgSrc">
@@ -39,11 +39,11 @@ import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
 
 const resources = reactive({ imgSrc: "" })
-// const subView = reactive({ id: 'list' });
 
-// function selectKpp(kpp){
-//     globals.location.kpp = kpp
-// }
+function selectLocation(org, kpp) {
+    globals.location.org = org
+    globals.location.cameras = configOrgs.orgs[org]['kpps'][kpp]['cameras']
+}
 
 function getTestImage(org, kpp, camera) {
     const url = `getStreetCameraImageV2/${org}/${kpp}/${camera}/`

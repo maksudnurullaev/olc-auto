@@ -17,6 +17,7 @@ export const useGlobalStore = defineStore("globals", {
       location: {
         org: "",
         kpp: "",
+        cameras: null,
       },
       carSearchNumber: "",
       car: {

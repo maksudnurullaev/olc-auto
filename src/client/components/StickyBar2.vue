@@ -1,7 +1,7 @@
 <template>
     <div class="sticky">
         Режим
-        <input :disabled="!globals.roleAsKpp || !globals.car.infoCurrentId" type="submit" @click="switchCamera" :value="getCameraBtnTitle()" />
+        <input :disabled="isCameraModeDisabled()" type="submit" @click="switchCamera" :value="getCameraBtnTitle()" />
         |
         <template v-if="globals.camera.isComponentOpen">
             Камеры/Режим:
@@ -36,6 +36,12 @@ const globals = useGlobalStore();
 
 function showCarInfos4Date() {
     wsGetCarInfos4Date(globals);
+}
+
+function isCameraModeDisabled(){
+    return !globals.roleAsKpp 
+    || !globals.car.infoCurrentId 
+    || ymdFormateDate() !== globals.car.forDate
 }
 
 function todayInfos() {

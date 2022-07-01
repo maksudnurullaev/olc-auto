@@ -21,11 +21,11 @@
           "cameras": {
             "In": {
               "description": "Камера въезда",
-              "url": "http://kpp:Kpp_1234@192.168.4.150/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG"
+              "url": "http://kpp:Kpp_1234@192.168.4.152/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG"
             },
             "Out": {
               "description": "Камера выезда",
-              "url": "http://kpp:Kpp_1234@192.168.4.151/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG"
+              "url": "http://kpp:Kpp_1234@192.168.4.153/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG"
             }
           }
         }
@@ -39,11 +39,11 @@
           "cameras": {
             "In": {
               "description": "Камера въезда",
-              "url": "http://kpp:Kpp_1234@192.168.4.150/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG"
+              "url": "http://kpp:Kpp_1234@192.168.4.154/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG"
             },
             "Out": {
               "description": "Камера выезда",
-              "url": "http://kpp:Kpp_1234@192.168.4.151/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG"
+              "url": "http://kpp:Kpp_1234@192.168.4.155/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG"
             }
           }
         }
