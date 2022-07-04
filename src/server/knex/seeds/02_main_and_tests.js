@@ -36,6 +36,8 @@ exports.seed = async function (knex) {
     {
       id: 1,
       car_number: test_car_1,
+      org: 'OLC',
+      kpp: 'olc-kpp-1',
       date_ymd: '2022-06-09',
       ttype_id: 1,
       code: '',
@@ -49,6 +51,8 @@ exports.seed = async function (knex) {
     {
       id: 2,
       car_number: test_car_2,
+      org: 'OLC',
+      kpp: 'olc-kpp-1',
       date_ymd: '2022-06-09',
       ttype_id: 1,
       code: '',
@@ -62,6 +66,8 @@ exports.seed = async function (knex) {
     {
       id: 3,
       car_number: test_car_3,
+      org: 'OLC',
+      kpp: 'olc-kpp-1',
       date_ymd: '2022-06-09',
       ttype_id: 1,
       code: '',

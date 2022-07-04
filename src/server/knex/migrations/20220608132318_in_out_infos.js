@@ -8,6 +8,8 @@ exports.up = function (knex) {
     table.string('date_ymd', 11).notNullable().index()
     table.string('car_number', 15).index().references('number').inTable('cars')
     table.integer('ttype_id', 11).unsigned().index().references('id').inTable('transports_types')
+    table.string('org', 16).notNullable()
+    table.string('kpp', 16).notNullable()
     table.string('in_datetime', 32).notNullable()
     table.string('out_datetime', 32)
     table.string('who_in_checked', 32).notNullable() // from session on create

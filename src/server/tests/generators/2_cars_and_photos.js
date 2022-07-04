@@ -21,6 +21,7 @@ app.use(app_ws)
 const utils = require('../../../utils/utils')
 const req = request(app)
 const knex = require('../../knex/knex')
+const { randomUUID } = require('crypto')
 
 function cleanTestData() {
     return knex('photos').delete().then(() => {
@@ -103,9 +104,11 @@ function getNewInfo(car_number, next_date) {
     const next_info = {
         // id: ini,
         car_number,
+        org: 'OLC',
+        kpp: 'olc-kpp-1',
         date_ymd: next_date,
         ttype_id: 1,
-        code: '',
+        code: randomUUID(),
         in_datetime: next_date + 'T01:01',
         out_datetime: null,
         contragent: null,
@@ -117,9 +120,9 @@ function getNewInfo(car_number, next_date) {
 }
 
 function main() {
-    cars_number = 6
-    infos_number = 6
-    photos_max_number = 6
+    let cars_number = 6
+    let infos_number = 6
+    let photos_max_number = 6
     console.log('Generate data for', cars_number, 'cars,', infos_number, "infos", 'and', photos_max_number, 'random photos!')
     generate(cars_number, infos_number, photos_max_number)
 }

@@ -31,6 +31,8 @@ export const useGlobalStore = defineStore("globals", {
         infoCurrent: {
           // mandatory fields to insert
           car_number: null,
+          org: null,
+          kpp: null,
           date_ymd: null,
           ttype_id: 0,
           code: "",
@@ -96,6 +98,8 @@ export const useGlobalStore = defineStore("globals", {
       this.car.infoCurrent = {
         // mandatory fields to insert
         car_number: null,
+        org: this.location.org,
+        kpp: this.location.kpp,
         date_ymd: null,
         ttype_id: 0,
         code: "",

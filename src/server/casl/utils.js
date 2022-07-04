@@ -28,7 +28,7 @@ const reAdmin = /^\/(getAllUsers|getRoles|changeRole4User|addUser|updateUser)/
 
 function hasAccess (req) {
   if (!req) {
-    console.error('No reqiest password to define user permission!')
+    console.error('Invalid request to define user permission!')
     return false
   }
 

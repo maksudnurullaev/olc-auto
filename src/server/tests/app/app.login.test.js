@@ -1,47 +1,49 @@
-const request = require('supertest')
-const app_ws = require('../../app-ws')
-const knex = require('../../knex/knex')
-const testUtils = require('../utils')
+const request = require("supertest");
+const app_ws = require("../../app-ws");
+const knex = require("../../knex/knex");
+const testUtils = require("../utils");
 
-const express = require('express')
-const app = express()
-const session = require('express-session')
-app.use(session({
-  secret: 'TEST-WppQ38S-4D44-2C44',
-  resave: true,
-  saveUninitialized: true
-}))
+const express = require("express");
+const app = express();
+const session = require("express-session");
+const { exit } = require("process");
 
-app.all('*', function (req, res, next) {
-  req.session.userRole = 'admin'
-  next()
-})
+app.use(
+  session({
+    secret: "TEST-WppQ38S-4D44-2C44",
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 
-app.use(app_ws)
+app.all("*", function (req, res, next) {
+  req.session.userRole = "admin";
+  next();
+});
 
-//  var tables = [
-//   'users',
-//   'roles',
-//   'users_roles'
-// ];
+app.use(app_ws);
 
-describe('Test WS-API vs Objection.js for:', () => {
+const reqApp = request(app)
+
+// const tables = ["users", "roles", "users_roles"];
+
+describe("Test WS-API vs Objection.js for:", () => {
   beforeAll(() => {
     // return testUtils.beforeAll(tables);
     return testUtils.beforeAll()
-  })
+  });
 
-  test(' ... POST  /checkLogin: check login status', () => {
-    return request(app)
-      .post('/checkLogin')
-      .then(response => {
-        const _data = eval(response.body)
-        expect(_data.result).toEqual(false) // ... no login yet
-      })
-  })
+  test(" ... POST  /checkLogin: check login status", () => {
+    return reqApp
+      .post("/checkLogin")
+      .then((response) => {
+        const _data = eval(response.body);
+        expect(_data.result).toEqual(false); // ... no login yet
+      });
+  });
 
   test(' ... POST  /login: admin', () => {
-    return request(app)
+    return reqApp
       .post('/login')
       .send({ id: 'admin', password: 'admin' })
       .then(response => {
@@ -53,7 +55,6 @@ describe('Test WS-API vs Objection.js for:', () => {
   })
 
   const newAdminPassword = '111111'
-
   test(' ... POST  /changePassword: admin, change password', () => {
     return request(app)
       .post('/changePassword')
@@ -100,6 +101,6 @@ describe('Test WS-API vs Objection.js for:', () => {
   })
 
   afterAll(() => {
-    knex.destroy()
-  })
-})
+    knex.destroy();
+  });
+});

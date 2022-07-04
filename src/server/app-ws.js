@@ -7,7 +7,6 @@ const Fs = require("fs");
 const Axios = require("axios");
 const app = express();
 const authUtils = require("./auth/utils");
-const casl = require("./casl");
 const myCrypto = require("./crypto");
 const dbUtils = require("./knex/utils");
 const wsUtils = require("./utils/ws");
@@ -20,25 +19,39 @@ app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 // express & session & auth
 //   ... i.e.: https://www.codexpedia.com/node-js/a-very-basic-session-auth-in-node-js-with-express-js/
 const session = require("express-session");
-const sqlite = require("better-sqlite3");
-const SqliteStore = require("better-sqlite3-session-store")(session);
-const db = new sqlite(path.join("dist", "db", "sessions.db"));
+if (utils.isDevEnvironment() || utils.isTestEnvironment()) { // DEV || TEST
+  app.use(
+    session({
+      secret: "WppQ38S-4D44-2C44",
+      resave: true,
+      saveUninitialized: true,
+    })
+  );
+} else { // PRODUCTION
+  const sqlite = require("better-sqlite3");
+  const SqliteStore = require("better-sqlite3-session-store")(session);
+  const db = new sqlite(path.join("dist", "db", "sessions.db"));
 
-app.use(
-  session({
-    secret: "WppQ38S-4D44-2C44",
-    resave: true,
-    saveUninitialized: true,
-    store: new SqliteStore({
-      client: db,
-      expired: {
-        clear: true,
-        intervalMs: 3600000, //ms = 60min
-      },
-    }),
-  })
-);
+  app.use(
+    session({
+      secret: "WppQ38S-4D44-2C44",
+      resave: true,
+      saveUninitialized: true,
+      store: new SqliteStore({
+        client: db,
+        expired: {
+          clear: true,
+          intervalMs: 3600000, //ms = 60min
+        },
+      }),
+    })
+  );
+}
+
+// ... casl
+const casl = require("./casl");
 app.use(casl.auth);
+// ###############################################
 
 app.post("/changeRole4User", function (req, res) {
   const postData = req.body;
@@ -178,7 +191,7 @@ app.post("/addUser", function (req, res) {
 });
 
 app.post("/checkLogin", function (req, res) {
-  if (req.session.user) {
+  if (req.session && req.session.user) {
     res.send({
       result: true,
       message: "login already done!",

@@ -9,11 +9,19 @@
                     <option v-for="info in globals.car.infos" :value="info.id">{{ info.in_datetime }}</option>
                 </select>
             </template>
-            <button :disabled="!globals.roleAsKpp || globals.car.forDate !== ymdFormateDate()" @click="globals.setNewIoInfosFormData()"
-                style="margin-left: 3px;">Добавить</button>
+            <button :disabled="!globals.roleAsKpp || globals.car.forDate !== ymdFormateDate()"
+                @click="globals.setNewIoInfosFormData()" style="margin-left: 3px;">Добавить</button>
         </fieldset>
         <fieldset v-if="globals.car.infoCurrentId || globals.car.form.isNew">
             <legend>Информация о въезде/выезде транспорта</legend>
+            Организация:<br />
+            <select disabled v-model="globals.car.infoCurrent.org">
+                <option v-for="org in getOrgs4Select()" :value="org.key">{{ org.title }}</option>
+            </select><br />
+            КПП:<br />
+            <select disabled v-model="globals.car.infoCurrent.kpp">
+                <option v-for="org in getOrgKpps4Select(globals.location.org)" :value="org.key">{{ org.title }}</option>
+            </select><br />
             <template v-if="globals.car.form.transportTypes.length">
                 Тип транспорта:<br />
                 <select :disabled="!globals.roleAsKpp" v-model="globals.car.infoCurrent.ttype_id"
@@ -67,10 +75,32 @@ import axios from 'axios';
 import { onMounted } from 'vue';
 import { ymdFormateDate } from '../../utils/common';
 import { wsGetCarInfos4Date, wsGetCarInfosDates, wsGetTransportTypes } from '../axios/ws'
+import configOrgs from '../../utils/Organizations.json'
+
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
 function changeFormData() {
     globals.setCarInfoID(globals.car.infoCurrentId);
+}
+
+function getOrgs4Select() {
+    const keys = Object.keys(configOrgs.orgs)
+    const result = []
+    keys.forEach(key => {
+        const org = configOrgs.orgs[key]
+        result.push({ key, title: org.description })
+    });
+    return result
+}
+
+function getOrgKpps4Select(org) {
+    const keys = Object.keys(configOrgs.orgs[org]['kpps'])
+    const result = []
+    keys.forEach(key => {
+        const kpp = configOrgs.orgs[org]['kpps'][key]
+        result.push({ key, title: kpp.description })
+    });
+    return result
 }
 
 function getNow() {

@@ -11,8 +11,7 @@
       <router-view />
     </div>
     <footer>
-      <a href="http://www.olc.uz" target="_blank">&copy; {{ new Date().getFullYear() }} - ТЛЦ «Orient Logistics
-        Center»</a>
+      &copy; {{ new Date().getFullYear() }} - NMK, All rights reserved
     </footer>
   </div>
 </template>
