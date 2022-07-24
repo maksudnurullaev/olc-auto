@@ -1,10 +1,13 @@
 <template>
     <div class="modal-mask">
         <div class="modal-wrapper">
-            <div class="modal-container">
+            <div class="modal-container" v-if="props.info">
 
                 <div class="modal-header">
                     <slot name="header">
+                        <button class="modal-default-button" @click="$emit('closeFullReport')">
+                            Закрыть
+                        </button>
                         <h1>
                             Детальный отчет по авто: <strong>{{ props.info.car_number }}</strong>
                         </h1>
@@ -50,9 +53,6 @@
                 <div class="modal-footer">
                     <slot name="footer">
                         Сгенерировано: {{ ymdFormateDate(null, true) }}
-                        <button class="modal-default-button" @click="$emit('closeFullReport')">
-                            OK
-                        </button>
                     </slot>
                 </div>
             </div>

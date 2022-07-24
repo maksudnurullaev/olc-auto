@@ -2,12 +2,12 @@
     <div class="content">
         <fieldset>
             <legend>Отчеты:</legend>
-            По датам:
-            <label for="dateFrom">oт:</label>
+            <input type="button" value="Отчет" @click="makeReport()" />
+            |
+            <label for="dateFrom">От:</label>
             <input type="date" id="dateFrom" v-model="resources.dateFrom" min="2022-01-01" :max="resources.dateTo">
             <label for="dateTo">до:</label>
             <input type="date" id="dateTo" v-model="resources.dateTo" :min="resources.dateFrom" :max="ymdFormateDate()">
-            <input type="button" value="Отчет" @click="makeReport()" />
             |
             Лимит записей:
             <select name="limits" id="limits" v-model="resources.limits">
@@ -38,7 +38,7 @@
                         </tr>
                     </thead>
                     <tr v-for="info in resources.infos">
-                        <td><a @click.prevent="showFullReport(info)" href="#" target="_blank">{{ info.car_number }}</a>
+                        <td><a :href="getFullReportURL(info)" target="_blank">{{ info.car_number }}</a>
                         </td>
                         <td>{{ info.in_datetime }}</td>
                         <td>{{ info.who_in_checked }}</td>
@@ -53,8 +53,6 @@
             </div>
         </fieldset>
     </div>
-    <ModalFullReport :info="resources.current.info" :photos="resources.current.photos" v-if="resources.showFullReport"
-        v-on:close-full-report="closeFullReport" />
 </template>
 
 <script setup>
@@ -62,10 +60,10 @@ import axios from 'axios';
 import { reactive, ref } from 'vue';
 import { ymdFormateDate } from '../../utils/common';
 
-import ModalFullReport from '../components/ModalFullReport.vue'
-
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
+
+const fullReportEl = ref(null);
 
 const resources = reactive({
     dateFrom: ymdFormateDate(),
@@ -80,28 +78,11 @@ const resources = reactive({
     }
 })
 
-function showFullReport(info) {
+function getFullReportURL(info) {
     if (info) {
-        const car_number = info.car_number,
-            infoId = info.id;
-
-        const url2photos = `cars/${car_number}/infos/${infoId}/photos`
-        console.log('Get photos:', url2photos)
-        axios.post(globals.getWebServiceURL + url2photos).then((response) => {
-            if (response.data.result && response.data.car) {
-                resources.current.info = info
-                resources.current.photos = response.data.car.photos
-                resources.showFullReport = true
-            } else {
-                console.warn(response.data.message)
-            }
-        })
-
+        return '/reports/info/' + info.id
     }
-}
-
-function closeFullReport() {
-    resources.showFullReport = false
+    else { alert('Invalid INFO!') }
 }
 
 function get1cStateName(s1c) {
@@ -127,6 +108,9 @@ function makeReport() {
     axios.post(globals.getWebServiceURL + url, filters).then((response) => {
         if (response.data.result) {
             resources.infos = response.data.infos
+            if (response.data.infos && response.data.infos.length == 0) {
+                alert('По данным критериям нет данных!')
+            }
         } else {
             console.warn(response.data.message)
         }

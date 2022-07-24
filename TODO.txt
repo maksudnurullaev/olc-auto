@@ -10,9 +10,13 @@
 9. Add create new user tests (as admin)
 10. Add owners of records for cars & photos
 11. (DONE!) Add catalogs
-13. Resize video output
+13. (DONE!) Resize video output
 14. Add simple reports system
 15. Restict actions for KPP & 1C roles
+# OUKITEL RT1
+16.1 Fix In & Out direction without manual changing
+16.2 Fix reports modal report issue - close modal could not be accessable
+16.3 Make report generation button more hightlighted visually
 
 # --- SSL Self signed certificate for development ---
 openssl genrsa -out key.pem

@@ -9,7 +9,7 @@ const roleRegistered = /^(admin|kpp|1c|registered)/;
 export const useGlobalStore = defineStore("globals", {
   state: () => {
     return {
-      debugMode: true,
+      debugMode: false,
       user: {
         id: "",
         role: "",

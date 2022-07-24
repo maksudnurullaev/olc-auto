@@ -9,6 +9,7 @@
     </header>
     <div class="main">
       <router-view />
+      <DebugShowUserAndRoles v-if="globals.debugMode" />
     </div>
     <footer>
       &copy; {{ new Date().getFullYear() }} - NMK, All rights reserved
@@ -19,6 +20,8 @@
 <script setup>
 import { onBeforeMount } from 'vue';
 import { wsCheckLogin } from './axios/ws';
+import DebugShowUserAndRoles from './components/debug/UserAndRoles.vue'
+
 import { useGlobalStore } from './stores/globals';
 const globals = useGlobalStore();
 

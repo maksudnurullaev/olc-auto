@@ -7,32 +7,7 @@
         <button @click="setCarID(car)" v-for="car in globals.cars">{{ car }}</button>
       </div>
       <div name="4debugger" v-if="globals.debugMode">
-        <pre>
-  globals.user.id: {{ globals.user.id }}
-  globals.user.role: {{ globals.user.role }}
-
-  globals.roleAsRegistered: {{ globals.roleAsRegistered }}
-  globals.roleAs1c: {{ globals.roleAs1c }}
-  globals.roleAsAdmin: {{ globals.roleAsAdmin }}
-  globals.roleAsKpp: {{ globals.roleAsKpp }}
-
-  globals.camera.isComponentOpen: {{ globals.camera.isComponentOpen }}
-  globals.camera.isCameraOpen: {{ globals.camera.isCamersOpen }}
-
-  globals.car.current_number: {{ globals.car.current_number }} 
-  globals.car.forDate: {{ globals.car.forDate }} 
-  globals.car.infoCurrentId: {{ globals.car.infoCurrentId }} 
-  globals.car.form.isNew: {{ globals.car.form.isNew }} 
-  globals.car.infos.length: {{ globals.car.infos.length }} 
-  globals.car.infosByDates.length: {{ globals.car.infosByDates.length }} 
-      </pre>
-        <div>
-          <ul>
-            <li v-for="[n, v] in Object.entries(globals.car.infoCurrent)">{{ n }}: {{ v ? v.toString().trim().length : 0
-            }}
-            </li>
-          </ul>
-        </div>
+        <!-- Temporary removed all debug messages -->
       </div>
     </pane>
     <pane size="65">

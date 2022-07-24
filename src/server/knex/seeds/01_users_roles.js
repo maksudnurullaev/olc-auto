@@ -9,7 +9,7 @@ exports.seed = async function (knex) {
   await knex('roles').del()
   await knex('roles').insert([
     { id: 'admin', description: 'Администратор' },
-    { id: 'manager', description: 'Менеджер КПП' },
+    // { id: 'manager', description: 'Менеджер КПП' },
     { id: 'kpp', description: 'Оператор КПП' },
     { id: '1c', description: 'Оператор 1С' },
     { id: 'registered', description: 'Заблокирован' }

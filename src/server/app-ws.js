@@ -1,4 +1,5 @@
 const utils = require("../utils/utils.js");
+const commonUtils = require("../utils/common");
 const express = require("express");
 const WS_NAME = "OLC-KPP API Web-Service version";
 const WS_VERSION = "0.0.1b";
@@ -19,7 +20,8 @@ app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 // express & session & auth
 //   ... i.e.: https://www.codexpedia.com/node-js/a-very-basic-session-auth-in-node-js-with-express-js/
 const session = require("express-session");
-if (utils.isDevEnvironment() || utils.isTestEnvironment()) { // DEV || TEST
+if (utils.isDevEnvironment() || utils.isTestEnvironment()) {
+  // DEV || TEST
   app.use(
     session({
       secret: "WppQ38S-4D44-2C44",
@@ -27,7 +29,8 @@ if (utils.isDevEnvironment() || utils.isTestEnvironment()) { // DEV || TEST
       saveUninitialized: true,
     })
   );
-} else { // PRODUCTION
+} else {
+  // PRODUCTION
   const sqlite = require("better-sqlite3");
   const SqliteStore = require("better-sqlite3-session-store")(session);
   const db = new sqlite(path.join("dist", "db", "sessions.db"));
@@ -483,7 +486,7 @@ app.post("/cars/:number/infos/:ioInfosId", (req, res) => {
 });
 
 app.post("/reports/infos/from/:dateFrom/to/:dateTo", (req, res) => {
-  const { dateFrom, dateTo, limits } = req.params;
+  const { dateFrom, dateTo } = req.params;
   const filters = req.body;
   try {
     const q = InOutInfo.query();
@@ -497,6 +500,41 @@ app.post("/reports/infos/from/:dateFrom/to/:dateTo", (req, res) => {
     });
   } catch (error) {
     res.status(500).send({ result: false, message: error.message });
+  }
+});
+
+const pugViews = path.resolve(__dirname, "..", "utils", "views");
+console.log("Pug views path:", pugViews);
+app.set("views", pugViews);
+app.set("view engine", "pug");
+app.get("/reports/info/:infoId", (req, res) => {
+  const { infoId } = req.params;
+  // res.send(utils.getFullInfoReport(infoId));
+  try {
+    InOutInfo.query()
+      .findById(infoId)
+      .then((info) => {
+        info.$relatedQuery('photos').then((photos) => {
+          if( photos ){
+            photos.forEach((photo) => {
+              photo.imageUrl = "/" + commonUtils.getImageAccessUrl(info.car_number, photo.url, info.date_ymd)
+            });
+            res.render("fullInfoReport", {
+              info,
+              photos
+            });    
+
+          } else {
+            res.render("fullInfoReport", {
+              title: "Hey",
+              message: "Hello there!",
+              info: info,
+            });    
+          }
+        })
+      });
+  } catch (error) {
+    res.send(error.toString());
   }
 });
 
@@ -547,6 +585,7 @@ app.post("/cars/:number/infos/:ioInfosId/photos", (req, res) => {
 // ... to photos
 const path2Photos = path.resolve(__dirname, "..", "..", "dist", "photos");
 const configOrgs = require("../utils/Organizations.json");
+const { getImageAccessUrl } = require("../utils/common.js");
 app.post("/getStreetCameraImageV2/:org/:kpp/:camera/", (request, response) => {
   const { org, kpp, camera } = request.params;
   if (configOrgs.orgs) {
