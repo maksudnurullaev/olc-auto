@@ -23,8 +23,8 @@
             <button id="qvga" @click="getMedia(qvgaConstraints)">QVGA</button>
             <button id="vga" @click="getMedia(vgaConstraints)">VGA</button>
             <button id="hd" @click="getMedia(hdConstraints)">HD</button>
-            <!--
-            <button id="full-hd">Full HD</button>
+            <button id="full-hd" @click="getMedia(fullHdConstraints)">Full HD</button>
+            <!-- 
             <button id="televisionFourK">Television 4K (3840x2160)</button>
             <button id="cinemaFourK">Cinema 4K (4096x2160)</button>
             <button id="eightK">8K</button>
@@ -276,11 +276,11 @@ const hdConstraints = {
     video: { width: { exact: 1280 }, height: { exact: 720 } }
 };
 
-/** For future release!
 const fullHdConstraints = {
     video: { width: { exact: 1920 }, height: { exact: 1080 } }
 };
 
+/** For future release!
 const televisionFourKConstraints = {
     video: { width: { exact: 3840 }, height: { exact: 2160 } }
 };

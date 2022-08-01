@@ -14,9 +14,10 @@
 14. Add simple reports system
 15. Restict actions for KPP & 1C roles
 # OUKITEL RT1
-16.1 Fix In & Out direction without manual changing
-16.2 Fix reports modal report issue - close modal could not be accessable
+16.1 (DISCUSS) Fix In & Out direction without manual changing
+16.2 (DONE) Fix full info report to blank page (using Pug)
 16.3 Make report generation button more hightlighted visually
+16.4 Make pop-up message when camera makes successfull screenshot
 
 # --- SSL Self signed certificate for development ---
 openssl genrsa -out key.pem

@@ -39,7 +39,7 @@ function isClass(id) {
           :class="{ selected: isClass('reports') }" v-if="globals.roleAs1c" value="Отчеты">
         <input type="submit" style="padding: 5px 10px" v-if="globals.roleAsAdmin" @click="subView.id = 'users'"
           :class="{ selected: isClass('users') }" value="Пользователи">
-        <input type="submit" style="padding: 5px 10px" v-if="globals.roleAsAdmin" @click="subView.id = 'kpps'"
+        <input type="submit" style="padding: 5px 10px" v-if="globals.roleAs1c" @click="subView.id = 'kpps'"
           :class="{ selected: isClass('kpps') }" value="Настройки КПП">
       </fieldset>
     </div>
@@ -47,7 +47,7 @@ function isClass(id) {
       <password-change v-if="subView.id == 'passwordChange' && globals.roleAsRegistered" />
       <reports v-else-if="subView.id == 'reports' && globals.roleAs1c" />
       <users v-else-if="subView.id == 'users' && globals.roleAsAdmin" />
-      <kpps v-else-if="subView.id == 'kpps' && globals.roleAsAdmin" />
+      <kpps v-else-if="subView.id == 'kpps' && globals.roleAs1c" />
     </div>
   </template>
   <template v-else>

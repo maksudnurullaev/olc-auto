@@ -1,8 +1,8 @@
 <template>
     <div class="content">
         <fieldset>
-            <legend>Отчеты:</legend>
-            <input type="button" value="Отчет" @click="makeReport()" />
+            <legend>Отчет:</legend>
+            <input type="button" value="Выполнить" style="border: 2px solid;" @click="makeReport()" />
             |
             <label for="dateFrom">От:</label>
             <input type="date" id="dateFrom" v-model="resources.dateFrom" min="2022-01-01" :max="resources.dateTo">
