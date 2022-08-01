@@ -5,7 +5,7 @@
 4. (DONE!) Implement SQLITE3/knex 
 5. (DONE!) Add user management wuth admin user|role
 6. (DONE!) Install objectction knex better-sqlite3
-7. Refactor knex|objectction files due generating with babel
+7. Refactor knex|objection files due generating with babel
 8. (DONE!cv-08 nbHTTP Basic Auth "SEEMS" does not works!
 9. Add create new user tests (as admin)
 10. Add owners of records for cars & photos
