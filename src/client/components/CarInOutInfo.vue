@@ -18,10 +18,18 @@
             <select disabled v-model="globals.car.infoCurrent.org">
                 <option v-for="org in getOrgs4Select()" :value="org.key">{{ org.title }}</option>
             </select><br />
-            КПП:<br />
-            <select disabled v-model="globals.car.infoCurrent.kpp">
+            КПП въезда:<br />
+            <select disabled v-model="globals.car.infoCurrent.in_kpp">
                 <option v-for="org in getOrgKpps4Select(globals.location.org)" :value="org.key">{{ org.title }}</option>
             </select><br />
+            Время въезда:<br />
+            <input type="datetime-local" v-model="globals.car.infoCurrent.in_datetime" disabled /><br />
+            КПП выезда:<br />
+            <select disabled v-model="globals.car.infoCurrent.out_kpp">
+                <option v-for="org in getOrgKpps4Select(globals.location.org)" :value="org.key">{{ org.title }}</option>
+            </select><br />
+            Время выезда:<br />
+            <input type="datetime-local" v-model="globals.car.infoCurrent.out_datetime" disabled /><br />
             <template v-if="globals.car.form.transportTypes.length">
                 Тип транспорта:<br />
                 <select :disabled="!globals.roleAsKpp" v-model="globals.car.infoCurrent.ttype_id"
@@ -41,10 +49,6 @@
                     }}</sup><br />
                 </template>
             </template>
-            Время въезда:<br />
-            <input type="datetime-local" v-model="globals.car.infoCurrent.in_datetime" disabled /><br />
-            Время выезда:<br />
-            <input type="datetime-local" v-model="globals.car.infoCurrent.out_datetime" disabled /><br />
             Телефон контрагента:<br />
             <input :disabled="!globals.roleAsKpp" ref="code" type="text" v-model="globals.car.infoCurrent.contragent"
                 placeholder="Телефон контрагента" /><br />

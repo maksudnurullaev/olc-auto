@@ -21,7 +21,7 @@ html
       | Код груза:
       strong= info.code ? info.code : '---'
       br
-      | Отравлено в 1С: 
+      | Отправлено в 1С: 
       strong= info.is_sent_to_1c ? 'Да' : 'Нет'
       br
       if info.is_sent_to_1c

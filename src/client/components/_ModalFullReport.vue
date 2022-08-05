@@ -31,7 +31,7 @@
                         <span class="columnName">Код груза: </span><span class="columnValue">{{ props.info.code ?
                                 props.info.code : '---'
                         }}</span><br />
-                        <span class="columnName">Отравлено в 1С: </span><span class="columnValue">{{
+                        <span class="columnName">Отправлено в 1С: </span><span class="columnValue">{{
                                 props.info.is_sent_to_1c ? 'Да' : 'Нет'
                         }}</span><br />
                         <span class="columnName">В 1С оформил: </span><span class="columnValue">{{

@@ -32,12 +32,13 @@ export const useGlobalStore = defineStore("globals", {
           // mandatory fields to insert
           car_number: null,
           org: null,
-          kpp: null,
+          in_kpp: null,
+          in_datetime: null,
           date_ymd: null,
           ttype_id: 0,
           code: "",
-          in_datetime: null,
-          // mandatory field to update
+          // mandatory field to OUT state
+          out_kpp: null,
           out_datetime: null,
           // ... other fields
           contragent: null,
@@ -79,6 +80,10 @@ export const useGlobalStore = defineStore("globals", {
         if (info.id == id) {
           // set info for car
           this.car.infoCurrent = info;
+          if( !this.car.infoCurrent.out_kpp ){
+            alert('Hi!!!');
+            this.car.infoCurrent.out_kpp = this.location.kpp;
+          }
           this.car.form.codeSize =
             this.car.form.codeLengthLimits[this.car.infoCurrent.ttype_id];
           this.car.form.isNew = false;
@@ -99,7 +104,8 @@ export const useGlobalStore = defineStore("globals", {
         // mandatory fields to insert
         car_number: null,
         org: this.location.org,
-        kpp: this.location.kpp,
+        in_kpp: this.location.kpp,
+        // out_kpp: this.location.kpp,
         date_ymd: null,
         ttype_id: 0,
         code: "",

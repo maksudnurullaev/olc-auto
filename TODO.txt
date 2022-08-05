@@ -18,6 +18,11 @@
 16.2 (DONE) Fix full info report to blank page (using Pug)
 16.3 Make report generation button more hightlighted visually
 16.4 Make pop-up message when camera makes successfull screenshot
+# others
+17. Show proper message when access denied!
+18. Fix in\out KPP infos for in_out_infos table
+19. (DONE!) "Отравлено" Исправить
+20. (DONE!) Телефон водителя обязательный!
 
 # --- SSL Self signed certificate for development ---
 openssl genrsa -out key.pem
