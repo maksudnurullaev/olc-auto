@@ -80,8 +80,7 @@ export const useGlobalStore = defineStore("globals", {
         if (info.id == id) {
           // set info for car
           this.car.infoCurrent = info;
-          if( !this.car.infoCurrent.out_kpp ){
-            alert('Hi!!!');
+          if( !this.car.infoCurrent.out_kpp ){ // setup out_kpp for
             this.car.infoCurrent.out_kpp = this.location.kpp;
           }
           this.car.form.codeSize =
