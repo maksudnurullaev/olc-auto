@@ -23,7 +23,7 @@ exports.seed = async function (knex) {
   await knex('transports_types').insert([
     { id: 1, name: 'Авиа доставка (фура)', code_length: 0 },
     { id: 2, name: 'Вагон', code_length: 9 },
-    { id: 3, name: 'Контейнеры', code_length: 12 },
+    { id: 3, name: 'Контейнеры', code_length: 11 },
     { id: 4, name: 'Легковой транспорт', code_length: 0 },
     { id: 5, name: 'Полувагон', code_length: 9 },
     { id: 6, name: 'Самоход', code_length: 0 },
