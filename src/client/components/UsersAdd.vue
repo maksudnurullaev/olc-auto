@@ -3,7 +3,7 @@
         <fieldset>
             <legend>Добавить пользователя:</legend>
             <input type="text" placeholder="Имя пользователя" v-model="userData.id" />&nbsp;<img
-                src="../assets/icons/correct.png" v-if="validUserId()" /><br />
+                src="../assets/icons/correct.png" v-if="validUserId()" /><span v-else>Не менее 6 символов</span><br />
             <input type="password" id="password1" placeholder="Пароль" v-model="userData.password1">&nbsp;<img
                 src="../assets/icons/correct.png" v-if="validPasswordLength()" /><br />
             <input type="password" id="password2" placeholder="Подтверждение пароля"

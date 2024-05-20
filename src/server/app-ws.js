@@ -52,8 +52,9 @@ if (utils.isDevEnvironment() || utils.isTestEnvironment()) {
 }
 
 // ... casl
-const casl = require("./casl");
-app.use(casl.auth);
+// TODO: Remove4Vet
+// const casl = require("./casl");
+// app.use(casl.auth);
 // ###############################################
 
 app.post("/changeRole4User", function (req, res) {
@@ -584,81 +585,6 @@ app.post("/cars/:number/infos/:ioInfosId/photos", (req, res) => {
 
 // ... to photos
 const path2Photos = path.resolve(__dirname, "..", "..", "dist", "photos");
-const configOrgs = require("../utils/Organizations.json");
-const { getImageAccessUrl } = require("../utils/common.js");
-app.post("/getStreetCameraImageV2/:org/:kpp/:camera/", (request, response) => {
-  const { org, kpp, camera } = request.params;
-  if (configOrgs.orgs) {
-    const orgs = configOrgs.orgs;
-    if (!orgs[org]) {
-      response
-        .status(200)
-        .send({ result: false, message: "Invalid org: " + org });
-      console.log(org);
-      return;
-    } else if (!orgs[org]["kpps"] || !orgs[org]["kpps"][kpp]) {
-      response.status(200).send({
-        result: false,
-        message: "Invalid kpps or kpp: " + kpp + " for org: " + org,
-      });
-      return;
-    } else if (
-      !orgs[org]["kpps"][kpp]["cameras"] ||
-      !orgs[org]["kpps"][kpp]["cameras"][camera]
-    ) {
-      response.status(200).send({
-        result: false,
-        message:
-          "Invalid camera: " +
-          camera +
-          " for kpp: " +
-          kpp +
-          " and for org: " +
-          org,
-      });
-      return;
-    } else {
-      const path2TempDir = path.join(path2Photos, "temp");
-      if (!utils.validateDir(path2TempDir)) {
-        response.status(200).send({
-          result: false,
-          message: "Invalid temp directory for test photos: " + path2TempDir,
-        });
-      } else {
-        const photoFile = utils.getUniqueId([kpp, camera].join("-")) + ".jpeg";
-        const path2TestPhotoFile = path.join(path2TempDir, photoFile);
-        const imageUrl =
-          os.hostname() !== "1ctest1"
-            ? "https://via.placeholder.com/1200x800/" +
-              (camera.indexOf("In") == 0 ? "008000" : "0000FF") +
-              "/808080.JPEG?text=OLC+KPP+Test-Image\n" +
-              photoFile
-            : orgs[org]["kpps"][kpp]["cameras"][camera]["url"];
-        console.log("Try to get image from url:", path2TestPhotoFile);
-        // const imageUrlTest = 'https://images.unsplash.com/photo-1506812574058-fc75fa93fead';
-        downloadImageFromURL(imageUrl, path2TestPhotoFile)
-          .then(() => {
-            response.status(200).send({
-              result: true,
-              message: "/" + ["photos", "temp", photoFile].join("/"),
-            });
-          })
-          .catch((err) => {
-            response.status(200).send({
-              result: false,
-              message: err,
-            });
-          });
-      }
-      return;
-    }
-  } else {
-    console.log("Invalid organizations definition!");
-    response
-      .status(200)
-      .send({ result: false, message: "Invalid organizations definition!" });
-  }
-});
 
 app.post("/getStreetCameraImage", (request, response) => {
   const carNumber = request.body.carNumber;

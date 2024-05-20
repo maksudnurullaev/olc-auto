@@ -1,8 +1,8 @@
 <template>
     <div class="sticky">
-        <input type="text" v-model="globals.carSearchNumber" @input="uppercase" placeholder="Номер авто"
-            v-on:keyup.enter="findCars" :disabled="globals.camera.isComponentOpen" />
-        <input type="submit" value="Поиск" @click="findCars" :disabled="globals.camera.isComponentOpen" />
+        <input type="text" v-model="globals.carSearchNumber" @input="uppercase" placeholder="Поиск"
+            v-on:keyup.enter="findCars" />
+        <input type="submit" value="Поиск" @click="findCars" />
     </div>
 </template>
 
@@ -35,13 +35,13 @@ function findCars() {
                 globals.cars.push(car.number)
             }
         } else {
-            console.warn(response.data.message)
+            console.warn(response.data.message);
             if (globals.carSearchNumber.length > 4) {
-                globals.car.current_number = globals.carSearchNumber
+                globals.car.current_number = globals.carSearchNumber;
                 // globals.car.current_number = car;
                 globals.car.forDate = ymdFormateDate();
                 wsGetCarInfosDates(globals);
-                wsGetCarInfos4Date(globals);
+                //wsGetCarInfos4Date(globals);
             }
         }
     })

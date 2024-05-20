@@ -32,13 +32,13 @@ function addInOutInfos(carNumber, postData) {
     throw new InOutInfoException('Not valid fields to insert record!')
   }
 
-  const m_fields = ['ttype_id', 'in_datetime', 'who_in_checked']
-  for (let index = 0; index < m_fields.length; index++) {
-    const field = m_fields[index]
-    if (!postData[field]) {
-      throw new InOutInfoException('Invalid field [' + field + '] to insert info!')
-    }
-  }
+  // const m_fields = ['ttype_id', 'in_datetime', 'who_in_checked']
+  // for (let index = 0; index < m_fields.length; index++) {
+  //   const field = m_fields[index]
+  //   if (!postData[field]) {
+  //     throw new InOutInfoException('Invalid field [' + field + '] to insert info!')
+  //   }
+  // }
 
   return isCarExists(carNumber).then((car) => {
     if (car) {

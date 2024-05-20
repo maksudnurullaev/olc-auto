@@ -1,11 +1,10 @@
 <template>
   <div class="f-container fixed-hf">
-    <header v-if="globals.roleAsRegistered">
-      <router-link to="/">Настройки/Отчеты</router-link>
-      <router-link v-if="globals.location.kpp && globals.roleAs1c" to="/kpp">Контроль на КПП</router-link>
-    </header>
-    <header v-else>
-      <h1>Система котроля транспорта на КПП</h1>
+      <header> Фотографии: <!-- <header v-if="globals.roleAsRegistered"> 
+      <router-link  to="/photos">Контроль на КПП</router-link>
+      <router-link to="/">Настройки/Отчеты</router-link> -->
+    <!-- <header v-else>
+      <h1>Фотографии: {{ $route.params.receptionId }}</h1>  -->
     </header>
     <div class="main">
       <router-view />

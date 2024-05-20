@@ -6,4 +6,11 @@ const pinia = createPinia();
 
 import router from './client/router'
 
-createApp(App).use(pinia).use(router).mount('#app')
+const app = createApp(App)
+
+import { isDevMode } from './utils/common'
+app.config.devtools = isDevMode();
+
+app.use(pinia)
+app.use(router)
+app.mount('#app')

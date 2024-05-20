@@ -1,9 +1,9 @@
 <template>
     <div class="sticky">
-        Режим
-        <input :disabled="isCameraModeDisabled()" type="submit" @click="switchCamera" :value="getCameraBtnTitle()" />
+        Перейти в режим: 
+        <input :dis_abled="isCameraModeDisabled()" type="submit" @click="switchCamera" :value="getCameraBtnTitle()" />
         |
-        <template v-if="globals.camera.isComponentOpen">
+        <!-- template v-if="globals.camera.isComponentOpen">
             Камера:
             <input type="radio" id="AutoIn" name="inOrOut" v-model="globals.car.state" value="In"
                 checked="true" /><label for="AutoIn">въезда</label>
@@ -13,8 +13,8 @@
                 v-if="globals.car.state == 'In'" />
             <input type="submit" value="Фото" style="margin-left: 6px;" @click="getStreetCameraImage('192.168.4.151')"
                 v-if="globals.car.state == 'Out'" />
-        </template>
-        <template v-else>
+        </template -->
+        <!-- template><!-- v-else -->
             История ({{ globals.car.infosByDates.length }}):
             <select v-model="globals.car.forDate" @change="showCarInfos4Date()">
                 <option :value="ymdFormateDate()">Сегодня ({{ todayInfos() }})</option>
@@ -24,7 +24,7 @@
                     </option>
                 </template>
             </select>
-        </template>
+        <!-- /template -->
     </div>
 </template>
 
@@ -39,9 +39,8 @@ function showCarInfos4Date() {
 }
 
 function isCameraModeDisabled(){
-    return !globals.roleAsKpp 
-    || !globals.car.infoCurrentId 
-    || ymdFormateDate() !== globals.car.forDate
+    return !globals.car.infoCurrentId 
+    || ymdFormateDate() !== globals.car.forDate;
 }
 
 function todayInfos() {
@@ -62,7 +61,7 @@ function switchCamera() {
 }
 
 function getCameraBtnTitle() {
-    return (globals.camera.isComponentOpen ? 'данных' : 'камеры');
+    return (globals.camera.isComponentOpen ? 'просмотра' : 'камеры');
 }
 
 function getStreetCameraImage(ip) {

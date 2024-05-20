@@ -1,19 +1,14 @@
 import { createWebHistory, createRouter } from 'vue-router'
 
 import Config from '../views/Config.vue'
-import Kpp from '../views/Kpp.vue'
+import Photos from '../views/Photos.vue'
 
 const routes = [
   {
     path: '/',
-    name: 'Config',
-    component: Config
+    name: 'Photos',
+    component: Photos
   },
-  {
-    path: '/kpp',
-    name: 'Kpp',
-    component: Kpp
-  }
 ]
 
 const router = createRouter({

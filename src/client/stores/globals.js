@@ -1,15 +1,17 @@
 import { defineStore } from "pinia";
-import { ymdFormateDate } from "../../utils/common.js";
+import { ymdFormateDate, isDevMode } from "../../utils/common.js";
 import { wsGetCarImages } from "../axios/ws.js";
 const roleAdmin = /^admin/;
 const roleKpp = /^(admin|kpp)/;
 const role1c = /^(admin|kpp|1c)/;
 const roleRegistered = /^(admin|kpp|1c|registered)/;
 
+console.warn("is dev mode: " + isDevMode());
+
 export const useGlobalStore = defineStore("globals", {
   state: () => {
     return {
-      debugMode: false,
+      debugMode: isDevMode(),
       user: {
         id: "",
         role: "",
@@ -174,7 +176,7 @@ export const useGlobalStore = defineStore("globals", {
   getters: {
     getWebServiceURL: (state) => {
       if (state.debugMode) {
-        return "/";
+        return "https://localhost:8443/";
       } else {
         return "/";
       }

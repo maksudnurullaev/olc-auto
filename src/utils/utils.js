@@ -1,30 +1,7 @@
 import { ymdFormateDate, getImageAccessUrl, string2Date, orgs } from "./common";
-// function ymdFormateDate (date) {
-//   const d = date || new Date()
-//   let month = '' + (d.getMonth() + 1)
-//   let day = '' + d.getDate()
-//   const year = d.getFullYear()
+import process from 'node:process';
 
-//   if (month.length < 2) { month = '0' + month }
-//   if (day.length < 2) { day = '0' + day }
-
-//   return [year, month, day].join('-')
-// };
-
-// function getImageAccessUrl (carNumber, fileName, forDate) {
-//   return ['photos', carNumber, ymdFormateDate(string2Date(forDate)), fileName].join('/')
-// };
-
-// function string2Date (dateString) {
-//   if (dateString) {
-//     const parts = dateString.split('-')
-//     return new Date(parts[0], parts[1] - 1, parts[2])
-//   }
-//   return new Date()
-// }
-
-// export { ymdFormateDate, getImageAccessUrl, string2Date }
-exports.ymdFormateDate = ymdFormateDate; // formateDate
+exports.ymdFormateDate = ymdFormateDate;
 exports.string2Date = string2Date;
 exports.getImageAccessUrl = getImageAccessUrl;
 exports.orgs = orgs;
@@ -48,7 +25,6 @@ function getUniqueId(prefix, postfix) {
     "MS" +
     d.getMilliseconds();
 
-  // let _result = (new Date()).valueOf();
   _result = prefix ? prefix + "-" + _result : "" + _result;
   _result = postfix ? _result + "-" + postfix : _result;
   return _result;
@@ -75,8 +51,6 @@ function validateDir(myPath) {
 }
 exports.validateDir = validateDir;
 
-// Detect current environment: [prod|test|development]
-const NODE_ENV_TEST = "test";
 const NODE_ENV_DEV = "development";
 const NODE_ENV = (process.env.NODE_ENV || NODE_ENV_DEV).trim(); // We have error without trim() here, maybe we found some !!!BUGFIX!!!
 
@@ -86,12 +60,7 @@ function isDevEnvironment() {
 }
 exports.isDevEnvironment = isDevEnvironment;
 
-function isTestEnvironment() {
-  return NODE_ENV === NODE_ENV_TEST;
-}
-exports.isTestEnvironment = isTestEnvironment;
-
 function isProdEnvironment() {
-  return !isDevEnvironment() && !isTestEnvironment();
+  return !isDevEnvironment();
 }
 exports.isProdEnvironment = isProdEnvironment;

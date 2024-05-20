@@ -4,6 +4,11 @@ const utils = require('../utils/utils.js')
 const https = require('https')
 const express = require('express')
 const dbUtils = require('./knex/utils')
+const cors = require('cors')
+
+if (utils.isDevEnvironment()){
+  console.log("!!!DEVELOPMENT MODE!!!")
+}
 
 // setup SSL for https
 const credentials = {
@@ -13,10 +18,11 @@ const credentials = {
 // ##################### SSL-header part of module 
 
 const app = require('./app-ws')
+app.use(cors())
 
 // ... to front files
 const path2Front = path.resolve(__dirname, '..', '..', 'dist', 'front')
-console.log('Path to photos: ' + path2Front)
+console.log('Path to front: ' + path2Front)
 app.use('/', express.static(path2Front))
 // ... to photos
 const path2Photos = path.resolve(__dirname, '..', '..', 'dist', 'photos')

@@ -19,7 +19,7 @@
                         <template v-if="userData.id != 'admin'">
                             <input type="text" placeholder="Имя пользователя" v-model="userData.id"
                                 :read_only="userData.id == 'admin'" />&nbsp;<img src="../assets/icons/correct.png"
-                                v-if="validUserId()" /><br />
+                                v-if="validUserId()" /><span v-else>Не менее 6 символов</span><br />
                             <input type="password" id="password1" placeholder="Пароль"
                                 v-model="userData.password1">&nbsp;<img src="../assets/icons/correct.png"
                                 v-if="validPasswordLength()" /><br />
