@@ -1,34 +1,14 @@
 <template>
   <div class="f-container fixed-hf">
-      <header> Фотографии: <!-- <header v-if="globals.roleAsRegistered"> 
-      <router-link  to="/photos">Контроль на КПП</router-link>
-      <router-link to="/">Настройки/Отчеты</router-link> -->
-    <!-- <header v-else>
-      <h1>Фотографии: {{ $route.params.receptionId }}</h1>  -->
-    </header>
+      <header> MyVet.Uz | Photos</header>
     <div class="main">
       <router-view />
-      <DebugShowUserAndRoles v-if="globals.debugMode" />
     </div>
     <footer>
       &copy; {{ new Date().getFullYear() }} - NMK, All rights reserved
     </footer>
   </div>
 </template>
-
-<script setup>
-import { onBeforeMount } from 'vue';
-import { wsCheckLogin } from './axios/ws';
-import DebugShowUserAndRoles from './components/debug/UserAndRoles.vue'
-
-import { useGlobalStore } from './stores/globals';
-const globals = useGlobalStore();
-
-onBeforeMount(() => {
-  wsCheckLogin(globals);
-});
-
-</script>
 
 <style scoped>
 @import url("./assets/css/main.css");

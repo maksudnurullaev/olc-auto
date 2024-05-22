@@ -6,9 +6,10 @@ const express = require('express')
 const dbUtils = require('./knex/utils')
 const cors = require('cors')
 
-if (utils.isDevEnvironment()){
-  console.log("!!!DEVELOPMENT MODE!!!")
-}
+console.log("====CURRENT MODE====");
+console.log(" DEV: " + import.meta.env.DEV)
+console.log("PROD: " + import.meta.env.PROD)
+console.log("====================");
 
 // setup SSL for https
 const credentials = {

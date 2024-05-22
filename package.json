@@ -6,7 +6,7 @@
     "front-dev": "vite",
     "front-build": "vite build",
     "front-preview": "vite preview",
-    "server-run": "npx nodemon -w ./dist/front -w ./dist/server --ignore **/tests/** ./dist/server/apps.js",
+    "server": "npx nodemon -w ./dist/front -w ./dist/server --ignore **/tests/** ./dist/server/apps.js",
     "server-transpile-server": "babel ./src/server --out-dir dist/server --ignore **/tests/**",
     "server-transpile-common": "babel ./src/utils --out-dir dist/utils --copy-files",
     "server-build": "npm-run-all server-transpile-server server-transpile-common",
@@ -60,6 +60,7 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
     "vite": "^5.2.11",
+    "vite-plugin-mkcert": "^1.17.5",
     "vite-plugin-require-transform": "^1.0.21",
     "vue-router": "^4.3.2",
     "webrtc-adapter": "^9.0.1"

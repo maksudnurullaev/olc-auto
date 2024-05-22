@@ -1,5 +1,4 @@
 import { ymdFormateDate, getImageAccessUrl, string2Date, orgs } from "./common";
-import process from 'node:process';
 
 exports.ymdFormateDate = ymdFormateDate;
 exports.string2Date = string2Date;
@@ -50,17 +49,3 @@ function validateDir(myPath) {
   }
 }
 exports.validateDir = validateDir;
-
-const NODE_ENV_DEV = "development";
-const NODE_ENV = (process.env.NODE_ENV || NODE_ENV_DEV).trim(); // We have error without trim() here, maybe we found some !!!BUGFIX!!!
-
-console.log("API Server environment:", NODE_ENV);
-function isDevEnvironment() {
-  return NODE_ENV === NODE_ENV_DEV;
-}
-exports.isDevEnvironment = isDevEnvironment;
-
-function isProdEnvironment() {
-  return !isDevEnvironment();
-}
-exports.isProdEnvironment = isProdEnvironment;

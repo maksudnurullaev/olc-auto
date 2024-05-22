@@ -1,17 +1,15 @@
 import { defineStore } from "pinia";
-import { ymdFormateDate, isDevMode } from "../../utils/common.js";
+import { ymdFormateDate } from "../../utils/common.js";
 import { wsGetCarImages } from "../axios/ws.js";
 const roleAdmin = /^admin/;
 const roleKpp = /^(admin|kpp)/;
 const role1c = /^(admin|kpp|1c)/;
 const roleRegistered = /^(admin|kpp|1c|registered)/;
 
-console.warn("is dev mode: " + isDevMode());
-
 export const useGlobalStore = defineStore("globals", {
   state: () => {
     return {
-      debugMode: isDevMode(),
+      debugMode: import.meta.env.DEV,
       user: {
         id: "",
         role: "",

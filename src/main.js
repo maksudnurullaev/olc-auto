@@ -8,9 +8,6 @@ import router from './client/router'
 
 const app = createApp(App)
 
-import { isDevMode } from './utils/common'
-app.config.devtools = isDevMode();
-
 app.use(pinia)
 app.use(router)
 app.mount('#app')

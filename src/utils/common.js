@@ -1,9 +1,3 @@
-import process from 'node:process';
-
-function isDevMode(){
-  return (process.env.NODE_ENV && (process.env.NODE_ENV == "development"));
-};
-
 function ymdFormateDate(date, withTimePart) {
   const d = date || new Date()
   let month = '' + (d.getMonth() + 1)
@@ -46,4 +40,4 @@ function getImageClass(fileName) {
   return 'NaN';
 };
 
-export { ymdFormateDate, getImageAccessUrl, string2Date, getImageClass, isDevMode }
+export { ymdFormateDate, getImageAccessUrl, string2Date, getImageClass }

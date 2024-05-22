@@ -1,20 +1,9 @@
 <template>
     <div class="sticky">
-        Перейти в режим: 
-        <input :dis_abled="isCameraModeDisabled()" type="submit" @click="switchCamera" :value="getCameraBtnTitle()" />
-        |
-        <!-- template v-if="globals.camera.isComponentOpen">
-            Камера:
-            <input type="radio" id="AutoIn" name="inOrOut" v-model="globals.car.state" value="In"
-                checked="true" /><label for="AutoIn">въезда</label>
-            <input type="radio" id="AutoOut" name="inOrOut" v-model="globals.car.state" value="Out" /><label
-                for="AutoOut">выезда</label>
-            <input type="submit" value="Фото" style="margin-left: 6px;" @click="getStreetCameraImage('192.168.4.150')"
-                v-if="globals.car.state == 'In'" />
-            <input type="submit" value="Фото" style="margin-left: 6px;" @click="getStreetCameraImage('192.168.4.151')"
-                v-if="globals.car.state == 'Out'" />
-        </template -->
-        <!-- template><!-- v-else -->
+        Перейти в режим:
+        <input type="submit" @click="switchCamera" :value="getCameraBtnTitle()" />
+        <template v-if="!globals.camera.isComponentOpen">
+            |
             История ({{ globals.car.infosByDates.length }}):
             <select v-model="globals.car.forDate" @change="showCarInfos4Date()">
                 <option :value="ymdFormateDate()">Сегодня ({{ todayInfos() }})</option>
@@ -23,24 +12,30 @@
                         {{ carInfoDate.date_ymd }} ({{ carInfoDate.records }})
                     </option>
                 </template>
-            </select>
-        <!-- /template -->
+            </select> |
+            <button @click="showCarInfos4Date()">Обновить</button>
+        </template>
     </div>
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
 import { ymdFormateDate } from '../../utils/common.js';
-import { wsGetStreetCameraImage, wsGetCarInfos4Date } from '../axios/ws.js';
+import { wsGetStreetCameraImage, wsGetCarInfosForDate } from '../axios/ws.js';
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
 
+onMounted(() => {
+    showCarInfos4Date();
+});
+
 function showCarInfos4Date() {
-    wsGetCarInfos4Date(globals);
+    wsGetCarInfosForDate(globals);
 }
 
-function isCameraModeDisabled(){
-    return !globals.car.infoCurrentId 
-    || ymdFormateDate() !== globals.car.forDate;
+function isCameraModeDisabled() {
+    return !globals.car.infoCurrentId
+        || ymdFormateDate() !== globals.car.forDate;
 }
 
 function todayInfos() {
@@ -56,7 +51,6 @@ function todayInfos() {
 
 function switchCamera() {
     globals.$patch({ camera: { isComponentOpen: !globals.camera.isComponentOpen } });
-    // globals.camera.isComponentOpen = !globals.camera.isComponentOpen;
     console.log("Show camera component: " + globals.camera.isComponentOpen);
 }
 

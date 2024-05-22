@@ -1,6 +1,6 @@
 <template>
     <fieldset>
-        <legend>Фотографии</legend>
+        <legend>Фотографии:</legend>
         <p>Нажмите на картинку чтобы увеличить</p>
         <a v-for="photo in props.photos" target="_blank" :href="photo.imageUrl">
             <img :src="photo.imageUrl" :alt="photo.created_at" style="width:150px" :class="getImageClass(photo.url)"

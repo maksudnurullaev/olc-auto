@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { getImageAccessUrl } from '../../utils/common'
 
-function wsGetCarInfos4Date(globals) {
+function wsGetCarInfosForDate(globals) {
   const car = globals.car.current_number
   const forDate = globals.car.forDate
   if (!car) {
@@ -36,7 +36,7 @@ function wsGetCarInfos4Date(globals) {
   })
 }
 
-function wsGetCarInfosDates(globals) {
+function wsGetCarInfosByDates(globals) {
   const car = globals.car.current_number
   if (!car) {
     alert('На заполнено номера авто!')
@@ -299,5 +299,5 @@ export {
   wsAddCarImage, wsGetCarImages, wsGetStreetCameraImage,
   wsLogin, wsCheckLogin, wsLogout, wsChangePassword,
   wsGetAllUsers, wsAddUser, wsUpdateUser, wsGetRoles, wsChangeRole4User,
-  wsGetTransportTypes, wsGetCarInfosDates, wsGetCarInfos4Date
+  wsGetTransportTypes, wsGetCarInfosByDates, wsGetCarInfosForDate
 }

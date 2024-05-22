@@ -12,20 +12,20 @@
             <button :dis_abled="!globals.roleAsKpp || globals.car.forDate !== ymdFormateDate()"
                 @click="globals.setNewIoInfosFormData()" style="margin-left: 3px;">Добавить</button>
         </fieldset>
-        <fieldset v-if="globals.car.infoCurrentId || globals.car.form.isNew">
-            Комментарий:<br />
+        <fieldset v-if="globals.car.infoCurrentId || globals.car.form.isNew" :disabled="globals.car.infoCurrent.in_datetime">
+            <legend>Комментарий:</legend>
             <textarea id="w3review" :disabled="!globals.car.current_number" name="w3review" rows="4" cols="50"
                 v-model="globals.car.infoCurrent.comment"></textarea><br />
-                <button @click="saveRecord()" :disabled="globals.car.infoCurrent.in_datetime">Сохранить</button>
+                <button @click="saveRecord()" v-if="!globals.car.infoCurrent.in_datetime">Сохранить</button>
         </fieldset>
     </div>
 </template>
 
 <script setup>
 import axios from 'axios';
-import { onMounted } from 'vue';
+// import { onMounted } from 'vue';
 import { ymdFormateDate } from '../../utils/common';
-import { wsGetCarInfos4Date, wsGetCarInfosDates, wsGetTransportTypes } from '../axios/ws'
+import { wsGetCarInfosForDate, wsGetCarInfosByDates, wsGetTransportTypes } from '../axios/ws'
 
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
@@ -60,14 +60,14 @@ function saveRecord() {
     console.log("Insert for car", globals.car.current_number, " new info!");
     axios.post(globals.getWebServiceURL + url2Add, postData).then((response) => {
         if (response.data.result) {
-            wsGetCarInfosDates(globals);
+            wsGetCarInfosByDates(globals);
 
             // add car to globals if not exists yet
             if (globals.cars.indexOf(car_number) == -1) {
                 globals.cars.push(car_number)
             }
             // update/set infos for car
-            wsGetCarInfos4Date(globals).then(() => {
+            wsGetCarInfosForDate(globals).then(() => {
                 for (let index = 0; index < globals.car.infos.length; index++) {
                     const info = globals.car.infos[index];
                     if (info.in_datetime == postData.in_datetime) {
@@ -85,9 +85,9 @@ function saveRecord() {
     });
 }
 
-onMounted(() => {
-    wsGetTransportTypes(globals);
-});
+// onMounted(() => {
+//     wsGetTransportTypes(globals);
+// });
 
 </script>
 
