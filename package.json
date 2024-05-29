@@ -9,7 +9,7 @@
     "server": "npx nodemon -w ./dist/front -w ./dist/server --ignore **/tests/** ./dist/server/apps.js",
     "server-transpile-server": "babel ./src/server --out-dir dist/server --ignore **/tests/**",
     "server-transpile-common": "babel ./src/utils --out-dir dist/utils --copy-files",
-    "build-server": "npm-run-all server-transpile-server server-transpile-common",
+    "build-server": "npx npm-run-all server-transpile-server server-transpile-common",
     "test": "jest --silent",
     "clean-all": "rimraf dist/server dist/utils dist/front",
     "build-all": "npm run build-server build-front"
