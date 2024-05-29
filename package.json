@@ -1,5 +1,5 @@
 {
-  "name": "olc-auto",
+  "name": "phots-myvet-uz",
   "private": true,
   "version": "0.0.1",
   "scripts": {
@@ -69,8 +69,7 @@
   },
   "babel": {
     "presets": [
-      "@babel/preset-env",
-      "babel-preset-vite"
+      "@babel/preset-env"
     ]
   }
 }

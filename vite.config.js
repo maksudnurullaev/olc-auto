@@ -5,8 +5,7 @@ import mkcert from 'vite-plugin-mkcert';
 export default defineConfig({
   build: {
     outDir: "dist/front",
-    minify: false, // WARNING! Remove later for production...
-    // sourcemap: true
+    minify: true, 
   },
   plugins: [vue(), mkcert() ],
 });
