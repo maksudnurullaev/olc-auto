@@ -5,8 +5,7 @@ const express = require('express')
 const dbUtils = require('./knex/utils')
 
 console.log("====CURRENT MODE====");
-console.log(" DEV: " + import.meta.env.DEV)
-console.log("PROD: " + import.meta.env.PROD)
+console.log(process.env.NODE_ENV || 'development')
 console.log("====================");
 
 // ... to front files
@@ -90,7 +89,7 @@ if (process.env.NODE_ENV === 'development') {
 } 
 
 
-if (import.meta.env.DEV) { //development
+if (process.env.NODE_ENV === 'development') {
   const https = require('https')
   // setup SSL for https
   const credentials = {
@@ -103,7 +102,7 @@ if (import.meta.env.DEV) { //development
   httpsServer.listen(8443, () => {
     console.log('https(development) - listen for 8443 port')
   })
-} else { //production
+} else {
   const http = require('http')
   var httpServer = http.createServer(app);
   httpServer.listen(8080, () => { // we switch off it - camers don't works without https(ssl)

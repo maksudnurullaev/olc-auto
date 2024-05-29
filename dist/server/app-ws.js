@@ -32,7 +32,7 @@ app.use(express.urlencoded({
 // express & session & auth
 //   ... i.e.: https://www.codexpedia.com/node-js/a-very-basic-session-auth-in-node-js-with-express-js/
 var session = require("express-session");
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'development') {
   // DEV || TEST
   app.use(session({
     secret: "WppQ38S-4D44-2C44",

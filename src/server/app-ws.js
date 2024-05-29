@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 // express & session & auth
 //   ... i.e.: https://www.codexpedia.com/node-js/a-very-basic-session-auth-in-node-js-with-express-js/
 const session = require("express-session");
-if ( import.meta.env.DEV ) {
+if ( process.env.NODE_ENV === 'development' ) {
   // DEV || TEST
   app.use(
     session({

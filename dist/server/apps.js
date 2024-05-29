@@ -6,8 +6,7 @@ var utils = require('../utils/utils.js');
 var express = require('express');
 var dbUtils = require('./knex/utils');
 console.log("====CURRENT MODE====");
-console.log(" DEV: " + (process.env.NODE_ENV !== 'production'));
-console.log("PROD: " + (process.env.NODE_ENV === 'production'));
+console.log(process.env.NODE_ENV || 'development');
 console.log("====================");
 
 // ... to front files
@@ -108,8 +107,7 @@ if (process.env.NODE_ENV === 'development') {
   var errorhandler = require('errorhandler');
   app.use(errorhandler());
 }
-if (process.env.NODE_ENV !== 'production') {
-  //development
+if (process.env.NODE_ENV === 'development') {
   var https = require('https');
   // setup SSL for https
   var credentials = {
@@ -123,7 +121,6 @@ if (process.env.NODE_ENV !== 'production') {
     console.log('https(development) - listen for 8443 port');
   });
 } else {
-  //production
   var http = require('http');
   var httpServer = http.createServer(app);
   httpServer.listen(8080, function () {
