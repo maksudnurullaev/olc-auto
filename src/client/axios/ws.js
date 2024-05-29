@@ -5,7 +5,7 @@ function wsGetCarInfosForDate(globals) {
   const car = globals.car.current_number
   const forDate = globals.car.forDate
   if (!car) {
-    alert('Нет номера авто!')
+    alert('Нет идентификационных данных!')
     return
   }
   if (!forDate) {
@@ -263,7 +263,7 @@ function wsGetStreetCameraImage(cameraIp, globals) {
 
 function wsGetCarImages(globals) {
   if (!globals.car.current_number) {
-    alert('Нет номера авто!')
+    alert('Нет идентификационных данных!')
     return
   }
   if (!globals.car.forDate) {

@@ -45,12 +45,10 @@ const route = useRoute();
 import { onBeforeMount } from 'vue';
 
 onBeforeMount(() => {
-  // wsCheckLogin(globals);
-  globals.car.current_number = route.params.receptionId || '';                      //|| ''; // 'test';
+  globals.car.current_number = route.params.receptionId || '';
   if( globals.car.current_number ){
     setCarID(globals.car.current_number);
   }
-  console.warn("route.query['receptionId']: " + route.params.receptionId );    //['receptionId']);
 });
 
 function setCarID(car) {

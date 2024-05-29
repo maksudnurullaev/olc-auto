@@ -37,7 +37,7 @@ if ( import.meta.env.DEV ) {
 
   app.use(
     session({
-      secret: "WppQ38S-4D44-2C44",
+      secret: "WppQ38S-4D44-2C44-PR0D",
       resave: true,
       saveUninitialized: true,
       store: new SqliteStore({

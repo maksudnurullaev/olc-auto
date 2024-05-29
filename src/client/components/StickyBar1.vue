@@ -21,7 +21,7 @@ function uppercase() {
 
 function findCarsLike() {
     if (!globals.carSearchNumber) {
-        alert('Нет номера авто!')
+        alert('Нет идентификационных данных!')
         return
     }
 

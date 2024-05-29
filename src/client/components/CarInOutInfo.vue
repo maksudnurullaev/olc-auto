@@ -41,7 +41,7 @@ function getNow() {
 
 function saveRecord() {
     if (!globals.car.current_number) {
-        alert('Нет номера авто!');
+        alert('Нет идентификационных данных!');
         return;
     }
 

@@ -26,12 +26,10 @@ import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
 
 onMounted(() => {
-    showCarInfos4Date();
+    if(globals.car.current_number){
+        wsGetCarInfosForDate(globals);
+    }
 });
-
-function showCarInfos4Date() {
-    wsGetCarInfosForDate(globals);
-}
 
 function isCameraModeDisabled() {
     return !globals.car.infoCurrentId
