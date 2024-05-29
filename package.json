@@ -4,15 +4,15 @@
   "version": "0.0.1",
   "scripts": {
     "front-dev": "vite",
-    "front-build": "vite build",
+    "build-front": "vite build",
     "front-preview": "vite preview",
     "server": "npx nodemon -w ./dist/front -w ./dist/server --ignore **/tests/** ./dist/server/apps.js",
     "server-transpile-server": "babel ./src/server --out-dir dist/server --ignore **/tests/**",
     "server-transpile-common": "babel ./src/utils --out-dir dist/utils --copy-files",
-    "server-build": "npm-run-all server-transpile-server server-transpile-common",
+    "build-server": "npm-run-all server-transpile-server server-transpile-common",
     "test": "jest --silent",
     "clean-all": "rimraf dist/server dist/utils dist/front",
-    "build-all": "npm run server-build front-build"
+    "build-all": "npm run build-server build-front"
   },
   "jest": {
     "modulePathIgnorePatterns": [
@@ -28,16 +28,17 @@
     "better-sqlite3": "^10.0.0",
     "better-sqlite3-session-store": "^0.1.0",
     "cors": "^2.8.5",
+    "errorhandler": "^1.5.1",
     "express-session": "^1.18.0",
     "knex": "^3.1.0",
     "node-forge": "^1.3.1",
+    "nodemon": "^3.1.2",
     "npm-check-updates": "^16.14.20",
     "objection": "^3.1.4",
     "pug": "^3.0.2",
     "rimraf": "^5.0.7",
     "vue": "^3.4.27",
-    "vue-web-cam": "^1.9.0",
-    "nodemon":"^3.1.2"
+    "vue-web-cam": "^1.9.0"
   },
   "devDependencies": {
     "@babel/node": "^7.23.9",

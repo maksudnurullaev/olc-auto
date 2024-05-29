@@ -85,12 +85,9 @@ app.use((req, res) => {
 });
 
 if (process.env.NODE_ENV === 'development') {
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-}
-
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.errorHandler());
-}
+  var errorhandler  = require('errorhandler')
+  app.use(errorhandler());
+} 
 
 
 if (import.meta.env.DEV) { //development
