@@ -36,7 +36,8 @@
     "pug": "^3.0.2",
     "rimraf": "^5.0.7",
     "vue": "^3.4.27",
-    "vue-web-cam": "^1.9.0"
+    "vue-web-cam": "^1.9.0",
+    "nodemon":"^3.1.2"
   },
   "devDependencies": {
     "@babel/node": "^7.23.9",

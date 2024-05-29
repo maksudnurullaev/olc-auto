@@ -1,33 +1,38 @@
 const path = require('path')
 const fs = require('fs')
 const utils = require('../utils/utils.js')
-const https = require('https')
 const express = require('express')
 const dbUtils = require('./knex/utils')
-const cors = require('cors')
 
 console.log("====CURRENT MODE====");
 console.log(" DEV: " + import.meta.env.DEV)
 console.log("PROD: " + import.meta.env.PROD)
 console.log("====================");
 
-// setup SSL for https
-const credentials = {
-  key: fs.readFileSync(path.resolve(__dirname, '..', '..', 'ssl', 'key.pem')),
-  cert: fs.readFileSync(path.resolve(__dirname, '..', '..', 'ssl', 'cert.pem'))
-}
-// ##################### SSL-header part of module 
-
-const app = require('./app-ws')
-app.use(cors())
-
 // ... to front files
 const path2Front = path.resolve(__dirname, '..', '..', 'dist', 'front')
 console.log('Path to front: ' + path2Front)
-app.use('/', express.static(path2Front))
 // ... to photos
 const path2Photos = path.resolve(__dirname, '..', '..', 'dist', 'photos')
 console.log('Path to photos: ' + path2Photos)
+if (!fs.existsSync(path2Photos)) {
+  fs.mkdirSync(path2Photos)
+  console.log('... just created!')
+}
+
+// ... to db files
+const path2DbFiles = path.resolve(__dirname, '..', '..', 'dist', 'db')
+console.log('Path to DB files: ' + path2DbFiles)
+if (!fs.existsSync(path2DbFiles)) {
+  fs.mkdirSync(path2DbFiles)
+  console.log('... just created!')
+}
+
+// redirect all unmatched to ROOT path
+const app = require('./app-ws')
+
+app.use('/', express.static(path2Front))
+//app.use('/assets', express.static(path2Front + '/assets'))
 app.use('/photos', express.static(path2Photos))
 
 // Save incoming image
@@ -75,23 +80,38 @@ app.post('/base64Jpeg2File', (request, response) => {
   }
 })
 
-// Disable HTTP
-// var httpServer = http.createServer(app);
-
-// SSL-footer part of module
-const httpsServer = https.createServer(credentials, app)
-
-// Disable HTTP
-// httpServer.listen(8080, () => { // we switch off it - camers don't works without https(ssl)
-//     console.log('http - listen for 8080 port')
-// });
-
-// redirect all unmatched to ROOT path
 app.use((req, res) => {
   res.redirect('/')
-})
+});
 
-// HTTPS listener
-httpsServer.listen(8443, () => {
-  console.log('https - listen for 8443 port')
-})
+if (process.env.NODE_ENV === 'development') {
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+}
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.errorHandler());
+}
+
+
+if (import.meta.env.DEV) { //development
+  const https = require('https')
+  // setup SSL for https
+  const credentials = {
+    key: fs.readFileSync(path.resolve(__dirname, '..', '..', 'ssl', 'key.pem')),
+    cert: fs.readFileSync(path.resolve(__dirname, '..', '..', 'ssl', 'cert.pem'))
+  }
+  const cors = require('cors')
+  app.use(cors())
+  const httpsServer = https.createServer(credentials, app)
+  httpsServer.listen(8443, () => {
+    console.log('https(development) - listen for 8443 port')
+  })
+} else { //production
+  const http = require('http')
+  var httpServer = http.createServer(app);
+  httpServer.listen(8080, () => { // we switch off it - camers don't works without https(ssl)
+    console.log('http(production) - listen for 8080 port')
+  });
+}
+
+
