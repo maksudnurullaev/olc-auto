@@ -13,7 +13,7 @@
     "server-transpile-common": "babel ./src/utils --out-dir dist/utils --copy-files",
     "build-server": "npx npm-run-all server-transpile-server server-transpile-common",
     "test": "jest --silent",
-    "clean-all": "rimraf dist/server dist/utils dist/front",
+    "clean-all": "rimraf dist/server dist/utils dist/front dist/utils",
     "build-all": "npm run build-server build-front"
   },
   "jest": {

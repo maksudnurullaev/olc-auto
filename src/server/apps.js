@@ -4,8 +4,10 @@ const utils = require('../utils/utils.js')
 const express = require('express')
 const dbUtils = require('./knex/utils')
 
+const MODE = process.env.NODE_ENV || 'development'
+
 console.log("====CURRENT MODE====");
-console.log(process.env.NODE_ENV || 'development')
+console.log(MODE);
 console.log("====================");
 
 // ... to front files
@@ -83,31 +85,33 @@ app.use((req, res) => {
   res.redirect('/')
 });
 
-if (process.env.NODE_ENV === 'development') {
-  var errorhandler  = require('errorhandler')
+if (MODE === 'development') {
+  var errorhandler = require('errorhandler')
   app.use(errorhandler());
-} 
+}
 
+if (MODE === 'development') {
+  const cors = require('cors')
+  app.use(cors())
+  console.log("CORS: This is CORS-enabled for all origins (development)!")
 
-if (process.env.NODE_ENV === 'development') {
   const https = require('https')
   // setup SSL for https
   const credentials = {
     key: fs.readFileSync(path.resolve(__dirname, '..', '..', 'ssl', 'key.pem')),
     cert: fs.readFileSync(path.resolve(__dirname, '..', '..', 'ssl', 'cert.pem'))
   }
-  const cors = require('cors')
-  app.use(cors())
+  
   const httpsServer = https.createServer(credentials, app)
   httpsServer.listen(8443, () => {
     console.log('https(development) - listen for 8443 port')
   })
 } else {
-  const http = require('http')
   var httpServer = http.createServer(app);
   httpServer.listen(8080, () => { // we switch off it - camers don't works without https(ssl)
-    console.log('http(production) - listen for 8080 port')
+    console.log('http(' + MODE + ') - listen for 8080 port')
   });
+
 }
 
 

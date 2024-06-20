@@ -1,6 +1,5 @@
 import { createWebHistory, createRouter } from 'vue-router'
 
-import Config from '../views/Config.vue'
 import Photos from '../views/Photos.vue'
 
 const routes = [
