@@ -107,6 +107,7 @@ if (MODE === 'development') {
     console.log('https(development) - listen for 8443 port')
   })
 } else {
+  const http = require('http')
   var httpServer = http.createServer(app);
   httpServer.listen(8080, () => { // we switch off it - camers don't works without https(ssl)
     console.log('http(' + MODE + ') - listen for 8080 port')
