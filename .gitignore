@@ -12,6 +12,7 @@ dist/db
 dist/photos
 dist/_*
 dist-ssr
+dist
 ssl
 dist-server
 *.local
