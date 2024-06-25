@@ -32,8 +32,7 @@ if (!fs.existsSync(path2DbFiles)) {
 // redirect all unmatched to ROOT path
 const app = require('./app-ws')
 
-app.use('/', express.static(path2Front))
-//app.use('/assets', express.static(path2Front + '/assets'))
+app.use('/assets', express.static(path2Front + '/assets'))
 app.use('/photos', express.static(path2Photos))
 
 // Save incoming image
@@ -81,9 +80,7 @@ app.post('/base64Jpeg2File', (request, response) => {
   }
 })
 
-app.use((req, res) => {
-  res.redirect('/')
-});
+app.use('/:rId?', express.static(path2Front));
 
 if (MODE === 'development') {
   var errorhandler = require('errorhandler')

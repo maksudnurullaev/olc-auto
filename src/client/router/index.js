@@ -4,7 +4,7 @@ import Photos from '../views/Photos.vue'
 
 const routes = [
   {
-    path: '/:receptionId?',
+    path: '/:rId?',
     name: 'Photos',
     component: Photos
   },

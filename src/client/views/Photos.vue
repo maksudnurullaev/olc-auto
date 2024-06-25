@@ -45,7 +45,8 @@ const route = useRoute();
 import { onBeforeMount } from 'vue';
 
 onBeforeMount(() => {
-  globals.car.current_number = route.params.receptionId || '';
+  globals.car.current_number = route.params.rId || '';
+  console.warn(route.params.rId || 'No rId!');
   if( globals.car.current_number ){
     setCarID(globals.car.current_number);
   }
@@ -55,9 +56,6 @@ function setCarID(car) {
   globals.car.current_number = car;
   globals.car.forDate = ymdFormateDate();
   wsGetCarInfosByDates(globals);
-  // reset old data
-  // globals.car.infos = [];
-  // globals.car.photos = [];
 }
 
 </script>
