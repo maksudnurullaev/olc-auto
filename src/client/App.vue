@@ -5,7 +5,7 @@
       <router-view />
     </div>
     <footer>
-      &copy; {{ new Date().getFullYear() }} - NMK, All rights reserved
+      <span @click="showHideSearchPanel">&copy; {{ new Date().getFullYear() }} - NMK, All rights reserved</span>
     </footer>
   </div>
 </template>
@@ -20,3 +20,13 @@ header h1 {
   -webkit-background-clip: text;
 }
 </style>
+
+<script setup>
+import { useGlobalStore } from './stores/globals';
+const globals = useGlobalStore();
+
+function showHideSearchPanel() {
+  globals.showSearchPanel = !globals.showSearchPanel;
+  // alert(globals.showSearchPanel);
+};
+</script>

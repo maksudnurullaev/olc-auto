@@ -1,2 +1,2 @@
-1. Detect DEBUG mode by detecting uri('localhost') - front part
-
+1. Hide(by default) search panel
+2. Send "info of reception" to photos.myvet.uz

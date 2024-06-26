@@ -10,6 +10,7 @@ export const useGlobalStore = defineStore("globals", {
   state: () => {
     return {
       debugMode: import.meta.env.DEV,
+      showSearhPanel: false,
       user: {
         id: "",
         role: "",

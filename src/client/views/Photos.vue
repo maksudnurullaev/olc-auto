@@ -1,6 +1,6 @@
 <template>
   <splitpanes class="default-theme">
-    <pane size="35">
+    <pane size="35" v-if="globals.showSearchPanel">
       <strong>Поиск</strong>
       <StickyBar1 />
       <div class="buttons" v-if="globals.cars.length && !globals.camera.isComponentOpen">
