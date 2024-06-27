@@ -9,7 +9,7 @@
                     <option v-for="info in globals.car.infos" :value="info.id">{{ info.in_datetime }}</option>
                 </select>
             </template>
-            <button :dis_abled="!globals.roleAsKpp || globals.car.forDate !== ymdFormateDate()"
+            <button :disabled="globals.car.forDate !== ymdFormateDate()"
                 @click="globals.setNewIoInfosFormData()" style="margin-left: 3px;">Добавить</button>
         </fieldset>
         <fieldset v-if="globals.car.infoCurrentId || globals.car.form.isNew" :disabled="globals.car.infoCurrent.in_datetime">
