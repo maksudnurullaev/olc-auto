@@ -27,9 +27,13 @@ const globals = useGlobalStore();
 
 onMounted(() => {
     if(globals.car.current_number){
-        wsGetCarInfosForDate(globals);
+        showCarInfos4Date();
     }
 });
+
+function showCarInfos4Date() {
+    wsGetCarInfosForDate(globals);
+}
 
 function isCameraModeDisabled() {
     return !globals.car.infoCurrentId
