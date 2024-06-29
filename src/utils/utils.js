@@ -58,7 +58,7 @@ function hasAccessVsCode(rId, aCode) {
   if (testHash.toUpperCase() === aCode.toUpperCase()) {
     return true;
   }
-  console.warn("No access rId(%s): testHash(%s) != aCode(%s)", rId, testHash, aCode);
+  console.warn("No access rId(%s), rIdVsDate(%s): testHash(%s) != aCode(%s)", rId, rIdVsDate, testHash, aCode);
   return false;
 }
 exports.hasAccessVsCode = hasAccessVsCode;
