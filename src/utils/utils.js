@@ -1,4 +1,5 @@
-import { ymdFormateDate, getImageAccessUrl, string2Date, orgs } from "./common";
+import { MD5FromString2HexString } from "../server/crypto";
+import { ymdFormateDate, getImageAccessUrl, string2Date, orgs, dmyFormatedDate } from "./common";
 
 exports.ymdFormateDate = ymdFormateDate;
 exports.string2Date = string2Date;
@@ -49,3 +50,11 @@ function validateDir(myPath) {
   }
 }
 exports.validateDir = validateDir;
+
+function hasAccessVsCode(rId, aCode) {
+  const dmyString = dmyFormatedDate();
+  const rIdVsDate = [rId, dmyString].join("-")
+  const myHash = MD5FromString2HexString(rIdVsDate);
+  return myHash.toUpperCase() === aCode.toUpperCase();
+}
+exports.hasAccessVsCode = hasAccessVsCode;

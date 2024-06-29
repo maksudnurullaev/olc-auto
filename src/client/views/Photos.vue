@@ -45,9 +45,10 @@ const route = useRoute();
 import { onBeforeMount } from 'vue';
 
 onBeforeMount(() => {
-  globals.car.current_number = route.params.rId || '';
-  console.warn(route.params.rId || 'No rId!');
-  if( globals.car.current_number ){
+  globals.car.current_number = route.query.rId || '';
+  if(!globals.car.current_number || globals.car.current_number === ""){
+    console.warn(route.query.rId || 'No rId!');
+  } else {
     setCarID(globals.car.current_number);
   }
 });

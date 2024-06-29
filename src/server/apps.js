@@ -80,7 +80,21 @@ app.post('/base64Jpeg2File', (request, response) => {
   }
 })
 
-app.use('/:rId?', express.static(path2Front));
+app.use('/reception', function (req, res, next) {
+  if(!req.query.rId || req.query.rId === "")
+    return res.send("NO recieption ID(rId) PASSED")
+
+  if(!req.query.aCode || req.query.aCode === "")
+    return res.send("NO access code(aCode) PASSED")
+
+  if(!utils.hasAccessVsCode(req.query.rId, req.query.aCode)){
+    console.warn("No access for rId(%s) and aCode(%s)!", req.query.rId, req.query.aCode);
+    return res.send("NO access!");
+  }
+
+  next();
+});
+app.use('/reception', express.static(path2Front));
 
 if (MODE === 'development') {
   var errorhandler = require('errorhandler')

@@ -1,6 +1,6 @@
 const forge = require('node-forge')
 
-function hashUserAndPassword (userId, userPassword) {
+function hashUserAndPassword(userId, userPassword) {
   try {
     const resultInString = userId + userPassword
     const hashObject = forge.md.sha512.create()
@@ -14,7 +14,7 @@ function hashUserAndPassword (userId, userPassword) {
 };
 exports.hashUserAndPassword = hashUserAndPassword
 
-function checkUserAndPassword (userId, userPassword, inHash) {
+function checkUserAndPassword(userId, userPassword, inHash) {
   const _hash = hashUserAndPassword(userId, userPassword)
   if (!_hash) {
     console.error("Couldn't get proper hashes for user & password!")
@@ -28,3 +28,10 @@ function checkUserAndPassword (userId, userPassword, inHash) {
   return _hash.localeCompare(inHash) == 0
 }
 exports.checkUserAndPassword = checkUserAndPassword
+
+function MD5FromString2HexString(inString) {
+  var md = forge.md.md5.create();
+  md.update(inString);
+  return(md.digest().toHex());
+}
+exports.MD5FromString2HexString = MD5FromString2HexString;

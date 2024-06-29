@@ -1,4 +1,5 @@
 const myCrypto = require('../../crypto')
+const utils = require('../../../utils/utils.js')
 
 describe('Test user & password:', () => {
   test(' ... initialization:', () => {
@@ -9,3 +10,16 @@ describe('Test user & password:', () => {
     expect(myCrypto.checkUserAndPassword(userId, userPassword, myHash))
   })
 })
+
+describe('Test access to website:', () => {
+  test(' ... rId and aCode:', () => {
+    const rId = '2bc1f801-14b95cf2-03042024-ULUGBEKBAHODYROVICH'
+    const aCode = 'A66470A6320126A8072B1C73939A558E'
+    const result = utils.hasAccessVsCode(rId,aCode);
+    expect(result).toBeTruthy(); 
+    const invalidResult = utils.hasAccessVsCode(rId,aCode + 'test');
+    expect(invalidResult).not.toBeTruthy(); 
+  })
+})
+
+// https://localhost:8443/reception?rId=2bc1f801-14b95cf2-03042024-ULUGBEKBAHODYROVICH&aCode=A66470A6320126A8072B1C73939A558E
