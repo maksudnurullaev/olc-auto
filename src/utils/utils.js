@@ -54,7 +54,11 @@ exports.validateDir = validateDir;
 function hasAccessVsCode(rId, aCode) {
   const dmyString = dmyFormatedDate();
   const rIdVsDate = [rId, dmyString].join("-")
-  const myHash = MD5FromString2HexString(rIdVsDate);
-  return myHash.toUpperCase() === aCode.toUpperCase();
+  const testHash = MD5FromString2HexString(rIdVsDate);
+  if (testHash.toUpperCase() === aCode.toUpperCase()) {
+    return true;
+  }
+  console.warn("No access: testHash() != aCode(%s)");
+  return false;
 }
 exports.hasAccessVsCode = hasAccessVsCode;
