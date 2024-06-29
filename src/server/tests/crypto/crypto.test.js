@@ -13,8 +13,8 @@ describe('Test user & password:', () => {
 
 describe('Test access to website:', () => {
   test(' ... rId and aCode:', () => {
-    const rId = '2bc1f801-14b95cf2-03042024-ULUGBEKBAHODYROVICH'
-    const aCode = 'A66470A6320126A8072B1C73939A558E'
+    const rId = '707777ca-9340d80e-03042024-ABDULLAZIZVETVRACH'
+    const aCode = '96978FFDB4D1AE9331346FAAEB9229BA'
     const result = utils.hasAccessVsCode(rId,aCode);
     expect(result).toBeTruthy(); 
     const invalidResult = utils.hasAccessVsCode(rId,aCode + 'test');
