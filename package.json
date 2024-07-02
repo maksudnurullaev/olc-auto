@@ -4,21 +4,22 @@
   "version": "0.0.1",
   "scripts": {
     "front-dev": "vite",
+    "front-preview": "vite preview",
     "build-front": "vite build",
     "build-front-dev": "vite build --sourcemap",
-    "front-preview": "vite preview",
-    "prestart": "npx knex migrate:latest && npm run build-all",
-    "start": "node ./dist/server/apps.js",
-    "server": "npx nodemon -w ./dist/front -w ./dist/server --ignore **/tests/** ./dist/server/apps.js",
+    "server-dev": "npx nodemon -w ./dist/front -w ./dist/server --ignore **/tests/** ./dist/server/apps.js",
     "server-transpile-server-dev": "babel ./src/server --out-dir dist/server --ignore **/tests/** --source-maps",
     "server-transpile-common-dev": "babel ./src/utils --out-dir dist/utils --copy-files --source-maps",
     "build-server-dev": "npx npm-run-all server-transpile-server-dev server-transpile-common-dev",
+    "build-all-dev": "npm run build-server-dev build-front-dev",
     "server-transpile-server": "babel ./src/server --out-dir dist/server --ignore **/tests/**",
     "server-transpile-common": "babel ./src/utils --out-dir dist/utils --copy-files",
     "build-server": "npx npm-run-all server-transpile-server server-transpile-common",
-    "test": "jest --silent",
+    "build-all": "npm run build-server build-front",
+    "prestart": "npx knex migrate:latest && npm run build-all",
+    "start": "node ./dist/server/apps.js",
     "clean-all": "rimraf dist/server dist/utils dist/front dist/utils",
-    "build-all": "npm run build-server build-front"
+    "test": "jest --silent"
   },
   "jest": {
     "modulePathIgnorePatterns": [
