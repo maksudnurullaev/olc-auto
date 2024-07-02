@@ -1,36 +1,38 @@
 <template>
-    <div v-if="globals.car.infoCurrentId" id="container">
+    <div v-if="globals.car.infoCurrentId">
 
-        <h1>Камера</h1>
+        <fieldset>
+            <legend>Выбор камеры и разрешения:</legend>
 
-        <!--
-        <button @click="openCamera" style="background: green;">Открыть камеру</button>
-        <button @click="closeCamera">Закрыть камеру</button>
--->
-        <!-- p>Выберите камеру!</p -->
-        <div class="select">
-            <label for="videoSource">Камера: </label>
             <select @change="closeCamera" ref="videoSource" v-model="globals.camera.currentCamera">
-                <option value="None">Выберите камеру...</option>
+                <option value="None" disabled>Выберите камеру...</option>
                 <option v-for="item in globals.camera.cameras" :value="item.id">{{ item.label }}</option>
             </select>
-        </div>
+            <br />
+            <select @change="setResolution()" v-if="globals.camera.currentCamera != 'None'"
+                v-model="globals.camera.currentResolution">
+                <option id="None" value="None" disabled>Выберите разрешение...</option>
+                <option id="qvga" value="0">Низкое</option>
+                <option id="vga" value="1">Среднее</option>
+                <option id="hd" value="2">Хорошее</option>
+                <option id="full-hd" value="3">Full HD</option>
+            </select>
 
-        <!-- p>Click a button to call <code>getUserMedia()</code> with appropriate resolution.</p -->
-
-        <div id="buttons" ref="resolutionsButtons" v-if="globals.camera.currentCamera != 'None'">
-            Разрешение:
-            <button id="qvga" @click="getMedia(qvgaConstraints)">QVGA</button>
-            <button id="vga" @click="getMedia(vgaConstraints)">VGA</button>
-            <button id="hd" @click="getMedia(hdConstraints)">HD</button>
-            <button id="full-hd" @click="getMedia(fullHdConstraints)">Full HD</button>
-            <!-- 
+            <!-- p>Click a button to call <code>getUserMedia()</code> with appropriate resolution.</p -->
+            <!-- <div id="buttons" ref="resolutionsButtons" v-if="globals.camera.currentCamera != 'None'">
+                Разрешение:
+                <button id="qvga" @click="getMedia(qvgaConstraints)">QVGA</button>
+                <button id="vga" @click="getMedia(vgaConstraints)">VGA</button>
+                <button id="hd" @click="getMedia(hdConstraints)">HD</button>
+                <button id="full-hd" @click="getMedia(fullHdConstraints)">Full HD</button>
+                <!-- 
             <button id="televisionFourK">Television 4K (3840x2160)</button>
             <button id="cinemaFourK">Cinema 4K (4096x2160)</button>
             <button id="eightK">8K</button>
+            </div>
             -->
-        </div>
 
+        </fieldset>
         <div ref="videoblock" id="videoblock">
             <button @click="takeSnapshot">Сфотографировать</button>
             <br />
@@ -281,6 +283,16 @@ const hdConstraints = {
 
 const fullHdConstraints = {
     video: { width: { exact: 1920 }, height: { exact: 1080 } }
+};
+
+const videoQualities = [qvgaConstraints, vgaConstraints, hdConstraints, fullHdConstraints];
+
+function setResolution() {
+    if (globals.camera.currentResolution != "None") {
+        // console.warn(globals.camera.currentResolution);
+        // console.warn(videoQualities[globals.camera.currentResolution]);
+        getMedia(videoQualities[globals.camera.currentResolution]);
+    }
 };
 
 /** For future release!

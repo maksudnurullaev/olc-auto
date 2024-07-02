@@ -1,6 +1,6 @@
 <template>
     <fieldset>
-        <legend>Камера:</legend>
+        <legend>Режим камеры:</legend>
         <input type="submit" @click="switchCamera" :value="getCameraBtnTitle()" />
     </fieldset>
     <fieldset v-if="!globals.camera.isComponentOpen">
