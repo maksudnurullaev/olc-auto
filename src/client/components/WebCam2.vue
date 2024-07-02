@@ -50,20 +50,16 @@
 </template>
 
 <script setup>
-import adapter from 'webrtc-adapter';
 import { onMounted, ref } from 'vue';
 import { wsAddCarImage } from '../axios/ws.js';
 
 import { useGlobalStore } from '../stores/globals';
-// import { constants } from 'buffer';
 const globals = useGlobalStore();
 
-const button = ref(null);
 const video = ref(null);
 const canvas = ref(null);
 const videoblock = ref(null);
 const stream = ref(null);
-const resolutionsButtons = ref(null);
 const constraints = {
     audio: false,
     video: true
