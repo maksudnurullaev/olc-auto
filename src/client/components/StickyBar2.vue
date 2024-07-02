@@ -1,21 +1,20 @@
 <template>
-    <div class="sticky">
-        Перейти в режим:
+    <fieldset>
+        <legend>Камера:</legend>
         <input type="submit" @click="switchCamera" :value="getCameraBtnTitle()" />
-        <template v-if="!globals.camera.isComponentOpen">
-            |
-            История ({{ globals.car.infosByDates.length }}):
-            <select v-model="globals.car.forDate" @change="showCarInfos4Date()">
-                <option :value="ymdFormateDate()">Сегодня ({{ todayInfos() }})</option>
-                <template v-for="carInfoDate in globals.car.infosByDates">
-                    <option v-if="carInfoDate.date_ymd != ymdFormateDate()" :value="carInfoDate.date_ymd">
-                        {{ carInfoDate.date_ymd }} ({{ carInfoDate.records }})
-                    </option>
-                </template>
-            </select> |
-            <button @click="showCarInfos4Date()">Обновить</button>
-        </template>
-    </div>
+    </fieldset>
+    <fieldset v-if="!globals.camera.isComponentOpen">
+        <legend>История({{ globals.car.infosByDates.length }}):</legend>
+        <select v-model="globals.car.forDate" @change="showCarInfos4Date()">
+            <option :value="ymdFormateDate()">Сегодня ({{ todayInfos() }})</option>
+            <template v-for="carInfoDate in globals.car.infosByDates">
+                <option v-if="carInfoDate.date_ymd != ymdFormateDate()" :value="carInfoDate.date_ymd">
+                    {{ carInfoDate.date_ymd }} ({{ carInfoDate.records }})
+                </option>
+            </template>
+        </select> |
+        <button @click="showCarInfos4Date()">Обновить</button>
+    </fieldset>
 </template>
 
 <script setup>
@@ -26,7 +25,7 @@ import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
 
 onMounted(() => {
-    if(globals.car.current_number){
+    if (globals.car.current_number) {
         showCarInfos4Date();
     }
 });
@@ -57,7 +56,7 @@ function switchCamera() {
 }
 
 function getCameraBtnTitle() {
-    return (globals.camera.isComponentOpen ? 'просмотра' : 'камеры');
+    return (globals.camera.isComponentOpen ? 'Выключить' : 'Включить');
 }
 
 function getStreetCameraImage(ip) {

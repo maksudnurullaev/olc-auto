@@ -8,7 +8,7 @@
       </div>
     </pane>
     <pane size="65">
-        <strong>Идентификационный номер приема: {{ globals.car.current_number }}</strong>
+        <strong>Приём: {{ globals.car.current_number }}</strong>
         <StickyBar2 />
         <WebCam2 v-if="globals.camera.isComponentOpen" />
         <CarInOutInfo v-else />
