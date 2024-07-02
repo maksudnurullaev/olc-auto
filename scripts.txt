@@ -1,0 +1,3 @@
+podman build -t node_test_v1 .
+
+podman run -it --rm --name my_node_test_v1 --mount type=volume,source=db,target=/app/dist/db,rw=true --mount type=volume,source=photos,target=/app/dist/photos,rw=true --mount type=volume,source=nm,target=/app/node_modules,rw=true -p 8080:8080/tcp node_photos_myvetuz 
