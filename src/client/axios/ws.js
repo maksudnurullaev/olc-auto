@@ -1,5 +1,7 @@
 import axios from 'axios'
-import { getImageAccessUrl } from '../../utils/common'
+import { getImageAccessUrl, isDevMode } from '../../utils/common'
+
+const devMode = isDevMode()
 
 function wsGetCarInfosForDate(globals) {
   const car = globals.car.current_number
@@ -89,13 +91,13 @@ function wsGetTransportTypes(globals) {
       }
     })
   } else {
-    console.log('Trasnports types already loaded!')
+    console.info('Trasnports types already loaded!')
   }
 }
 
 function wsChangeRole4User(globals, postData) {
   axios.post(globals.getWebServiceURL + 'changeRole4User', postData).then(function (response) {
-    console.log(response.data.message)
+    devMode && console.log(response.data.message)
     if (response.data.result) {
       alert('Роль для пользователя измернен!')
     } else {
@@ -119,7 +121,7 @@ function wsGetAllUsers(globals, pageResources) {
       }
     })
     .catch(function (error) {
-      console.log(error)
+      console.error(error)
       return []
     })
 }
@@ -138,7 +140,7 @@ function wsLogout(globals) {
       }
     })
     .catch(function (error) {
-      console.log(error)
+      console.error(error)
     })
 }
 
@@ -146,7 +148,7 @@ function wsCheckLogin(globals) {
   axios.post(globals.getWebServiceURL + 'checkLogin')
     .then(function (response) {
       if (response.data.result) {
-        console.log(response.data.message)
+        devMode && console.log(response.data.message)
         globals.user = response.data.user
       } else {
         if (response.data.message) {
@@ -155,7 +157,7 @@ function wsCheckLogin(globals) {
       }
     })
     .catch(function (error) {
-      console.log(error)
+      console.error(error)
     })
 }
 
@@ -177,11 +179,10 @@ function wsLogin(userData, globals) {
     id: userData.id,
     password: userData.password
   }
-  // console.log(postData);
   axios.post(globals.getWebServiceURL + 'login', postData)
     .then(function (response) {
       if (response.data.result) {
-        console.log(response.data.message)
+        devMode && console.log(response.data.message)
         globals.user = response.data.user
       } else {
         if (response.data.message) {
@@ -192,27 +193,23 @@ function wsLogin(userData, globals) {
       }
     })
     .catch(function (error) {
-      console.log(error)
+      console.error(error)
     })
 }
 
 function wsAddCarImage(postData, globals) {
-  // const globals = useGlobalStore();
   axios.post(globals.getWebServiceURL + 'base64Jpeg2File', postData)
     .then(function (response) {
       if (response.data.result) {
         let newPhoto = response.data.photo
         newPhoto.imageUrl = globals.getWebServiceURL + getImageAccessUrl(globals.car.current_number, newPhoto.url, globals.car.forDate)
         globals.car.photos.push(newPhoto)
-        // wsGetCarImages(globals)
-        // console.log(response.data.image)
-        // globals.car.photos.push(response.data.image)
       } else {
         console.warn(response.data.message ? response.data.message : 'Error returns from server, check logs!')
       }
     })
     .catch(function (error) {
-      console.log(error)
+      console.error(error)
     })
 }
 
@@ -227,11 +224,11 @@ function wsGetStreetCameraImage(cameraIp, globals) {
     return
   }
 
-  console.log('Get street images for car:', carNumber)
-  console.log(' ...  and from camera(ip):', cameraIp)
-  console.log(' ...           and infoId:', infoId)
-  console.log(' ...             for date:', forDate)
-  console.log(' ...       and car number:', carState)
+  devMode && console.log('Get street images for car:', carNumber)
+  devMode && console.log(' ...  and from camera(ip):', cameraIp)
+  devMode && console.log(' ...           and infoId:', infoId)
+  devMode && console.log(' ...             for date:', forDate)
+  devMode && console.log(' ...       and car number:', carState)
   const myPostData = {
     carNumber,
     forDate,
@@ -243,21 +240,16 @@ function wsGetStreetCameraImage(cameraIp, globals) {
   axios.post(globals.getWebServiceURL + 'getStreetCameraImage', myPostData)
     .then(function (response) {
       if (response.data.result) {
-        //        newPhoto.imageUrl = globals.getWebServiceURL + getImageAccessUrl(globals.car.current_number, newPhoto.url, globals.car.forDate)
         let newPhoto = response.data.photo
         newPhoto.imageUrl = globals.getWebServiceURL + getImageAccessUrl(carNumber, newPhoto.url, forDate)
         globals.car.photos.push(newPhoto)
-
-        // let newPhoto = response.data.photo
-        // const newPhoto = getImageAccessUrl(carNumber, response.data.imageUrl, forDate)
-        // globals.car.photos.push(imageUrl)
-        console.log('New image created:', newPhoto.uls, 'for car', carNumber);
+        devMode && console.log('New image created:', newPhoto.uls, 'for car', carNumber);
       } else {
-        console.log(response.data.message);
+        console.warn("Wrong result: " + response.data.message);
       }
     })
     .catch(function (error) {
-      console.log(error)
+      console.error(error)
     })
 }
 
@@ -271,16 +263,12 @@ function wsGetCarImages(globals) {
     return
   }
 
-  console.log('Get images for car:', globals.car.current_number)
-  console.log(' ...    and infoId:', globals.car.infoCurrentId)
-  console.log(' ...  and for date:', globals.car.forDate)
-  // const myPostData = {
-  //   carID: globals.car.current_number,
-  //   forDate: globals.car.forDate
-  // }
+  devMode && console.log('Get images for car:', globals.car.current_number)
+  devMode && console.log(' ...    and infoId:', globals.car.infoCurrentId)
+  devMode && console.log(' ...  and for date:', globals.car.forDate)
+
   globals.car.photos = [] // reset car images
   let wsUrl = "cars/" + globals.car.current_number + "/infos/" + globals.car.infoCurrentId + "/photos"
-  // axios.post(globals.getWebServiceURL + 'getImages', myPostData)
   axios.post(globals.getWebServiceURL + wsUrl)
     .then(function (response) {
       if (response.data.result) {
@@ -291,7 +279,7 @@ function wsGetCarImages(globals) {
       }
     })
     .catch(function (error) {
-      console.log(error)
+      console.error(error)
     })
 }
 

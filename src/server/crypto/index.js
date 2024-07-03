@@ -1,4 +1,6 @@
 const forge = require('node-forge')
+const utils = require('../../utils/common')
+const isDevMode = utils.isDevMode()
 
 function hashUserAndPassword(userId, userPassword) {
   try {
@@ -20,11 +22,11 @@ function checkUserAndPassword(userId, userPassword, inHash) {
     console.error("Couldn't get proper hashes for user & password!")
     return false
   }
-  // JUST FOR DEBUG
-  // console.log('userId', userId);
-  // console.log('userPassword', userPassword);
-  // console.log('inHash', inHash);
-  // console.log('_hash', _hash);
+
+  isDevMode && console.log('userId', userId);
+  isDevMode && console.log('userPassword', userPassword);
+  isDevMode && console.log('inHash', inHash);
+  isDevMode && console.log('_hash', _hash);
   return _hash.localeCompare(inHash) == 0
 }
 exports.checkUserAndPassword = checkUserAndPassword

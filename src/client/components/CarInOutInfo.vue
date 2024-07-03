@@ -24,11 +24,14 @@
 <script setup>
 import axios from 'axios';
 // import { onMounted } from 'vue';
-import { ymdFormateDate } from '../../utils/common';
+import { ymdFormateDate, isDevMode } from '../../utils/common';
 import { wsGetCarInfosForDate, wsGetCarInfosByDates, wsGetTransportTypes } from '../axios/ws'
 
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
+
+const devMode = isDevMode();
+
 function changeFormData() {
     globals.setCarInfoID(globals.car.infoCurrentId);
 }
@@ -53,11 +56,11 @@ function saveRecord() {
     for (const pn in infoCurrent) {
         if (infoCurrent[pn]) {
             postData[pn] = infoCurrent[pn];
-            console.log(pn, ': ', infoCurrent[pn]);
+            devMode && console.log(pn, ': ', infoCurrent[pn]);
         }
     }
 
-    console.log("Insert for car", globals.car.current_number, " new info!");
+    devMode && console.log("Insert for car", globals.car.current_number, " new info!");
     axios.post(globals.getWebServiceURL + url2Add, postData).then((response) => {
         if (response.data.result) {
             wsGetCarInfosByDates(globals);
@@ -76,8 +79,7 @@ function saveRecord() {
                     }
                 }
             });
-
-            console.log(url2Add, ' insert success!');
+            devMode && console.log(url2Add, ' insert success!');
         } else {
             globals.car.infoCurrent.in_datetime = null; // restore state of access to update
             console.warn(url2Add, 'insert failed!', response.data.message);

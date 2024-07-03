@@ -57,13 +57,11 @@
 
 <script setup>
 import axios from 'axios';
-import { reactive, ref } from 'vue';
-import { ymdFormateDate } from '../../utils/common';
+import { reactive } from 'vue';
+import { ymdFormateDate, isDevMode } from '../../utils/common';
 
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
-
-const fullReportEl = ref(null);
 
 const resources = reactive({
     dateFrom: ymdFormateDate(),
@@ -103,8 +101,8 @@ function makeReport() {
         filters.where = { is_sent_to_1c: resources.stateOf1C }
     }
 
-    console.log('URL report:', url)
-    console.log('URL report filters:', filters)
+    isDevMode() && console.log('URL report:', url)
+    isDevMode() && console.log('URL report filters:', filters)
     axios.post(globals.getWebServiceURL + url, filters).then((response) => {
         if (response.data.result) {
             resources.infos = response.data.infos

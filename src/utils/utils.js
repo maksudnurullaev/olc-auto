@@ -1,10 +1,13 @@
 import { MD5FromString2HexString } from "../server/crypto";
-import { ymdFormateDate, getImageAccessUrl, string2Date, orgs, dmyFormatedDate } from "./common";
+import { ymdFormateDate, getImageAccessUrl, string2Date, orgs, dmyFormatedDate, isDevMode, getNodeMode } from "./common";
 
 exports.ymdFormateDate = ymdFormateDate;
 exports.string2Date = string2Date;
 exports.getImageAccessUrl = getImageAccessUrl;
 exports.orgs = orgs;
+
+exports.isDevMode = isDevMode;
+exports.getNodeMode = getNodeMode;
 
 const path = require("path");
 

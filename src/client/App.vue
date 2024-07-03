@@ -27,6 +27,5 @@ const globals = useGlobalStore();
 
 function showHideSearchPanel() {
   globals.showSearchPanel = !globals.showSearchPanel;
-  // alert(globals.showSearchPanel);
 };
 </script>

@@ -52,7 +52,6 @@ function todayInfos() {
 
 function switchCamera() {
     globals.$patch({ camera: { isComponentOpen: !globals.camera.isComponentOpen } });
-    console.log("Show camera component: " + globals.camera.isComponentOpen);
 }
 
 function getCameraBtnTitle() {

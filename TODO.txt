@@ -1,2 +1,3 @@
-1. Hide(by default) search panel
+1. Hide(by default) search panel (DONE!)
 2. Send "info of reception" to photos.myvet.uz
+3. Remove some features for production mode

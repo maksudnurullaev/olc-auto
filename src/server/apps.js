@@ -3,30 +3,29 @@ const fs = require('fs')
 const utils = require('../utils/utils.js')
 const express = require('express')
 const dbUtils = require('./knex/utils')
+const isDevMode = utils.isDevMode()
 
-const MODE = process.env.NODE_ENV || 'development'
-
-console.log("====CURRENT MODE====");
-console.log(MODE);
-console.log("====================");
+console.info("====CURRENT MODE====");
+console.info(utils.getNodeMode());
+console.info("====================");
 
 // ... to front files
 const path2Front = path.resolve(__dirname, '..', '..', 'dist', 'front')
-console.log('Path to front: ' + path2Front)
+console.info('Path to front: ' + path2Front)
 // ... to photos
 const path2Photos = path.resolve(__dirname, '..', '..', 'dist', 'photos')
-console.log('Path to photos: ' + path2Photos)
+console.info('Path to photos: ' + path2Photos)
 if (!fs.existsSync(path2Photos)) {
   fs.mkdirSync(path2Photos)
-  console.log('... just created!')
+  console.warn('... just created!')
 }
 
 // ... to db files
 const path2DbFiles = path.resolve(__dirname, '..', '..', 'dist', 'db')
-console.log('Path to DB files: ' + path2DbFiles)
+console.info('Path to DB files: ' + path2DbFiles)
 if (!fs.existsSync(path2DbFiles)) {
   fs.mkdirSync(path2DbFiles)
-  console.log('... just created!')
+  console.info('... just created!')
 }
 
 // redirect all unmatched to ROOT path
@@ -45,24 +44,24 @@ app.post('/base64Jpeg2File', (request, response) => {
     response.status(400).send({ result: false, message: 'Parameters are not properly defined!' })
     return
   }
-  console.log('Get device camera image:')
-  console.log(' ...          for carID:', carNumber)
-  console.log(' ...           for date:', forDate)
-  console.log(' ...     with car state:', carState)
-  console.log(' ...         image size:', request.body.dataURL.length)
+  console.info('Get device camera image:')
+  console.info(' ...          for carID:', carNumber)
+  console.info(' ...           for date:', forDate)
+  console.info(' ...     with car state:', carState)
+  console.info(' ...         image size:', request.body.dataURL.length)
   const base64String = request.body.dataURL
   const base64Image = base64String.split(';base64,').pop()
   const myPath = utils.getImagesDirectoryPath(path2Photos, carNumber, forDate)
   if (utils.validateDir(myPath)) {
     const myFile = utils.getUniqueId(null, carState) + '.jpeg'
     const myPath2File = path.join(myPath, myFile)
-    console.log('File going to be saved as: ' + myPath2File)
+    isDevMode && console.log('File going to be saved as: ' + myPath2File)
     fs.writeFile(myPath2File, base64Image, { encoding: 'base64' }, function (err) {
       if (err) {
         console.error(err)
         response.send({ result: false, errMessage: err.toString() })
       } else {
-        console.log('File saved:', myPath2File)
+        isDevMode && console.log('File saved:', myPath2File)
         if (!request.body.infoId) {
           response.send({ result: true, message: "Invalid infoId to add photos!" })
         } else {
@@ -75,7 +74,7 @@ app.post('/base64Jpeg2File', (request, response) => {
       }
     })
   } else {
-    console.log("Couldn't validate path: " + myPath)
+    console.error("Couldn't validate path: " + myPath)
     response.send({ result: false, errMessage: ("Couldn't validate path: " + myPath) })
   }
 })
@@ -96,15 +95,12 @@ app.use('/reception', function (req, res, next) {
 });
 app.use('/reception', express.static(path2Front));
 
-if (MODE === 'development') {
+if (utils.isDevMode()) {
   var errorhandler = require('errorhandler')
   app.use(errorhandler());
-}
-
-if (MODE === 'development') {
   const cors = require('cors')
   app.use(cors())
-  console.log("CORS: This is CORS-enabled for all origins (development)!")
+  console.warn("CORS: This is CORS-enabled for all origins (development)!")
 
   const https = require('https')
   // setup SSL for https
@@ -115,13 +111,13 @@ if (MODE === 'development') {
   
   const httpsServer = https.createServer(credentials, app)
   httpsServer.listen(8443, () => {
-    console.log('https(development) - listen for 8443 port')
+    console.info('http(' + utils.getNodeMode() + ') - listen for 8443 port')
   })
 } else {
   const http = require('http')
   var httpServer = http.createServer(app);
   httpServer.listen(8080, () => { // we switch off it - camers don't works without https(ssl)
-    console.log('http(' + MODE + ') - listen for 8080 port')
+    console.info('http(' + utils.getNodeMode() + ') - listen for 8080 port')
   });
 
 }

@@ -52,7 +52,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { wsAddCarImage } from '../axios/ws.js';
-
+import { isDevMode } from '../../utils/common';
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
 
@@ -91,22 +91,16 @@ function gotDevices(deviceInfos) {
                 // option.text = deviceInfo.label || `camera ${videoSource.value.length + 1}`;
                 // videoSource.value.appendChild(option);
             } else {
-                console.log('Some other kind of source/device: ', deviceInfo);
+                console.warn('Some other kind of source/device: ', deviceInfo);
             }
         }
         globals.camera.initialized = true;
     }
-    // selectors.forEach((select, selectorIndex) => {
-    //     if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
-    //         select.value = values[selectorIndex];
-    //     }
-    // });
 }
 
 onMounted(() => {
     navigator.mediaDevices.enumerateDevices(constraints).then(gotDevices).catch(handleError);
-    // console.log(adapter.browserDetails);
-    // videoSource.value.onchange = start;
+
 });
 
 function start() {
@@ -115,20 +109,12 @@ function start() {
             track.stop();
         });
     }
-    // console.log("videoSelect changed, value: " + videoSource.value.value);
-    //   const audioSource = audioInputSelect.value;
-    //   const videoSource = videoSelect.value;
-    //   const constraints = {
-    //     audio: {deviceId: audioSource ? {exact: audioSource} : undefined},
-    //     video: {deviceId: videoSource ? {exact: videoSource} : undefined}
-    //   };
-    //   navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
 }
 
 // #### Video source selection end
 globals.$subscribe((mutation, state) => {
     let _payload = mutation.payload;
-    console.log('mutation', mutation);
+    isDevMode() && console.log('mutation', mutation);
     if (_payload && _payload.camera) {
         if (!_payload.camera.isComponentOpen) {
             closeCamera();
@@ -151,7 +137,7 @@ globals.$subscribe((mutation, state) => {
 // }
 
 function handleError(error) {
-    console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
+    console.error('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
 }
 
 function takeSnapshot() {
@@ -169,7 +155,7 @@ function takeSnapshot() {
     canvas.value.getContext('2d').drawImage(video.value, 0, 0, canvas.value.width, canvas.value.height);
 
     const dataURL = canvas.value.toDataURL("image/jpeg");
-    console.log(dataURL.length);
+    isDevMode() && console.log(dataURL.length);
     let myPostData = {
         dataURL: dataURL,
         carNumber: globals.car.current_number,
@@ -211,10 +197,7 @@ function getMedia(constraints) {
     }
 
     constraints.video.deviceId = globals.camera.currentCamera;
-    // console.log('constraints:', constraints);
-    // showDebugMessage(JSON.stringify(constraints));
 
-    // clearErrorMessage();
     videoblock.value.style.display = 'none';
     navigator.mediaDevices.getUserMedia(constraints)
         .then(gotStream)
@@ -234,7 +217,7 @@ function gotStream(mediaStream) {
 
     const track = mediaStream.getVideoTracks()[0];
     const constraints = track.getConstraints();
-    console.log('Result constraints: ' + JSON.stringify(constraints));
+    isDevMode() && console.log('Result constraints: ' + JSON.stringify(constraints));
 
     canvas.value.width = video.value.videoWidth;
     canvas.value.height = video.value.videoHeight;
@@ -256,7 +239,7 @@ function errorMessage(who, what, when) {
 
     messagebox.innerText = "Ошибка, детализация в логах!";
     messagebox.style.display = 'block';
-    console.log(message);
+    console.error(message);
 }
 
 // function clearErrorMessage() {

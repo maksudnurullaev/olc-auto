@@ -11,12 +11,12 @@
 
 <script setup>
 import { onMounted } from 'vue';
-import { getImageClass } from '../../utils/common';
+import { getImageClass, isDevMode } from '../../utils/common';
 
 const props = defineProps(['photos'])
 
 onMounted(() => {
-    console.log("Thumbtail photos:", props.photos.length)
+    isDevMode() && console.log("Thumbtail photos:", props.photos.length)
 })
 
 </script>

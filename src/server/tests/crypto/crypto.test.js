@@ -6,7 +6,8 @@ describe('Test user & password:', () => {
     const userId = 'testUserId'
     const userPassword = 'testUserPassword'
     const myHash = myCrypto.hashUserAndPassword(userId, userPassword)
-    expect(myHash).not.toBeNull() // console.log(myHash, 'length: ' + myHash.length);
+    expect(myHash).not.toBeNull() 
+    utils.isDevMode() && console.log(myHash, 'length: ' + myHash.length);
     expect(myCrypto.checkUserAndPassword(userId, userPassword, myHash))
   })
 })

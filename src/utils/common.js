@@ -52,4 +52,12 @@ function getImageClass(fileName) {
   return 'NaN';
 };
 
-export { ymdFormateDate, getImageAccessUrl, string2Date, getImageClass, dmyFormatedDate }
+function isDevMode(){
+  return process.env.NODE_ENV === 'development';
+}
+
+function getNodeMode(){
+  return process.env.NODE_ENV || 'development';
+}
+
+export { ymdFormateDate, getImageAccessUrl, string2Date, getImageClass, dmyFormatedDate, isDevMode, getNodeMode }

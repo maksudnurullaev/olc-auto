@@ -31,7 +31,6 @@ function validPasswords() {
 }
 
 function changePassword() {
-    console.log('Change password!');
     if (!validPasswords()) {
         alert('Некорретные данные!');
         return;

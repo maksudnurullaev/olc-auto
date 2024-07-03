@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ymdFormateDate } from "../../utils/common.js";
+import { ymdFormateDate, isDevMode } from "../../utils/common.js";
 import { wsGetCarImages } from "../axios/ws.js";
 const roleAdmin = /^admin/;
 const roleKpp = /^(admin|kpp)/;
@@ -72,7 +72,7 @@ export const useGlobalStore = defineStore("globals", {
   },
   actions: {
     setCarInfoID(id) {
-      console.log("setCarInfoID:", id);
+      isDevMode() && console.log("setCarInfoID:", id);
       this.car.infoCurrentId = id;
       if (!id) {
         return;
@@ -89,7 +89,7 @@ export const useGlobalStore = defineStore("globals", {
             this.car.form.codeLengthLimits[this.car.infoCurrent.ttype_id];
           this.car.form.isNew = false;
           // set photos for car
-          console.log(
+          isDevMode() && console.log(
             "Get photos for car",
             this.car.current_number,
             "and infoId",

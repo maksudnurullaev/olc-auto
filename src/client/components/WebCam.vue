@@ -51,25 +51,15 @@
 import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
 import { useGlobalStore } from '../stores/globals';
+import { isDevMode } from '../../utils/common';
 const globals = useGlobalStore();
-
 
 const camera = ref(null);
 const canvas = ref(null);
 const videoList = ref(null);
 
-// const _data = reactive({
-//     isCameraOpen: false,
-//     isPhotoTaken: false,
-//     isShotPhoto: false,
-//     isLoading: false,
-//     link: '#',
-//     cameras: {}
-
-// });
-
 watch(globals.camera.isComponentOpen, (newValue, oldValue) => {
-    console.log('(newValue, oldValue)', (newValue, oldValue));
+    isDevMode() && console.log('(newValue, oldValue)', (newValue, oldValue));
 });
 
 globals.$subscribe((mutation, state) => {
@@ -81,8 +71,8 @@ globals.$subscribe((mutation, state) => {
 })
 
 onMounted(() => {
-    console.log("Update device list!");
-    console.log(updateDeviceList());
+    isDevMode() && console.log("Update device list!");
+    isDevMode() && console.log(updateDeviceList());
 });
 
 function toggleCamera() {
@@ -170,7 +160,7 @@ function takePhoto() {
     context.drawImage(camera.value, 0, 0, 450, 337.5);
     //MNK
     const dataURL = canvas.value.toDataURL("image/jpeg");
-    console.log(dataURL.length);
+    isDevMode() && console.log(dataURL.length);
     axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
     axios.post(globals.getWebServiceURL + "base64Jpeg2File", {
         dataURL: dataURL,
@@ -179,10 +169,10 @@ function takePhoto() {
     })
         .then(function (response) {
             globals.addCarImage(response.data.image);
-            console.log(response.data.image);
+            isDevMode() && console.log(response.data.image);
         })
         .catch(function (error) {
-            console.log(error);
+            console.error(error);
         });
 }
 
