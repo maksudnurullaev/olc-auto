@@ -37,7 +37,7 @@ exports.getUniqueId = getUniqueId;
 const fs = require("fs");
 function validateDir(myPath) {
   if (fs.existsSync(myPath)) {
-    console.log("Directory already exists: " + myPath);
+    console.warn("Directory already exists: " + myPath);
     return true;
   } else {
     const myResult = fs.mkdirSync(myPath, { recursive: true }, (err) => {
@@ -45,10 +45,10 @@ function validateDir(myPath) {
         console.error(err);
         return false;
       }
-      console.log("Directory created successfully: " + myPath);
+      isDevMode() && console.log("Directory created successfully: " + myPath);
       return true;
     });
-    console.log(myResult);
+    isDevMode() && console.log(myResult);
     return true;
   }
 }
@@ -61,7 +61,6 @@ function hasAccessVsCode(rId, aCode) {
   if (testHash.toUpperCase() === aCode.toUpperCase()) {
     return true;
   }
-  console.warn("No access rId(%s), rIdVsDate(%s): testHash(%s) != aCode(%s)", rId, rIdVsDate, testHash, aCode);
   return false;
 }
 exports.hasAccessVsCode = hasAccessVsCode;
