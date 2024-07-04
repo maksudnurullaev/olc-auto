@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.1",
   "scripts": {
-    "front-dev": "vite",
+    "front-dev": "vite -c vite.config.dev.js ",
     "front-preview": "vite preview",
     "build-front": "vite build",
     "build-front-dev": "vite build --sourcemap",

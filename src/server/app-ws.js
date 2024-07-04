@@ -445,7 +445,7 @@ app.post("/cars/:number/infos", (req, res) => {
             .status(200)
             .send({ result: false, message: "Invalid car number: " + number });
         } else {
-          const q = car.$relatedQuery("infos");
+          const q = car.$relatedQuery("infos").orderBy("in_datetime","DESC");
           if (filters) {
             dbUtils.setFilters(q, filters);
           }

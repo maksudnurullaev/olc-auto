@@ -52,8 +52,11 @@ function getImageClass(fileName) {
   return 'NaN';
 };
 
+function isProdMode(){
+  return process.env.NODE_ENV && process.env.NODE_ENV === 'production';
+}
 function isDevMode(){
-  return process.env.NODE_ENV === 'development';
+  return !isProdMode();
 }
 
 function getNodeMode(){

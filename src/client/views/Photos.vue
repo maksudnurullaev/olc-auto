@@ -15,7 +15,7 @@
         <div id="container" v-if="globals.car.infoCurrentId">
           <image-thumbnails :photos="globals.car.photos" v-if="globals.car.photos.length"/>
         </div>
-         <div v-else-if="!globals.car.current_number" class="center"><h3>Необходимо выполнить поиск и выбрать номер машины!</h3></div>
+         <div v-else-if="!globals.car.current_number" class="center"><h3>Необходимо выполнить поиск и выбрать уникальны приём!</h3></div>
          <pre v-if="globals.debugMode">
           {{ globals }}
          </pre>

@@ -80,13 +80,13 @@ app.post('/base64Jpeg2File', (request, response) => {
 })
 
 app.use('/reception', function (req, res, next) {
-  if(!req.query.rId || req.query.rId === "")
+  if (!req.query.rId || req.query.rId === "")
     return res.send("NO recieption ID(rId) PASSED")
 
-  if(!req.query.aCode || req.query.aCode === "")
+  if (!req.query.aCode || req.query.aCode === "")
     return res.send("NO access code(aCode) PASSED")
 
-  if(!utils.hasAccessVsCode(req.query.rId, req.query.aCode)){
+  if (!utils.hasAccessVsCode(req.query.rId, req.query.aCode)) {
     console.warn("No access for rId(%s) and aCode(%s)!", req.query.rId, req.query.aCode);
     return res.send("NO access!");
   }
@@ -101,25 +101,25 @@ if (utils.isDevMode()) {
   const cors = require('cors')
   app.use(cors())
   console.warn("CORS: This is CORS-enabled for all origins (development)!")
-
-  const https = require('https')
-  // setup SSL for https
-  const credentials = {
-    key: fs.readFileSync(path.resolve(__dirname, '..', '..', 'ssl', 'key.pem')),
-    cert: fs.readFileSync(path.resolve(__dirname, '..', '..', 'ssl', 'cert.pem'))
-  }
-  
-  const httpsServer = https.createServer(credentials, app)
-  httpsServer.listen(8443, () => {
-    console.info('http(' + utils.getNodeMode() + ') - listen for 8443 port')
-  })
-} else {
-  const http = require('http')
-  var httpServer = http.createServer(app);
-  httpServer.listen(8080, () => { // we switch off it - camers don't works without https(ssl)
-    console.info('http(' + utils.getNodeMode() + ') - listen for 8080 port')
-  });
-
 }
+//   const https = require('https')
+//   // setup SSL for https
+//   const credentials = {
+//     key: fs.readFileSync(path.resolve(__dirname, '..', '..', 'ssl', 'key.pem')),
+//     cert: fs.readFileSync(path.resolve(__dirname, '..', '..', 'ssl', 'cert.pem'))
+//   }
+
+//   const httpsServer = https.createServer(credentials, app)
+//   httpsServer.listen(8443, () => {
+//     console.info('http(' + utils.getNodeMode() + ') - listen for 8443 port')
+//   })
+// } else {
+const http = require('http')
+var httpServer = http.createServer(app);
+httpServer.listen(8080, () => { // we switch off it - camers don't works without https(ssl)
+  console.info('http(' + utils.getNodeMode() + ') - listen for 8080 port')
+});
+
+//}
 
 

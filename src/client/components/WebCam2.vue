@@ -268,8 +268,6 @@ const videoQualities = [qvgaConstraints, vgaConstraints, hdConstraints, fullHdCo
 
 function setResolution() {
     if (globals.camera.currentResolution != "None") {
-        // console.warn(globals.camera.currentResolution);
-        // console.warn(videoQualities[globals.camera.currentResolution]);
         getMedia(videoQualities[globals.camera.currentResolution]);
     }
 };

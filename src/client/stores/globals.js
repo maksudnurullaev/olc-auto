@@ -176,7 +176,7 @@ export const useGlobalStore = defineStore("globals", {
   getters: {
     getWebServiceURL: (state) => {
       if (state.debugMode) {
-        return "https://localhost:8443/";
+        return "http://localhost:8080/";
       } else {
         return "/";
       }
