@@ -9,7 +9,7 @@
                 <option v-for="item in globals.camera.cameras" :value="item.id">{{ item.label }}</option>
             </select>
             <br />
-            <select @change="setResolution()" v-if="globals.camera.currentCamera != 'None'"
+            <select @change="try2OpenCamera()" v-if="globals.camera.currentCamera != 'None'"
                 v-model="globals.camera.currentResolution">
                 <option id="None" value="None" disabled>Выберите разрешение...</option>
                 <option id="qvga" value="0">Низкое</option>
@@ -33,14 +33,13 @@
             -->
 
         </fieldset>
-        <div ref="videoblock" id="videoblock">
-            <button @click="takeSnapshot">Сфотографировать</button>
-            <br />
-            <video @onchange="start" @click="takeSnapshot" id="gum-res-local" ref="video" playsinline autoplay></video>
-            <br />
-            <button @click="takeSnapshot">Сфотографировать</button>
-        </div>
-
+        <fieldset>
+            <legend>Камера:</legend>
+            <div ref="videoblock" id="videoblock">
+                <video @onchange="start" @click="takeSnapshot" id="gum-res-local" ref="video" playsinline
+                    autoplay></video>
+            </div>
+        </fieldset>
         <p ref="errormessageblock" id="errormessage"></p>
         <canvas ref="canvas"></canvas>
     </div>
@@ -100,7 +99,7 @@ function gotDevices(deviceInfos) {
 
 onMounted(() => {
     navigator.mediaDevices.enumerateDevices(constraints).then(gotDevices).catch(handleError);
-
+    try2OpenCamera();
 });
 
 function start() {
@@ -266,8 +265,8 @@ const fullHdConstraints = {
 
 const videoQualities = [qvgaConstraints, vgaConstraints, hdConstraints, fullHdConstraints];
 
-function setResolution() {
-    if (globals.camera.currentResolution != "None") {
+function try2OpenCamera() {
+    if (globals.camera.currentCamera != 'None' && globals.camera.currentResolution != "None") {
         getMedia(videoQualities[globals.camera.currentResolution]);
     }
 };

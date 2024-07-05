@@ -1,5 +1,5 @@
 <template>
-    <fieldset>
+    <fieldset v-if="!isCameraModeDisabled()">
         <legend>Режим камеры:</legend>
         <input type="submit" @click="switchCamera" :value="getCameraBtnTitle()" />
     </fieldset>
@@ -20,7 +20,7 @@
 <script setup>
 import { onMounted } from 'vue';
 import { ymdFormateDate } from '../../utils/common.js';
-import { wsGetStreetCameraImage, wsGetCarInfosForDate } from '../axios/ws.js';
+import { wsGetCarInfosForDate } from '../axios/ws.js';
 import { useGlobalStore } from '../stores/globals';
 const globals = useGlobalStore();
 
@@ -55,11 +55,7 @@ function switchCamera() {
 }
 
 function getCameraBtnTitle() {
-    return (globals.camera.isComponentOpen ? 'Выключить' : 'Включить');
-}
-
-function getStreetCameraImage(ip) {
-    wsGetStreetCameraImage(ip, globals);
+    return (globals.camera.isComponentOpen ? 'Выключить' : 'Включить') + "  камеру";
 }
 
 </script>
